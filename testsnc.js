@@ -86,7 +86,7 @@ const startup = async () => {
     await delay(1000);
     console.log('Should have waited long enough for the RNG to initialse now...');
     console.log('Test result...' + JSON.stringify(gameInterface.play(0)));
-    console.log('and we are off...');
+    console.log('and we are off...\n\n');
 
     app.listen(port, () => {
         console.log(`FAKE server running on port ${port}.`);
