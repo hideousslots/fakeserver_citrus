@@ -1,0 +1,15 @@
+export enum SpaceHiveSymbol {
+    Ten,
+    Jack,
+    Queen,
+    King,
+    Ace,
+    High1,
+    High2,
+    High3,
+    High4,
+    High5,
+    Scatter,
+    Wild,
+    PlaceHolder,
+}
