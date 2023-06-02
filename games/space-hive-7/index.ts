@@ -52,8 +52,11 @@ export const index: IGame<IData> = {
     },
 
     play({bet, action, state, variant, promo}): IPlayResponse<IData> {
-        console.log('snc ' + process.env.RNG);
-        return play(bet);
+        let result = play(bet);
+        if(result.win !== 0) {
+            console.log('snc - got a win ' + JSON.stringify(result));
+        }
+        return result;
     },
 
     action(strategy): string {
