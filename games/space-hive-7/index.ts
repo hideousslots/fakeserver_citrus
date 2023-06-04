@@ -53,9 +53,9 @@ export const index: IGame<IData> = {
 
     play({bet, action, state, variant, promo}): IPlayResponse<IData> {
         let result = play(bet);
-        if(result.win !== 0) {
-            console.log('snc - got a win ' + JSON.stringify(result));
-        }
+        // if(result.win !== 0) {
+        //     console.log('snc - got a win ' + JSON.stringify(result));
+        // }
         return result;
     },
 

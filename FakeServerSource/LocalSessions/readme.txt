@@ -1,0 +1,1 @@
+This folder contains local session logs. The logs are ignored in GIT, but the folder and this readme.txt are held
