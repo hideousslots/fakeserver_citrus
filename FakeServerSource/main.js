@@ -3,6 +3,7 @@
 const delay = ms => new Promise(res => setTimeout(res, ms));
 const CurrentSession = require('./currentSession.js');
 const Repeater = require('./repeater.js');
+const Tester = require('./tester.js');
 const path = require('path');
 
 function FakeServer(_interface) {
@@ -16,6 +17,7 @@ function FakeServer(_interface) {
     //Set up maintained data for the fake server
 
     const sessionData = new CurrentSession();
+    const tester = new Tester(_interface);
     const localRepeat = new Repeater(path.join(__dirname,'/PlaybackData/localRepeats.json'));
     const globalRepeat = new Repeater(path.join(__dirname,'/PlaybackData/globalRepeats.json'));
     let fixedResponse = undefined;
@@ -168,6 +170,10 @@ function FakeServer(_interface) {
 
         let response = '<HTML><HEAD><TITLE>FAKE SERVER INTERFACE</TITLE></HEAD><BODY>';
 
+        //Test data (temporary space)
+
+        response += '<hr><div>TEST DATA SIMPLE RESULTS</div><div>' + tester.GetSimpleResults() + '</div>';
+
         //Any current fixed response?
 
         response += '<hr><div><div align="center"><h1>Current fixed response</h1></div>';
@@ -228,6 +234,7 @@ function FakeServer(_interface) {
             console.log('Web interface at http://127.0.0.1:' + port);
         });
 
+        tester.StartTester();
     }
 
     startup();
