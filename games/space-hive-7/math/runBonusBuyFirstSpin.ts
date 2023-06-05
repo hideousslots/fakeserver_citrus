@@ -5,7 +5,8 @@ import GameProfilesRegistry from "./GameProfilesRegistry";
 import {Distribution} from "../../../common/distributions/Distribution";
 import {GameFeature} from "./pickGameFeature";
 
-export function runRespinsSession(integerRng: IntegerRng,
+//NB This is a copy and rewrite of runRespinsSessions to allow a cleanish way to ask spin to use 'bonusBuy' mode
+export function runBonusBuyFirstSpin(integerRng: IntegerRng,
                                   bet: number,
                                   precisionMoneyMapper: (a: number) => number,
                                   initialAccumulatedRoundWin: number,
@@ -25,24 +26,20 @@ export function runRespinsSession(integerRng: IntegerRng,
 
     let reelLengths = initialReelLengths;
     let spinResult;
-    do {
+    const accumulatedRoundWinBetMultiple = precisionMoneyMapper(accumulatedRoundWin / bet);
+    const currentGameProfile = gameProfilesRegistry.getUpdatedGameProfile(accumulatedRoundWinBetMultiple);
 
-        const accumulatedRoundWinBetMultiple = precisionMoneyMapper(accumulatedRoundWin / bet);
-        const currentGameProfile = gameProfilesRegistry.getUpdatedGameProfile(accumulatedRoundWinBetMultiple);
+    spinResult = spin(integerRng, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
+        currentGameProfile, "bonusBuySpin", accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
 
-        spinResult = spin(integerRng, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
-            currentGameProfile, "", accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
+    spinResult.freeSpinIndex = freeSpinIndex;
 
-        spinResult.freeSpinIndex = 10 - freeSpinIndex;
-
-        reelLengths = spinResult.newReelLengths;
-        accumulatedRespinsSessionWin = precisionMoneyMapper(accumulatedRespinsSessionWin + spinResult.win);
-        accumulatedRoundWin = precisionMoneyMapper(accumulatedRoundWin + spinResult.win);
-        accumulatedScattersCollected = accumulatedScattersCollected + spinResult.scatters.collected;
-        
-        spinResults.push(spinResult);
-
-    } while (spinResult.isRespinTriggered);
+    reelLengths = spinResult.newReelLengths;
+    accumulatedRespinsSessionWin = precisionMoneyMapper(accumulatedRespinsSessionWin + spinResult.win);
+    accumulatedRoundWin = precisionMoneyMapper(accumulatedRoundWin + spinResult.win);
+    accumulatedScattersCollected = accumulatedScattersCollected + spinResult.scatters.collected;
+    
+    spinResults.push(spinResult);
 
     return spinResults;
 }

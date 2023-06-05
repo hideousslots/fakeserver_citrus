@@ -49,6 +49,7 @@ export function spin(integerRng: IntegerRng,
                      reelSetsDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<number> } },
                      featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
                      gameProfile: string,
+                     specialModeId: string,
                      initialAccumulatedRespinsSessionWin: number,
                      initialAccumulatedRoundWin: number,
                      initialScatters: number): SpinResult {
@@ -56,10 +57,37 @@ export function spin(integerRng: IntegerRng,
     const waysAmount = reelLengths.reduce((previousWaysAmount, currentReelLength) => previousWaysAmount * currentReelLength, 1);
     const waysAmountLevel = getWaysAmountLevel(waysAmount);
 
-    const reelSetIndex = pickReelSetIndex(integerRng, reelSetsDistributions, gameProfile, waysAmountLevel);
+    //Special mode spins enforce some changes
 
-    const indexReels = generateReels(integerRng, mathConfig.reelSets[reelSetIndex], reelLengths);
+    let reelSetIndex: number;
+    
+    if(specialModeId === "bonusBuySpin") {
+        //Force non win reel set
+        reelSetIndex = 6;
+    } else {
+        reelSetIndex = pickReelSetIndex(integerRng, reelSetsDistributions, gameProfile, waysAmountLevel);
+    }
 
+    let indexReels = generateReels(integerRng, mathConfig.reelSets[reelSetIndex], reelLengths);
+
+    //Special mode spins enforce some other changes
+
+    if(specialModeId === "bonusBuySpin") {
+        //Pick three reels to apply a scatter on
+
+        const possibleReels: number[] = [];
+        for(let i = 0 ; i < indexReels.length; i++) {
+            possibleReels.push(i);
+        }
+
+        for(let r=0;r < 3; r++) {
+            
+            const thisReelIndex = possibleReels.splice(integerRng.randomInteger(possibleReels.length), 1)[0];
+            const thisRowIndex = integerRng.randomInteger(indexReels[thisReelIndex].length);
+            indexReels[thisReelIndex][thisRowIndex] = SpaceHiveSymbol.Scatter;
+        }
+    }
+    
     const featureReels = indexReels.map(reel => reel.slice());
     const {featureType, payload} = pickGameFeature(integerRng, featuresDistributions, gameProfile, waysAmountLevel);
     

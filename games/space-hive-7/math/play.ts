@@ -5,8 +5,11 @@ import FloatSourcedIntegerRng from "../../../common/rng/FloatSourcedIntegerRng";
 import {mathConfig} from "./config/mathConfig";
 import GameProfilesRegistry from "./GameProfilesRegistry";
 import {runRespinsSession} from "./runRespinsSession";
+import {runBonusBuyFirstSpin} from "./runBonusBuyFirstSpin";
+import { SpinResult } from "./spin";
+import * as fs from 'fs';
 
-export default function play(bet: number) {
+export default function play(bet: number, action: string) {
 
     const precisionMoneyMapper = money => Number(money.toFixed(8));
 
@@ -15,9 +18,25 @@ export default function play(bet: number) {
     const initialBaseGameProfile = pickValueFromDistribution(integerRng, mathConfig.baseGameProfilesDistribution);
     const baseGameProfilesRegistry = new GameProfilesRegistry(mathConfig.baseGameProfileFallbacks, initialBaseGameProfile);
 
-    const baseGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+    //Handle normal and bonus buy modes separately
+
+    let baseGameRespinsSession: SpinResult[];
+    let accumulatedRoundWin;
+    let bonusProfile;
+
+    if(action == "main") {
+        //Normal play
+        bonusProfile =  mathConfig.bonusGameProfilesDistribution;
+        baseGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
         mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
-    let accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
+    } else if(action == "bonusbuy") {
+        //Bonus buy mode (use dead reels and force scatter)
+        bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
+        baseGameRespinsSession = runBonusBuyFirstSpin(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);    
+    }
+
+    accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
 
     const collectedScattersAmount = baseGameRespinsSession
         .reduce((scattersAmount, result) => scattersAmount + result.scatters.positions.length, 0);
@@ -25,7 +44,7 @@ export default function play(bet: number) {
     const bonusGameRespinsSessions = [];
     if (collectedScattersAmount >= mathConfig.scattersTriggeringBonusAmount) {
 
-        const initialBonusGameProfile = pickValueFromDistribution(integerRng, mathConfig.bonusGameProfilesDistribution);
+        const initialBonusGameProfile:string  = pickValueFromDistribution(integerRng, bonusProfile);
         let bonusGameProfilesRegistry = new GameProfilesRegistry(mathConfig.bonusGameProfileFallbacks, initialBonusGameProfile);
         let currentBonusGameReelLengths = mathConfig.bonusGameInitialReelLengths;
 
@@ -38,6 +57,8 @@ export default function play(bet: number) {
             accumulatedRoundWin = getLastElement(bonusGameRespinsSession).accumulatedRoundWin;
             currentBonusGameReelLengths = getLastElement(bonusGameRespinsSession).newReelLengths;
         }
+
+       // fs.appendFileSync('testData.json', JSON.stringify({baseGameRespinsSession, bonusGameRespinsSessions}));
     }
 
     return {
