@@ -71,12 +71,6 @@ function FakeServer(_interface) {
             gameResponse.state = {};
         }
 
-        //For now (until the frontend accepts the scatters data being prebuilt) add in collectedScattersPositions
-
-        gameResponse.data.baseGameRespinsSession.forEach((session) => {
-            session.collectedScattersPositions = session.scatters.positions;
-        });
-
         const roundId = sessionData.NoteRoundPlayed(1, gameResponse.win, gameResponse);
 
         response = {
@@ -158,7 +152,7 @@ function FakeServer(_interface) {
             let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.repeatrecent});
             // console.log('found repeat data' + JSON.stringify(repeatData));
             if(repeatData !== undefined) {
-                fixedResponse = repeatData;
+                fixedResponse = repeatData.result;
             }
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
             return;
