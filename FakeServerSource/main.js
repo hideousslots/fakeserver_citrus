@@ -3,6 +3,7 @@
 const delay = ms => new Promise(res => setTimeout(res, ms));
 const CurrentSession = require('./currentSession.js');
 const Repeater = require('./repeater.js');
+const path = require('path');
 
 function FakeServer(_interface) {
 
@@ -15,8 +16,8 @@ function FakeServer(_interface) {
     //Set up maintained data for the fake server
 
     const sessionData = new CurrentSession();
-    const localRepeat = new Repeater('./FakeServerSource/PlaybackData/localRepeats.json');
-    const globalRepeat = new Repeater('./FakeServerSource/PlaybackData/globalRepeats.json');
+    const localRepeat = new Repeater(path.join(__dirname,'/PlaybackData/localRepeats.json'));
+    const globalRepeat = new Repeater(path.join(__dirname,'/PlaybackData/globalRepeats.json'));
     let fixedResponse = undefined;
 
     //Set up the express server
