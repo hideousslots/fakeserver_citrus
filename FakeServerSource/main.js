@@ -92,6 +92,18 @@ function FakeServer(_interface) {
 
         //console.log('req ' + JSON.stringify(req.query));
 
+        if(req.query.tester_on !== undefined) {
+            tester.StartTester();
+            res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
+            return;
+        }
+
+        if(req.query.tester_off !== undefined) {
+            tester.StopTester();
+            res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
+            return;
+        }
+
         if(req.query.repeatrecent !== undefined) {
             //Try to set repeat from recent data
 
@@ -101,6 +113,8 @@ function FakeServer(_interface) {
             if(repeatData !== undefined) {
                 fixedResponse = repeatData.result;
             }
+            res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
+            return;
         }
 
         if(req.query.setrepeatlocal !== undefined) {
@@ -172,7 +186,13 @@ function FakeServer(_interface) {
 
         //Test data (temporary space)
 
-        response += '<hr><div>TEST DATA SIMPLE RESULTS</div><div>' + tester.GetSimpleResults() + '</div>';
+        response += '<hr><div align="center">TEST DATA SIMPLE RESULTS</div>';
+        response += '<div align="center">' + tester.GetSimpleResults() + '</div>';
+        if(tester.IsTesterOn()) {
+            response += '<div align="center"><A href="?tester_off=1">TURN TESTER OFF</A></div>';
+        } else {
+            response += '<div align="center"><A href="?tester_on=1">TURN TESTER ON</A></div>';            
+        }
 
         //Any current fixed response?
 
@@ -234,7 +254,7 @@ function FakeServer(_interface) {
             console.log('Web interface at http://127.0.0.1:' + port);
         });
 
-        tester.StartTester();
+        //tester.StartTester();
     }
 
     startup();

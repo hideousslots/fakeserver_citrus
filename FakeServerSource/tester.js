@@ -38,17 +38,31 @@ function Tester(_interface) {
         let result = 'Games Played : ' + reportableData.gamesPlayed + '<br>';
         result += 'Total bet : ' + reportableData.totalBet + '<br>';
         result += 'Total win : ' + reportableData.totalWin + '<br>';
-        result += 'RTP : ' + (Math.floor((reportableData.totalWin / reportableData.totalBet) * 10000) / 100) + '%<br>';
+        if(reportableData.totalBet === 0) {
+            result += 'RTP: 0.0%';
+        } else {
+            result += 'RTP : ' + (Math.floor((reportableData.totalWin / reportableData.totalBet) * 10000) / 100) + '%<br>';
+        }
         return result;
     }
 
     public.StartTester = function () {
+        if(testData.testActive === true) {
+            return;
+        }
         testData.testActive = true;
         setTimeout(runTestGroup,10);
     }
     
     public.StopTester = function () {
+        if(testData.testActive === false) {
+            return;
+        }
         testData.testActive = false;        
+    }
+
+    public.IsTesterOn = function() {
+        return testData.testActive;
     }
 
     runTestGroup = async() => {
