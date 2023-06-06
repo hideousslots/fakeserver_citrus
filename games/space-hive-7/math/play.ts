@@ -28,7 +28,7 @@ export default function play(bet: number, action: string) {
 
     if(action == "main") {
         //Normal play
-        bonusProfile =  mathConfig.bonusGameProfilesDistribution;
+        bonusProfile =  mathConfig.baseGameProfilesDistribution;
         baseGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
             mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                               
@@ -46,9 +46,10 @@ export default function play(bet: number, action: string) {
         bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;        
         baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
             mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, 'coinbonusbuyspin_first');    
-        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
+        let specialReelLengths = pickValueFromDistribution(integerRng, mathConfig.bonusBuyCoinInitialReelLengthsDistribution);
 
-        let specialReelLengths = pickValueFromDistribution(integerRng, mathConfig.bonusBuyCoinInitialReelLengthsDistribution)
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = specialReelLengths;                                
+
         accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
         const bonusGameRespinsSession = runBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, accumulatedRoundWin, specialReelLengths,
             mathConfig.baseGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, baseGameProfilesRegistry, 0, 'coinbonusbuyspin_second');

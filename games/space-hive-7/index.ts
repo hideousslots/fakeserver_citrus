@@ -73,8 +73,10 @@ export const index: IGame<IData> = {
 
     play({bet, action, state, variant, promo}): IPlayResponse<IData> {
         //SNC - for now for action to bonusBuy
-        action = "coinbonusbuy";
+        //action = "coinbonusbuy";
+        //action = "bonusbuy";
         //return play(bet, action);
+        action = "main";
         const result = play(bet, action);
         console.log(JSON.stringify(result));
         return result;
