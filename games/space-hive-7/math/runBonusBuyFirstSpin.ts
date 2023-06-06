@@ -12,7 +12,7 @@ export function runBonusBuyFirstSpin(integerRng: IntegerRng,
                                   initialAccumulatedRoundWin: number,
                                   initialReelLengths: number[],
                                   reelSetsDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<number> } },
-                                  featuresDistributions: Distribution<GameFeature>,
+                                  featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
                                   gameProfilesRegistry: GameProfilesRegistry,
                                   freeSpinIndex: number,
                                   callingAction: string): SpinResult[] {

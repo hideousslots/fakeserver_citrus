@@ -17,6 +17,27 @@ export const mathConfig = {
     bonusGameInitialReelLengths: [2, 3, 4, 4, 3, 2],
     maxExpandedReelLengths: [6, 6, 6, 6, 6, 6],
 
+    bonusBuyCoinInitialReelLengthsDistribution: {
+        values: [
+            [2, 3, 4, 4, 3, 2],
+            [2, 3, 5, 5, 3, 2],
+            [2, 4, 5, 5, 4, 2],
+            [3, 4, 5, 5, 4, 3],
+            [2, 3, 6, 6, 3, 2],
+            [2, 4, 6, 6, 4, 2],
+            [3, 4, 6, 6, 4, 3],
+            [2, 5, 6, 6, 5, 2],
+            [3, 5, 6, 6, 5, 3],
+            [4, 5, 6, 6, 5, 4],
+            [2, 6, 6, 6, 6, 2],
+            [3, 6, 6, 6, 6, 3],
+            [4, 6, 6, 6, 6, 4],
+            [5, 6, 6, 6, 6, 5],
+            [6, 6, 6, 6, 6, 6],
+        ],
+        weights: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    },
+
     scattersTriggeringBonusAmount: 3,
     bonusGameFreeSpinsAmount: 10,
 
@@ -104,54 +125,6 @@ export const mathConfig = {
     },
 
     bonusGameProfileFallbacks: {
-        UltraLow: {threshold: 12500, fallback: UltraLow},
-        BonusLow: {threshold: 12500, fallback: BonusLow},
-        BonusNewLow: {threshold: 22, fallback: UltraLow},
-        BonusMed: {threshold: 40, fallback: BonusLow},
-        ReplaceHeavy: {threshold: 55, fallback: BonusLow},
-        InstantHeavy: {threshold: 55, fallback: BonusLow},
-        BonusHigh: {threshold: 150, fallback: BonusLow},
-    },
-
-    coinBonusBuyGameProfilesDistribution: { //TO BE TWEAKED
-        values: [BonusNewLow, ReplaceHeavy, InstantHeavy, BonusHigh],
-        weights: [3000, 3300, 3300, 400],
-    },
-
-    coinBonusBuyCoinGameProfileDistribution: {
-        values: [
-        {featureType: ExpandedInstantPrize, payload: 0},
-        {featureType: ExpandedInstantPrize, payload: 1},
-        {featureType: ExpandedInstantPrize, payload: 2},
-        {featureType: ExpandedInstantPrize, payload: 3},
-        {featureType: ExpandedInstantPrize, payload: 4},
-        {featureType: ExpandedInstantPrize, payload: 5},
-        {featureType: ExpandedInstantPrize, payload: 6},
-        {featureType: ExpandedInstantPrize, payload: 7},
-        {featureType: ExpandedInstantPrize, payload: 8},
-        {featureType: ExpandedInstantPrize, payload: 9},
-        {featureType: ExpandedInstantPrize, payload: 10},
-        {featureType: ExpandedInstantPrize, payload: 11},
-        {featureType: ExpandedInstantPrize, payload: 12},
-        {featureType: ExpandedInstantPrize, payload: 13},
-        {featureType: ExpandedInstantPrize, payload: 14},
-        {featureType: ExpandedInstantPrize, payload: 15},
-        {featureType: ExpandedInstantPrize, payload: 16},
-        {featureType: ExpandedInstantPrize, payload: 17},
-        {featureType: ExpandedInstantPrize, payload: 18},
-        {featureType: ExpandedInstantPrize, payload: 19},
-        {featureType: ExpandedInstantPrize, payload: 20},
-        ],
-
-        weights: [  47619, 47619, 47619, 47619, 47619, 
-                    47619, 47619, 47619, 47619, 47619, 
-                    47619, 47619, 47619, 47619, 47619, 
-                    47619, 47619, 47619, 47619, 47619, 
-                    47619]
-
-    },
-
-    coinBonusGameProfileFallbacks: {
         UltraLow: {threshold: 12500, fallback: UltraLow},
         BonusLow: {threshold: 12500, fallback: BonusLow},
         BonusNewLow: {threshold: 22, fallback: UltraLow},

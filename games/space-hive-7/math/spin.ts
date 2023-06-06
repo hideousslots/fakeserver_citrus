@@ -47,7 +47,7 @@ export function spin(integerRng: IntegerRng,
                      precisionMoneyMapper: (a: number) => number,
                      reelLengths: number[],
                      reelSetsDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<number> } },
-                     featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } } | Distribution<GameFeature>,
+                     featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
                      gameProfile: string,
                      specialModeId: string,
                      initialAccumulatedRespinsSessionWin: number,
@@ -72,7 +72,7 @@ export function spin(integerRng: IntegerRng,
 
     //Special mode spins enforce some other changes
 
-    if(specialModeId === "bonusbuyspin") {
+    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin")) {
         //Pick three reels to apply a scatter on
 
         const possibleReels: number[] = [];
@@ -91,13 +91,13 @@ export function spin(integerRng: IntegerRng,
     const featureReels = indexReels.map(reel => reel.slice());
     let featureType;
     let payload;
-    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin")) {
-        const feature: GameFeature = pickGameFeatureFromDistribution(integerRng, <Distribution<GameFeature>>featuresDistributions);
+    if(specialModeId === "coinbonusbuyspin") {
+        const feature: GameFeature = pickGameFeatureFromDistribution(integerRng, mathConfig.bonusBuyCoinGameProfileDistribution);
 
         featureType = feature.featureType;
         payload = feature.payload;    
     } else {
-        const feature: GameFeature = pickGameFeature(integerRng, <{ [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } }>featuresDistributions, gameProfile, waysAmountLevel);
+        const feature: GameFeature = pickGameFeature(integerRng, featuresDistributions, gameProfile, waysAmountLevel);
 
         featureType = feature.featureType;
         payload = feature.payload;
