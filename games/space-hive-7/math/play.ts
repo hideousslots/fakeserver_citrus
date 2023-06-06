@@ -28,18 +28,25 @@ export default function play(bet: number, action: string) {
         //Normal play
         bonusProfile =  mathConfig.bonusGameProfilesDistribution;
         baseGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
-        mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                               
     } else if(action == "bonusbuy") {
         //Bonus buy mode (use dead reels and force scatter)
         bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
         baseGameRespinsSession = runBonusBuyFirstSpin(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
             mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);    
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
     }
 
     accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
 
-    const collectedScattersAmount = baseGameRespinsSession
-        .reduce((scattersAmount, result) => scattersAmount + result.scatters.positions.length, 0);
+    //***
+    //SWAP COMMENTS HERE FOR BONUS ROUND
+    // const collectedScattersAmount = baseGameRespinsSession
+    //     .reduce((scattersAmount, result) => scattersAmount + result.scatters.positions.length, 0);
+
+    const collectedScattersAmount = 3
+    //***
 
     const bonusGameRespinsSessions = [];
     if (collectedScattersAmount >= mathConfig.scattersTriggeringBonusAmount) {
@@ -52,6 +59,8 @@ export default function play(bet: number, action: string) {
 
             const bonusGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, accumulatedRoundWin,
                 currentBonusGameReelLengths, mathConfig.bonusGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, bonusGameProfilesRegistry, freeSpinIndex);
+
+            // bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1].newReelLengths = [2,3,4,4,3,2];                                
 
             bonusGameRespinsSessions.push(bonusGameRespinsSession);
             accumulatedRoundWin = getLastElement(bonusGameRespinsSession).accumulatedRoundWin;

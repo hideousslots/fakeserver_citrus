@@ -113,7 +113,8 @@ export function spin(integerRng: IntegerRng,
         case FeatureType.ExpandedInstantPrize: {
 
             expandedInstantPrizeData = {
-                 coinData: [],
+                 coinDataBefore: [],
+                 coinDataAfter: [],
                  reelsBefore: [],
                  reelsAfter: []
             };
@@ -121,6 +122,7 @@ export function spin(integerRng: IntegerRng,
             let expandedInstantPrizeCoins = pickExpandedInstantPrizeCoins(integerRng, coin, precisionMoneyMapper, "bonus", payload, indexReels);
             expandedInstantPrizeCoins.forEach(coinsPrize => {
                 featureReels[coinsPrize.position.column][coinsPrize.position.row] = SpaceHiveSymbol.PlaceHolder;
+                expandedInstantPrizeData.coinDataBefore.push(coinsPrize);
             });
             
             //Array Of Column Totals
@@ -149,7 +151,7 @@ export function spin(integerRng: IntegerRng,
                         const win = columnWinTotal[columnIndex];
                         const position = { column: columnIndex, row: rowIndex };
                         const instantPrize = { betMultiplier: win, win, position };
-                        expandedInstantPrizeData.coinData.push(instantPrize);
+                        expandedInstantPrizeData.coinDataAfter.push(instantPrize);
                     }
                 });
             });
@@ -202,9 +204,9 @@ export function spin(integerRng: IntegerRng,
             : instantPrizeCoins.reduce((previousTotalWin, coinPrize) => previousTotalWin + coinPrize.win, 0))
         + (expandedInstantPrizeData === null
             ? 0
-            : expandedInstantPrizeData.coinData.reduce((previousTotalWin, coinPrize) => previousTotalWin + coinPrize.win, 0))
+            : expandedInstantPrizeData.coinDataAfter.reduce((previousTotalWin, coinPrize) => previousTotalWin + coinPrize.win, 0))
         + (replaceWins === null ? 0 : replaceWins.win);
-       
+    
     return {
         reels: featureReels,
         reelsExpanded: featureReelsExpanded,
