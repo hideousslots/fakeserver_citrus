@@ -38,6 +38,7 @@ export default function play(bet: number, action: string) {
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
     } else if(action == "coinbonusbuy") {
         //Coin bonus buy mode (use dead reels and force scatter)
+        bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
         let reelLengths = pickValueFromDistribution(integerRng, mathConfig.bonusBuyCoinInitialReelLengthsDistribution)
         baseGameRespinsSession = runBonusBuyFirstSpin(integerRng, bet, precisionMoneyMapper, 0, reelLengths,
             mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, action);    
