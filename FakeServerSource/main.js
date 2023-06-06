@@ -27,12 +27,11 @@ function FakeServer(_interface) {
     const express = require('express');
     const cors = require("cors");
 
-    const bodyParser = require('body-parser');
     const app = express();
     const port = 3002;
 
     app.use(cors({ maxAge: 10 * 60 /*10 minutes*/ }));
-    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(express.json());
 
     //Some of the server needs faking (authenticate and so on...)
     app.post('/authenticate', (req, res) => {
@@ -62,6 +61,13 @@ function FakeServer(_interface) {
 
     app.post('/game/play', async (req, res) => {
 
+        let requestData = {
+            bet: req.body.bet,
+            action: req.body.action,
+            game: req.body.game,
+            provider: req.body.provider
+        };
+
         //Fixed response or not?
 
         let gameResponse;
@@ -69,11 +75,11 @@ function FakeServer(_interface) {
         if(fixedResponse !== undefined) {
             gameResponse = fixedResponse;
         } else {
-            gameResponse = gameInterface.play({ bet: 1, action: "main", state: null, variant: null, promo: null });
+            gameResponse = gameInterface.play({ bet: requestData.bet, action: requestData.action, state: null, variant: null, promo: null });
             gameResponse.state = {};
         }
 
-        const roundId = sessionData.NoteRoundPlayed(1, gameResponse.win, gameResponse);
+        const roundId = sessionData.NoteRoundPlayed(requestData.bet, gameResponse.win, gameResponse);
 
         response = {
             roundId: roundId,
