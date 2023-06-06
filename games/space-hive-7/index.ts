@@ -7,6 +7,7 @@ import HitFrequency from "@slotify/gdk/lib/stats/HitFrequency";
 import Variance from "@slotify/gdk/lib/stats/Variance";
 import ConfidenceInterval from "@slotify/gdk/lib/stats/ConfidenceInterval";
 import Average from "@slotify/gdk/lib/stats/Average";
+import Max from "@slotify/gdk/lib/stats/Max";
 import play from "./math/play";
 import {SpinResult} from "./math/spin";
 import {getPlayerConfig} from "./math/config/getPlayerConfig";
@@ -21,7 +22,11 @@ export const index: IGame<IData> = {
     bets: {
         "main": {
             available: [0.10, 0.20, 0.50, 1, 2, 5, 8, 10, 20, 30, 40, 50, 100],
-            default: 1, maxWin: 10000, coin: mathConfig.coinsPerBet
+            default: 1, maxWin: 13000, coin: mathConfig.coinsPerBet
+        },
+        "bonusbuy": { //this isn't being picked up
+            available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
+            default: 100, maxWin: 13000, coin: mathConfig.coinsPerBet / 100
         },
     },
 
@@ -40,7 +45,19 @@ export const index: IGame<IData> = {
             wagers => wagers.some(wager => wager.data.bonusGameRespinsSessions.length > 0)),
         averageBonusGameLength: new Average((wagers) => wagers[0].data.bonusGameRespinsSessions
             .reduce((totalLength, respinsSession) => totalLength + respinsSession.length, 0))
-            .filter((wagers) => wagers[0].data.bonusGameRespinsSessions.length > 0)
+            .filter((wagers) => wagers[0].data.bonusGameRespinsSessions.length > 0),
+        // The value of the Bonus without the Trigger
+        averageBonusGameValue: new Average((wagers) => {
+            let baseGameWin =  wagers[0].data.baseGameRespinsSession[wagers[0].data.baseGameRespinsSession.length -1 ].accumulatedRoundWin
+            return wagers[0].win - baseGameWin
+        }).filter((wagers) => wagers[0].data.bonusGameRespinsSessions && wagers[0].data.bonusGameRespinsSessions.length > 0),
+        biggestWin: new Max(wagers => wagers[0]?.win || 0),
+        over_100x: new HitFrequency(wagers => wagers.some(wager => wager.win > 100)),
+        over_500x: new HitFrequency(wagers => wagers.some(wager => wager.win > 500)),
+        over_1000x: new HitFrequency(wagers => wagers.some(wager => wager.win > 1000)),
+        over_2000x: new HitFrequency(wagers => wagers.some(wager => wager.win > 2000)),
+        over_5000x: new HitFrequency(wagers => wagers.some(wager => wager.win > 5000)),
+        over_10000x: new HitFrequency(wagers => wagers.some(wager => wager.win > 10000)),
     },
     cheats: {
         "main": {
@@ -48,14 +65,18 @@ export const index: IGame<IData> = {
             "BONUS_ROUND_TRIGGERED": wager => wager.data.bonusGameRespinsSessions.length > 1,
             "BASE_GAME_BEE_WILDS_TRIGGERED": wager => wager.data.baseGameRespinsSession[0].beeWildPositions !== null,
             "INSTANT_PRIZE_TRIGGERED": wager => wager.data.baseGameRespinsSession[0].instantPrizeCoins !== null,
+        },
+        "bonusbuy": {
+
         }
     },
 
     play({bet, action, state, variant, promo}): IPlayResponse<IData> {
-        let result = play(bet, "main");
-        // if(result.win !== 0) {
-        //     console.log('snc - got a win ' + JSON.stringify(result));
-        // }
+        //SNC - for now for action to bonusBuy
+        action = "coinbonusbuy";
+        //return play(bet, action);
+        const result = play(bet, action);
+        console.log(JSON.stringify(result));
         return result;
     },
 

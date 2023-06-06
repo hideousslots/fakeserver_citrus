@@ -18,3 +18,8 @@ export function pickGameFeature(integerRng: IntegerRng,
 
     return pickValueFromDistribution(integerRng, distribution);
 }
+
+export function pickGameFeatureFromDistribution(integerRng: IntegerRng, distribution: Distribution<GameFeature>): GameFeature {
+
+    return pickValueFromDistribution(integerRng, distribution);
+}

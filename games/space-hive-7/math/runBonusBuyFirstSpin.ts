@@ -12,9 +12,10 @@ export function runBonusBuyFirstSpin(integerRng: IntegerRng,
                                   initialAccumulatedRoundWin: number,
                                   initialReelLengths: number[],
                                   reelSetsDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<number> } },
-                                  featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
+                                  featuresDistributions: Distribution<GameFeature>,
                                   gameProfilesRegistry: GameProfilesRegistry,
-                                  freeSpinIndex: number): SpinResult[] {
+                                  freeSpinIndex: number,
+                                  callingAction: string): SpinResult[] {
 
     const coin = precisionMoneyMapper(bet / mathConfig.coinsPerBet);
 
@@ -29,8 +30,14 @@ export function runBonusBuyFirstSpin(integerRng: IntegerRng,
     const accumulatedRoundWinBetMultiple = precisionMoneyMapper(accumulatedRoundWin / bet);
     const currentGameProfile = gameProfilesRegistry.getUpdatedGameProfile(accumulatedRoundWinBetMultiple);
 
+    let specialModeId: string = '';
+    if(callingAction === 'bonusbuy') {
+        specialModeId = 'bonusbuyspin';
+    } else if (callingAction === 'coinbonusbuy') {
+        specialModeId = 'coinbonusbuyspin';
+    }
     spinResult = spin(integerRng, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
-        currentGameProfile, "bonusBuySpin", accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
+        currentGameProfile, specialModeId, accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
 
     spinResult.freeSpinIndex = freeSpinIndex;
 

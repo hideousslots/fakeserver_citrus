@@ -34,19 +34,20 @@ export default function play(bet: number, action: string) {
         //Bonus buy mode (use dead reels and force scatter)
         bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
         baseGameRespinsSession = runBonusBuyFirstSpin(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
-            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);    
+            mathConfig.baseGameReelSetsDistributions, mathConfig.bonusBuyCoinGameProfileDistribution, baseGameProfilesRegistry, 0, action);    
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
+    } else if(action == "coinbonusbuy") {
+        //Coin bonus buy mode (use dead reels and force scatter)
+        bonusProfile = mathConfig.coinBonusBuyGameProfilesDistribution;
+        baseGameRespinsSession = runBonusBuyFirstSpin(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.coinBonusBuyCoinGameProfileDistribution, baseGameProfilesRegistry, 0, action);    
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
     }
 
     accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
 
-    //***
-    //SWAP COMMENTS HERE FOR BONUS ROUND
-    // const collectedScattersAmount = baseGameRespinsSession
-    //     .reduce((scattersAmount, result) => scattersAmount + result.scatters.positions.length, 0);
-
-    const collectedScattersAmount = 3
-    //***
+    const collectedScattersAmount = baseGameRespinsSession
+        .reduce((scattersAmount, result) => scattersAmount + result.scatters.positions.length, 0);
 
     const bonusGameRespinsSessions = [];
     if (collectedScattersAmount >= mathConfig.scattersTriggeringBonusAmount) {
@@ -60,7 +61,7 @@ export default function play(bet: number, action: string) {
             const bonusGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, accumulatedRoundWin,
                 currentBonusGameReelLengths, mathConfig.bonusGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, bonusGameProfilesRegistry, freeSpinIndex);
 
-            // bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1].newReelLengths = [2,3,4,4,3,2];                                
+            bonusGameRespinsSession[bonusGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
 
             bonusGameRespinsSessions.push(bonusGameRespinsSession);
             accumulatedRoundWin = getLastElement(bonusGameRespinsSession).accumulatedRoundWin;

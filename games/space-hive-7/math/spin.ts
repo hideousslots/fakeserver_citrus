@@ -9,7 +9,7 @@ import {filterDistinctElements} from "../../../common/arrays/filterDistinctEleme
 import {pickReelSetIndex} from "./pickReelSetIndex";
 import {FeatureType} from "./config/FeatureType";
 import {Position} from "../../../common/reels/Position";
-import {GameFeature, pickGameFeature} from "./pickGameFeature";
+import {GameFeature, pickGameFeature, pickGameFeatureFromDistribution} from "./pickGameFeature";
 import {InstantPrizeCoin, pickInstantPrizeCoins} from "./pickInstantPrizeCoins";
 import {ExpandedInstantPrizeCoin, ExpandedInstantPrizeCoinData, pickExpandedInstantPrizeCoins} from './pickExpandedInstantPrizeCoins';
 import {pickBeeWildPositions} from "./pickBeeWildPositions";
@@ -47,7 +47,7 @@ export function spin(integerRng: IntegerRng,
                      precisionMoneyMapper: (a: number) => number,
                      reelLengths: number[],
                      reelSetsDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<number> } },
-                     featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
+                     featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } } | Distribution<GameFeature>,
                      gameProfile: string,
                      specialModeId: string,
                      initialAccumulatedRespinsSessionWin: number,
@@ -61,7 +61,7 @@ export function spin(integerRng: IntegerRng,
 
     let reelSetIndex: number;
     
-    if(specialModeId === "bonusBuySpin") {
+    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin")) {
         //Force non win reel set
         reelSetIndex = 6;
     } else {
@@ -72,7 +72,7 @@ export function spin(integerRng: IntegerRng,
 
     //Special mode spins enforce some other changes
 
-    if(specialModeId === "bonusBuySpin") {
+    if(specialModeId === "bonusbuyspin") {
         //Pick three reels to apply a scatter on
 
         const possibleReels: number[] = [];
@@ -89,7 +89,19 @@ export function spin(integerRng: IntegerRng,
     }
     
     const featureReels = indexReels.map(reel => reel.slice());
-    const {featureType, payload} = pickGameFeature(integerRng, featuresDistributions, gameProfile, waysAmountLevel);
+    let featureType;
+    let payload;
+    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin")) {
+        const feature: GameFeature = pickGameFeatureFromDistribution(integerRng, <Distribution<GameFeature>>featuresDistributions);
+
+        featureType = feature.featureType;
+        payload = feature.payload;    
+    } else {
+        const feature: GameFeature = pickGameFeature(integerRng, <{ [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } }>featuresDistributions, gameProfile, waysAmountLevel);
+
+        featureType = feature.featureType;
+        payload = feature.payload;
+    }
     
     let featureReelsExpanded = null;
     let beeWildPositions = null;
