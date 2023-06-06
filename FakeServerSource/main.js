@@ -59,6 +59,17 @@ function FakeServer(_interface) {
 
     //Game play response
 
+    const SetFixedResponse = function (_response) {
+        //Ensure an action is reported (mainly for old data)
+
+        fixedResponse = _response;
+        if(fixedResponse !== undefined) {
+            if(fixedResponse.data.action === undefined) {
+                fixedResponse.data.action = 'main';
+            }
+        }
+    }
+
     app.post('/game/play', async (req, res) => {
 
         let requestData = {
@@ -74,6 +85,7 @@ function FakeServer(_interface) {
 
         if(fixedResponse !== undefined) {
             gameResponse = fixedResponse;
+        
         } else {
             gameResponse = gameInterface.play({ bet: requestData.bet, action: requestData.action, state: null, variant: null, promo: null });
             gameResponse.state = {};
@@ -113,40 +125,30 @@ function FakeServer(_interface) {
         if(req.query.repeatrecent !== undefined) {
             //Try to set repeat from recent data
 
-            fixedResponse = undefined;
             let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.repeatrecent});
             // console.log('found repeat data' + JSON.stringify(repeatData));
-            if(repeatData !== undefined) {
-                fixedResponse = repeatData.result;
-            }
+            SetFixedResponse(repeatData.result);
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
             return;
         }
 
         if(req.query.setrepeatlocal !== undefined) {
-            fixedResponse = undefined;
             let repeatData = localRepeat.GetRepeatByID(req.query.setrepeatlocal);
             // console.log('found repeat data' + JSON.stringify(repeatData));
-            if(repeatData !== undefined) {
-                fixedResponse = repeatData;
-            }
+            SetFixedResponse(repeatData);
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
             return;
         }
 
         if(req.query.setrepeatglobal !== undefined) {
-            fixedResponse = undefined;
             let repeatData = globalRepeat.GetRepeatByID(req.query.setrepeatglobal);
             // console.log('found repeat data' + JSON.stringify(repeatData));
-            if(repeatData !== undefined) {
-                fixedResponse = repeatData;
-            }
+            SetFixedResponse(repeatData);
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
             return;
         }
 
         if(req.query.addrecentlocal !== undefined) {
-            fixedResponse = undefined;
             let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.addrecentlocal});
             // console.log('found repeat data' + JSON.stringify(repeatData));
             if(repeatData !== undefined) {
@@ -157,7 +159,6 @@ function FakeServer(_interface) {
         }
 
         if(req.query.addrecentglobal !== undefined) {
-            fixedResponse = undefined;
             let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.addrecentglobal});
             // console.log('found repeat data' + JSON.stringify(repeatData));
             if(repeatData !== undefined) {
@@ -173,15 +174,13 @@ function FakeServer(_interface) {
             // console.log(JSON.stringify(sessionData.recentRoundData));
             let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.repeatrecent});
             // console.log('found repeat data' + JSON.stringify(repeatData));
-            if(repeatData !== undefined) {
-                fixedResponse = repeatData.result;
-            }
+            SetFixedResponse(repeatData.result);
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
             return;
         }
 
         if(req.query.clearfixedresponse !== undefined) {
-            fixedResponse = undefined;
+            SetFixedResponse(undefined);
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
             return;
         }

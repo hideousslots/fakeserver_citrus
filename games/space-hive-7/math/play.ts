@@ -28,7 +28,7 @@ export default function play(bet: number, action: string) {
 
     if(action == "main") {
         //Normal play
-        bonusProfile =  mathConfig.baseGameProfilesDistribution;
+        bonusProfile =  mathConfig.bonusGameProfilesDistribution;
         baseGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
             mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                               
@@ -60,13 +60,13 @@ export default function play(bet: number, action: string) {
         accumulatedRoundWin = getLastElement(bonusGameRespinsSession).accumulatedRoundWin;
         return {
             win: precisionMoneyMapper(accumulatedRoundWin),
-            data: {baseGameRespinsSession, bonusGameRespinsSessions}
+            data: {action, baseGameRespinsSession, bonusGameRespinsSessions}
         };
     } else {
         //Need to know what a valid file is
         return {
             win: precisionMoneyMapper(0),
-            data: {baseGameRespinsSession:[], bonusGameRespinsSessions:[]}
+            data: {action, baseGameRespinsSession:[], bonusGameRespinsSessions:[]}
         };
     }
     accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
@@ -97,6 +97,6 @@ export default function play(bet: number, action: string) {
 
     return {
         win: precisionMoneyMapper(accumulatedRoundWin),
-        data: {baseGameRespinsSession, bonusGameRespinsSessions}
+        data: {action, baseGameRespinsSession, bonusGameRespinsSessions}
     };
 }

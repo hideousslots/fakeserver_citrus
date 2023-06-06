@@ -75,11 +75,11 @@ export const index: IGame<IData> = {
         //SNC - for now for action to bonusBuy
         //action = "coinbonusbuy";
         //action = "bonusbuy";
-        //return play(bet, action);
-        action = "main";
-        const result = play(bet, action);
-        console.log(JSON.stringify(result));
-        return result;
+        //action = "main";
+        return play(bet, action);
+        //const result = play(bet, action);
+        //console.log(JSON.stringify(result));
+        //return result;
     },
 
     action(strategy): string {
