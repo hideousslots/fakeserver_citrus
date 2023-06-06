@@ -72,7 +72,7 @@ export function spin(integerRng: IntegerRng,
 
     //Special mode spins enforce some other changes
 
-    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin")) {
+    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin_first")) {
         //Pick three reels to apply a scatter on
 
         const possibleReels: number[] = [];
@@ -91,7 +91,10 @@ export function spin(integerRng: IntegerRng,
     const featureReels = indexReels.map(reel => reel.slice());
     let featureType;
     let payload;
-    if(specialModeId === "coinbonusbuyspin") {
+    if(specialModeId === "coinbonusbuyspin_first") {
+        featureType = FeatureType.None;
+        payload = 0;
+    } else if (specialModeId === "coinbonusbuyspin_second") {
         const feature: GameFeature = pickGameFeatureFromDistribution(integerRng, mathConfig.bonusBuyCoinGameProfileDistribution);
 
         featureType = feature.featureType;

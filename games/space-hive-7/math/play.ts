@@ -5,7 +5,7 @@ import FloatSourcedIntegerRng from "../../../common/rng/FloatSourcedIntegerRng";
 import {mathConfig} from "./config/mathConfig";
 import GameProfilesRegistry from "./GameProfilesRegistry";
 import {runRespinsSession} from "./runRespinsSession";
-import {runBonusBuyFirstSpin} from "./runBonusBuyFirstSpin";
+import {runBonusBuySpinSession} from "./runBonusBuySpinSession";
 import { SpinResult } from "./spin";
 import * as fs from 'fs';
 
@@ -21,6 +21,8 @@ export default function play(bet: number, action: string) {
     //Handle normal and bonus buy modes separately
 
     let baseGameRespinsSession: SpinResult[];
+    const bonusGameRespinsSessions = [];
+
     let accumulatedRoundWin;
     let bonusProfile;
 
@@ -33,16 +35,32 @@ export default function play(bet: number, action: string) {
     } else if(action == "bonusbuy") {
         //Bonus buy mode (use dead reels and force scatter)
         bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
-        baseGameRespinsSession = runBonusBuyFirstSpin(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
-            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, action);    
+        baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, 'bonusbuyspin');    
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
     } else if(action == "coinbonusbuy") {
         //Coin bonus buy mode (use dead reels and force scatter)
-        bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
-        let reelLengths = pickValueFromDistribution(integerRng, mathConfig.bonusBuyCoinInitialReelLengthsDistribution)
-        baseGameRespinsSession = runBonusBuyFirstSpin(integerRng, bet, precisionMoneyMapper, 0, reelLengths,
-            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, action);    
+
+        //Special full path
+
+        bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;        
+        baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, 'coinbonusbuyspin_first');    
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
+
+        let specialReelLengths = pickValueFromDistribution(integerRng, mathConfig.bonusBuyCoinInitialReelLengthsDistribution)
+        accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
+        const bonusGameRespinsSession = runBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, accumulatedRoundWin, specialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, baseGameProfilesRegistry, 0, 'coinbonusbuyspin_second');
+
+        bonusGameRespinsSession[bonusGameRespinsSession.length - 1].newReelLengths = [2,3,4,4,3,2];                                
+
+        bonusGameRespinsSessions.push(bonusGameRespinsSession);
+        accumulatedRoundWin = getLastElement(bonusGameRespinsSession).accumulatedRoundWin;
+        return {
+            win: precisionMoneyMapper(accumulatedRoundWin),
+            data: {baseGameRespinsSession, bonusGameRespinsSessions}
+        };
     } else {
         //Need to know what a valid file is
         return {
@@ -55,7 +73,6 @@ export default function play(bet: number, action: string) {
     const collectedScattersAmount = baseGameRespinsSession
         .reduce((scattersAmount, result) => scattersAmount + result.scatters.positions.length, 0);
 
-    const bonusGameRespinsSessions = [];
     if (collectedScattersAmount >= mathConfig.scattersTriggeringBonusAmount) {
 
         const initialBonusGameProfile:string  = pickValueFromDistribution(integerRng, bonusProfile);

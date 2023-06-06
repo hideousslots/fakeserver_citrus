@@ -6,7 +6,7 @@ import {Distribution} from "../../../common/distributions/Distribution";
 import {GameFeature} from "./pickGameFeature";
 
 //NB This is a copy and rewrite of runRespinsSessions to allow a cleanish way to ask spin to use 'bonusBuy' mode
-export function runBonusBuyFirstSpin(integerRng: IntegerRng,
+export function runBonusBuySpinSession(integerRng: IntegerRng,
                                   bet: number,
                                   precisionMoneyMapper: (a: number) => number,
                                   initialAccumulatedRoundWin: number,
@@ -15,7 +15,7 @@ export function runBonusBuyFirstSpin(integerRng: IntegerRng,
                                   featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
                                   gameProfilesRegistry: GameProfilesRegistry,
                                   freeSpinIndex: number,
-                                  callingAction: string): SpinResult[] {
+                                  specialModeId: string): SpinResult[] {
 
     const coin = precisionMoneyMapper(bet / mathConfig.coinsPerBet);
 
@@ -30,12 +30,6 @@ export function runBonusBuyFirstSpin(integerRng: IntegerRng,
     const accumulatedRoundWinBetMultiple = precisionMoneyMapper(accumulatedRoundWin / bet);
     const currentGameProfile = gameProfilesRegistry.getUpdatedGameProfile(accumulatedRoundWinBetMultiple);
 
-    let specialModeId: string = '';
-    if(callingAction === 'bonusbuy') {
-        specialModeId = 'bonusbuyspin';
-    } else if (callingAction === 'coinbonusbuy') {
-        specialModeId = 'coinbonusbuyspin';
-    }
     spinResult = spin(integerRng, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
         currentGameProfile, specialModeId, accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
 
