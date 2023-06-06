@@ -18,7 +18,7 @@ function Repeater(_repeatFile) {
     let repeatData = [];
     {
         let fileData = fs.readFileSync(repeatDataFile);
-        if((repeatData !== null) || (repeatData !== undefined)) {
+        if((repeatData !== null) && (repeatData !== undefined)) {
             repeatData = JSON.parse(fileData);
         }
     }
