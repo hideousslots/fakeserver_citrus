@@ -61,7 +61,7 @@ export function spin(integerRng: IntegerRng,
 
     let reelSetIndex: number;
     
-    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin")) {
+    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin_first") || (specialModeId === "coinbonusbuyspin_second")) {
         //Force non win reel set
         reelSetIndex = 6;
     } else {
@@ -105,7 +105,7 @@ export function spin(integerRng: IntegerRng,
         featureType = feature.featureType;
         payload = feature.payload;
     }
-    
+
     let featureReelsExpanded = null;
     let beeWildPositions = null;
     let instantPrizeCoins = null;

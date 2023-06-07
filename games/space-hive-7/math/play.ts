@@ -48,7 +48,8 @@ export default function play(bet: number, action: string) {
             mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, 'coinbonusbuyspin_first');    
         let specialReelLengths = pickValueFromDistribution(integerRng, mathConfig.bonusBuyCoinInitialReelLengthsDistribution);
 
-        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = specialReelLengths;                                
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = specialReelLengths;
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].isRespinTriggered = true; 
 
         accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
         const bonusGameRespinsSession = runBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, accumulatedRoundWin, specialReelLengths,
