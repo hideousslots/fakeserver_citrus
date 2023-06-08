@@ -3,7 +3,7 @@ import {FeatureType} from "./FeatureType";
 import {BonusGameProfile} from "./BonusGameProfile";
 
 const {BaseGameMedium, BaseGameHigh, BaseGameLow} = BaseGameProfile;
-const {UltraLow, BonusLow, BonusNewLow, BonusMed, ReplaceHeavy, InstantHeavy, BonusHigh} = BonusGameProfile;
+const {UltraLow, BonusLow, BonusNewLow, ReplaceHeavy, InstantHeavy, BonusHigh} = BonusGameProfile;
 const {None} = FeatureType;
 const {BeeWilds} = FeatureType;
 const {InstantPrize} = FeatureType;
@@ -55,11 +55,11 @@ export const mathConfig = {
     },
 
     bookPayTable: { //2, 3, 4
-        0: [0, 1, 3],
-        1: [0, 1, 3],
-        2: [0, 1, 3],
-        3: [0, 1, 5],
-        4: [0, 1, 5],
+        0: [1, 3],
+        1: [1, 3],
+        2: [1, 3],
+        3: [1, 5],
+        4: [1, 5],
         5: [2, 3, 6],
         6: [2, 3, 6],
         7: [4, 6, 8],

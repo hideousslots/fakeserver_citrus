@@ -11,7 +11,7 @@ import {FeatureType} from "./config/FeatureType";
 import {Position} from "../../../common/reels/Position";
 import {GameFeature, pickGameFeature, pickGameFeatureFromDistribution} from "./pickGameFeature";
 import {InstantPrizeCoin, pickInstantPrizeCoins} from "./pickInstantPrizeCoins";
-import {ExpandedInstantPrizeCoin, ExpandedInstantPrizeCoinData, pickExpandedInstantPrizeCoins} from './pickExpandedInstantPrizeCoins';
+import {ExpandedInstantPrizeCoin,  pickExpandedInstantPrizeCoins} from './pickExpandedInstantPrizeCoins';
 import {pickBeeWildPositions} from "./pickBeeWildPositions";
 import {getWaysAmountLevel} from "./getWaysAmountLevel";
 import getSymbolsPositions from "../../../common/reels/getSymbolsPositions";
@@ -68,7 +68,7 @@ export function spin(integerRng: IntegerRng,
         reelSetIndex = pickReelSetIndex(integerRng, reelSetsDistributions, gameProfile, waysAmountLevel);
     }
 
-    let indexReels = generateReels(integerRng, mathConfig.reelSets[reelSetIndex], reelLengths);
+    const indexReels = generateReels(integerRng, mathConfig.reelSets[reelSetIndex], reelLengths);
 
     //Special mode spins enforce some other changes
 
@@ -134,7 +134,7 @@ export function spin(integerRng: IntegerRng,
                  reelsAfter: []
             };
 
-            let expandedInstantPrizeCoins = pickExpandedInstantPrizeCoins(integerRng, coin, precisionMoneyMapper, "bonus", payload, indexReels);
+            const expandedInstantPrizeCoins = pickExpandedInstantPrizeCoins(integerRng, coin, precisionMoneyMapper, "bonus", payload, indexReels);
             expandedInstantPrizeCoins.forEach(coinsPrize => {
                 featureReels[coinsPrize.position.column][coinsPrize.position.row] = SpaceHiveSymbol.PlaceHolder;
                 expandedInstantPrizeData.coinDataBefore.push(coinsPrize);
@@ -181,7 +181,7 @@ export function spin(integerRng: IntegerRng,
                 mathConfig.bookPayTable as unknown as Record<SpaceHiveSymbol, number[]>,
                 coin,
                 precisionMoneyMapper
-                )
+                );
             break;
         }
         
@@ -242,6 +242,5 @@ export function spin(integerRng: IntegerRng,
     };
 }
 
-// If I'm supply IntegerRNG as an argument and using it several times in a function, is it being redrawn every time?
 // Instant Prize is calculated correctly, but we don't have the before and after data sent to client
 // 

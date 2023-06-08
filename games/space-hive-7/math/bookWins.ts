@@ -13,7 +13,7 @@ export function modifyReelsForReplace(integerRng: IntegerRng, payload: number, r
     const endReel = reels.length - 1;
 
     // Identify the columns that contain at least one symbol that matches
-    let columnsWithSymbol = [];
+    const columnsWithSymbol = [];
     for(let column = startReel; column < endReel; column++) {
         if(reels[column].includes(symbol)) {
             columnsWithSymbol.push(column);
@@ -31,7 +31,7 @@ export function modifyReelsForReplace(integerRng: IntegerRng, payload: number, r
 
     // If the number of such columns is less than "ways", 
     // add the matching symbol to enough columns without it until the number of columns with matching symbols equals "ways"
-    let columnsWithoutSymbol = [];
+    const columnsWithoutSymbol = [];
     for(let column = startReel; column < endReel; column++) {
         if(!reels[column].includes(symbol)) {
             columnsWithoutSymbol.push(column);
