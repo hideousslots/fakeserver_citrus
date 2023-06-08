@@ -213,17 +213,17 @@ function FakeServer(_interface) {
 
         //List options for repeats
 
-        let repeatOptions = localRepeat.GetRepeatOptions();
-        response += '<hr><div><div align="center"><h1>Local fixed response options</h1></div>';
-        repeatOptions.forEach((option) => {
-            response += '<div align="center"><A href="?setrepeatlocal=' + option + '">ID: ' + option + '</A></div>';
-        });
-        response += '</div>';
-
-        repeatOptions = globalRepeat.GetRepeatOptions();
+        let repeatOptions = globalRepeat.GetRepeatOptions();
         response += '<hr><div><div align="center"><h1>Global fixed response options</h1></div>';
         repeatOptions.forEach((option) => {
             response += '<div align="center"><A href="?setrepeatglobal=' + option + '">ID: ' + option + '</A></div>';
+        });
+        response += '</div>';
+
+        repeatOptions = localRepeat.GetRepeatOptions();
+        response += '<hr><div><div align="center"><h1>Local fixed response options</h1></div>';
+        repeatOptions.forEach((option) => {
+            response += '<div align="center"><A href="?setrepeatlocal=' + option + '">ID: ' + option + '</A></div>';
         });
         response += '</div>';
 
