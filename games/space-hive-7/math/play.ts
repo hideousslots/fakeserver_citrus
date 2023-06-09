@@ -91,12 +91,13 @@ export default function play(bet: number, action: string) {
             const bonusGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, accumulatedRoundWin,
                 currentBonusGameReelLengths, mathConfig.bonusGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, bonusGameProfilesRegistry, freeSpinIndex);
 
-            bonusGameRespinsSession[bonusGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                                
-
             bonusGameRespinsSessions.push(bonusGameRespinsSession);
             accumulatedRoundWin = getLastElement(bonusGameRespinsSession).accumulatedRoundWin;
             currentBonusGameReelLengths = getLastElement(bonusGameRespinsSession).newReelLengths;
         }
+
+        let sessionLength: number = bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1].length;
+        bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1][sessionLength -1].newReelLengths = mathConfig.baseGameInitialReelLengths;                                
 
        // fs.appendFileSync('testData.json', JSON.stringify({baseGameRespinsSession, bonusGameRespinsSessions}));
     }
