@@ -41,8 +41,10 @@ export default function play(bet: number, action: string) {
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                               
     } else if(action === ActionType.Ante) {
         //Ante play
-
-        coin = precisionMoneyMapper(bet/mathConfig.coinsPerBet_ante);
+        //Bet comes in as (currently) 15 coins. Get the true coin size, and set the bet as if it were normal
+        //For example an ante bet of 15 is a coin value of 1 and a true bet of 10
+        coin = precisionMoneyMapper(bet / mathConfig.coinsPerBet_ante);
+        bet = precisionMoneyMapper(coin * mathConfig.coinsPerBet_main);
         
         bonusProfile =  mathConfig.bonusGameProfilesDistribution;
         baseGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
