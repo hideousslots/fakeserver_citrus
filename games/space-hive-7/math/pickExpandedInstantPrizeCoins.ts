@@ -17,14 +17,12 @@ export interface ExpandedInstantPrizeCoinData {
     reelsAfter: SpaceHiveSymbol[][]
 }
 
-export function pickExpandedInstantPrizeCoins(integerRng: IntegerRng,
-                                      coin: number,
+export function pickExpandedInstantPrizeCoins(integerRng: IntegerRng,                                      
+                                      bet: number,
                                       precisionMoneyMapper: (a: number) => number,
                                       gameType: ("base" | "bonus"),
                                       gameProfileIndex: number,
                                       reels: SpaceHiveSymbol[][]): ExpandedInstantPrizeCoin[] {
-
-    const bet = precisionMoneyMapper(coin * mathConfig.coinsPerBet);
 
     const availablePositions = getPositionsOnReels(reels, mathConfig.instantPrizeCoinsConfig.availableColumns);
 

@@ -17,6 +17,7 @@ import {getWaysAmountLevel} from "./getWaysAmountLevel";
 import getSymbolsPositions from "../../../common/reels/getSymbolsPositions";
 import {Distribution} from "../../../common/distributions/Distribution";
 import {modifyReelsForReplace, expandFeatureReels, calculateBookWins} from "./bookWins";
+import { SpecialModeType } from "./config/SpecialModeType";
 
 export interface ScatterInfo {
     collected: number;
@@ -43,13 +44,14 @@ export interface SpinResult {
 }
 
 export function spin(integerRng: IntegerRng,
+                     bet: number,
                      coin: number,
                      precisionMoneyMapper: (a: number) => number,
                      reelLengths: number[],
                      reelSetsDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<number> } },
                      featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
                      gameProfile: string,
-                     specialModeId: string,
+                     specialModeType: SpecialModeType,
                      initialAccumulatedRespinsSessionWin: number,
                      initialAccumulatedRoundWin: number,
                      initialScatters: number): SpinResult {
@@ -61,7 +63,7 @@ export function spin(integerRng: IntegerRng,
 
     let reelSetIndex: number;
     
-    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin_first") || (specialModeId === "coinbonusbuyspin_second")) {
+    if((specialModeType === SpecialModeType.BonusBuySpin) || (specialModeType === SpecialModeType.CoinBonusBuyFirstSpin) || (specialModeType === SpecialModeType.CoinBonusBuySubsequentSpin)) {
         //Force non win reel set
         reelSetIndex = 6;
     } else {
@@ -72,7 +74,7 @@ export function spin(integerRng: IntegerRng,
 
     //Special mode spins enforce some other changes
 
-    if((specialModeId === "bonusbuyspin") || (specialModeId === "coinbonusbuyspin_first")) {
+    if((specialModeType === SpecialModeType.BonusBuySpin) || (specialModeType === SpecialModeType.CoinBonusBuyFirstSpin)) {
         //Pick three reels to apply a scatter on
 
         const possibleReels: number[] = [];
@@ -91,10 +93,10 @@ export function spin(integerRng: IntegerRng,
     const featureReels = indexReels.map(reel => reel.slice());
     let featureType;
     let payload;
-    if(specialModeId === "coinbonusbuyspin_first") {
+    if(specialModeType === SpecialModeType.CoinBonusBuyFirstSpin) {
         featureType = FeatureType.None;
         payload = 0;
-    } else if (specialModeId === "coinbonusbuyspin_second") {
+    } else if (specialModeType === SpecialModeType.CoinBonusBuySubsequentSpin) {
         const feature: GameFeature = pickGameFeatureFromDistribution(integerRng, mathConfig.bonusBuyCoinGameProfileDistribution);
 
         featureType = feature.featureType;
@@ -120,7 +122,7 @@ export function spin(integerRng: IntegerRng,
             break;
         }
         case FeatureType.InstantPrize: {
-            instantPrizeCoins = pickInstantPrizeCoins(integerRng, coin, precisionMoneyMapper, "base", payload, indexReels);
+            instantPrizeCoins = pickInstantPrizeCoins(integerRng, bet, precisionMoneyMapper, "base", payload, indexReels);
             instantPrizeCoins.forEach(
                 coinsPrize => featureReels[coinsPrize.position.column][coinsPrize.position.row] = SpaceHiveSymbol.PlaceHolder);
             break;
@@ -134,7 +136,7 @@ export function spin(integerRng: IntegerRng,
                  reelsAfter: []
             };
 
-            const expandedInstantPrizeCoins = pickExpandedInstantPrizeCoins(integerRng, coin, precisionMoneyMapper, "bonus", payload, indexReels);
+            const expandedInstantPrizeCoins = pickExpandedInstantPrizeCoins(integerRng, bet, precisionMoneyMapper, "bonus", payload, indexReels);
             expandedInstantPrizeCoins.forEach(coinsPrize => {
                 featureReels[coinsPrize.position.column][coinsPrize.position.row] = SpaceHiveSymbol.PlaceHolder;
                 expandedInstantPrizeData.coinDataBefore.push(coinsPrize);

@@ -12,13 +12,11 @@ export interface InstantPrizeCoin {
 }
 
 export function pickInstantPrizeCoins(integerRng: IntegerRng,
-                                      coin: number,
+                                      bet: number,
                                       precisionMoneyMapper: (a: number) => number,
                                       gameType: ("base" | "bonus"),
                                       gameProfileIndex: number,
                                       reels: SpaceHiveSymbol[][]): InstantPrizeCoin[] {
-
-    const bet = precisionMoneyMapper(coin * mathConfig.coinsPerBet);
 
     const availablePositions = getPositionsOnReels(reels, mathConfig.instantPrizeCoinsConfig.availableColumns);
 

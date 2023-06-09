@@ -22,11 +22,19 @@ export const index: IGame<IData> = {
     bets: {
         "main": {
             available: [0.10, 0.20, 0.50, 1, 2, 5, 8, 10, 20, 30, 40, 50, 100],
-            default: 1, maxWin: 13000, coin: mathConfig.coinsPerBet
+            default: 1, maxWin: 13000, coin: mathConfig.coinsPerBet_main
+        },
+        "ante": {
+            available: [0.10, 0.20, 0.50, 1, 2, 5, 8, 10, 20, 30, 40, 50, 100],
+            default: 1, maxWin: 13000, coin: mathConfig.coinsPerBet_ante
         },
         "bonusbuy": { //this isn't being picked up
             available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
-            default: 100, maxWin: 13000, coin: mathConfig.coinsPerBet * 100
+            default: 100, maxWin: 13000, coin: mathConfig.coinsPerBet_bonusBuy
+        },
+        "coinsbonusbuy": { //this isn't being picked up
+            available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
+            default: 100, maxWin: 13000, coin: mathConfig.coinsPerBet_coinsBonusBuy
         },
     },
 

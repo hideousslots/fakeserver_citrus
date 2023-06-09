@@ -11,8 +11,12 @@ const {ExpandedInstantPrize} = FeatureType;
 const {BookReplacement} = FeatureType;
 
 export const mathConfig = {
-    coinsPerBet: 10,
-
+    
+    coinsPerBet_main: 10,
+    coinsPerBet_ante: 15,
+    coinsPerBet_bonusBuy: 1000,
+    coinsPerBet_coinsBonusBuy: 1000,
+    
     baseGameInitialReelLengths: [2, 3, 4, 4, 3, 2],
     bonusGameInitialReelLengths: [2, 3, 4, 4, 3, 2],
     maxExpandedReelLengths: [6, 6, 6, 6, 6, 6],

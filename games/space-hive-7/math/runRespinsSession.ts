@@ -4,9 +4,11 @@ import {IntegerRng} from "../../../common/rng/IntegerRng";
 import GameProfilesRegistry from "./GameProfilesRegistry";
 import {Distribution} from "../../../common/distributions/Distribution";
 import {GameFeature} from "./pickGameFeature";
+import { SpecialModeType } from "./config/SpecialModeType";
 
 export function runRespinsSession(integerRng: IntegerRng,
                                   bet: number,
+                                  coin: number,
                                   precisionMoneyMapper: (a: number) => number,
                                   initialAccumulatedRoundWin: number,
                                   initialReelLengths: number[],
@@ -14,8 +16,6 @@ export function runRespinsSession(integerRng: IntegerRng,
                                   featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
                                   gameProfilesRegistry: GameProfilesRegistry,
                                   freeSpinIndex: number): SpinResult[] {
-
-    const coin = precisionMoneyMapper(bet / mathConfig.coinsPerBet);
 
     const spinResults = [];
 
@@ -30,8 +30,8 @@ export function runRespinsSession(integerRng: IntegerRng,
         const accumulatedRoundWinBetMultiple = precisionMoneyMapper(accumulatedRoundWin / bet);
         const currentGameProfile = gameProfilesRegistry.getUpdatedGameProfile(accumulatedRoundWinBetMultiple);
 
-        spinResult = spin(integerRng, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
-            currentGameProfile, "", accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
+        spinResult = spin(integerRng, bet, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
+            currentGameProfile, SpecialModeType.None, accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
 
         spinResult.freeSpinIndex = 10 - freeSpinIndex;
 

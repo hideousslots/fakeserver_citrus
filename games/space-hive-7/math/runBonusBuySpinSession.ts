@@ -4,10 +4,12 @@ import {IntegerRng} from "../../../common/rng/IntegerRng";
 import GameProfilesRegistry from "./GameProfilesRegistry";
 import {Distribution} from "../../../common/distributions/Distribution";
 import {GameFeature} from "./pickGameFeature";
+import { SpecialModeType } from "./config/SpecialModeType";
 
 //NB This is a copy and rewrite of runRespinsSessions to allow a cleanish way to ask spin to use 'bonusBuy' mode
 export function runBonusBuySpinSession(integerRng: IntegerRng,
                                   bet: number,
+                                  coin: number,
                                   precisionMoneyMapper: (a: number) => number,
                                   initialAccumulatedRoundWin: number,
                                   initialReelLengths: number[],
@@ -15,9 +17,7 @@ export function runBonusBuySpinSession(integerRng: IntegerRng,
                                   featuresDistributions: { [profileId: string]: { [waysLevel: string]: Distribution<GameFeature> } },
                                   gameProfilesRegistry: GameProfilesRegistry,
                                   freeSpinIndex: number,
-                                  specialModeId: string): SpinResult[] {
-
-    const coin = precisionMoneyMapper(bet / mathConfig.coinsPerBet);
+                                  specialModeType: SpecialModeType): SpinResult[] {
 
     const spinResults = [];
 
@@ -29,8 +29,8 @@ export function runBonusBuySpinSession(integerRng: IntegerRng,
     const accumulatedRoundWinBetMultiple = precisionMoneyMapper(accumulatedRoundWin / bet);
     const currentGameProfile = gameProfilesRegistry.getUpdatedGameProfile(accumulatedRoundWinBetMultiple);
 
-    const spinResult = spin(integerRng, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
-        currentGameProfile, specialModeId, accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
+    const spinResult = spin(integerRng, bet, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
+        currentGameProfile, specialModeType, accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
 
     spinResult.freeSpinIndex = freeSpinIndex;
 

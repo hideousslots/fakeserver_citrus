@@ -3,15 +3,17 @@ import {getLastElement} from "../../../common/arrays/getLast";
 import {pickValueFromDistribution} from "../../../common/distributions/pickValueFromDistribution";
 import FloatSourcedIntegerRng from "../../../common/rng/FloatSourcedIntegerRng";
 import {mathConfig} from "./config/mathConfig";
+import {ActionType} from "./config/ActionType";
 import GameProfilesRegistry from "./GameProfilesRegistry";
 import {runRespinsSession} from "./runRespinsSession";
 import {runBonusBuySpinSession} from "./runBonusBuySpinSession";
 import {runCoinBonusBuySpinSession} from "./runCoinBonusBuySpinSession";
 import { SpinResult } from "./spin";
+import { SpecialModeType } from "./config/SpecialModeType";
 
 export default function play(bet: number, action: string) {
 
-    const precisionMoneyMapper = money => Number(money.toFixed(8));
+    const precisionMoneyMapper = money => Number(money.toFixed(2));
 
     const integerRng = new FloatSourcedIntegerRng(() => rng());
 
@@ -26,26 +28,44 @@ export default function play(bet: number, action: string) {
     let accumulatedRoundWin;
     let bonusProfile;
 
-    if(action === "main") {
+    let coin: number = 0;
+
+    if(action === ActionType.Main) {
         //Normal play
+
+        coin = precisionMoneyMapper(bet/mathConfig.coinsPerBet_main);
+    
         bonusProfile =  mathConfig.bonusGameProfilesDistribution;
-        baseGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+        baseGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
             mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                               
-    } else if(action === "bonusbuy") {
-        //Bonus buy mode (use dead reels and force scatter)
-        bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
-        baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
-            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, 'bonusbuyspin');    
-        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                                
-    } else if(action === "coinbonusbuy") {
-        //Coin bonus buy mode (use dead reels and force scatter)
+    } else if(action === ActionType.Ante) {
+        //Ante play
 
-        //Special full path
+        coin = precisionMoneyMapper(bet/mathConfig.coinsPerBet_ante);
+        
+        bonusProfile =  mathConfig.bonusGameProfilesDistribution;
+        baseGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                               
+    } else if(action === ActionType.BonusBuy) {
+        //Bonus buy mode (use dead reels and force scatter)
+
+        coin = precisionMoneyMapper(bet/mathConfig.coinsPerBet_bonusBuy);
+
+        bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
+        baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, SpecialModeType.BonusBuySpin);    
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                                
+    } else if(action === ActionType.CoinsBonusBuy) {
+        //Coin bonus buy mode (use dead reels and force scatter)
+        //NB Uses special full path
+
+        coin = precisionMoneyMapper(bet/mathConfig.coinsPerBet_coinsBonusBuy);
 
         bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;        
-        baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
-            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, 'coinbonusbuyspin_first');    
+        baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, SpecialModeType.CoinBonusBuyFirstSpin);    
        
         const specialReelLengths: number[][] = [   
             pickValueFromDistribution(integerRng, mathConfig.bonusBuyCoinInitialReelLengthsDistribution),
@@ -57,8 +77,8 @@ export default function play(bet: number, action: string) {
         baseGameRespinsSession[baseGameRespinsSession.length - 1].isRespinTriggered = true; 
 
         accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
-        const bonusGameRespinsSession = runCoinBonusBuySpinSession(integerRng, bet, precisionMoneyMapper, accumulatedRoundWin, 
-            mathConfig.baseGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, baseGameProfilesRegistry, 0, specialReelLengths, 'coinbonusbuyspin_second');
+        const bonusGameRespinsSession = runCoinBonusBuySpinSession(integerRng, bet, coin, precisionMoneyMapper, accumulatedRoundWin, 
+            mathConfig.baseGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, baseGameProfilesRegistry, 0, specialReelLengths, SpecialModeType.CoinBonusBuySubsequentSpin);
 
         bonusGameRespinsSession[bonusGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                                
 
@@ -69,12 +89,13 @@ export default function play(bet: number, action: string) {
             data: {action, baseGameRespinsSession, bonusGameRespinsSessions}
         };
     } else {
-        //Need to know what a valid file is
+        //Need to know what a valid fail is
         return {
             win: precisionMoneyMapper(0),
             data: {action, baseGameRespinsSession:[], bonusGameRespinsSessions:[]}
         };
     }
+
     accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
 
     const collectedScattersAmount = baseGameRespinsSession
@@ -88,7 +109,7 @@ export default function play(bet: number, action: string) {
 
         for (let freeSpinIndex = 0; freeSpinIndex < mathConfig.bonusGameFreeSpinsAmount; freeSpinIndex++) {
 
-            const bonusGameRespinsSession = runRespinsSession(integerRng, bet, precisionMoneyMapper, accumulatedRoundWin,
+            const bonusGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, accumulatedRoundWin,
                 currentBonusGameReelLengths, mathConfig.bonusGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, bonusGameProfilesRegistry, freeSpinIndex);
 
             bonusGameRespinsSessions.push(bonusGameRespinsSession);
@@ -103,7 +124,9 @@ export default function play(bet: number, action: string) {
     }
 
     return {
-        win: precisionMoneyMapper(accumulatedRoundWin),
+        //SNC 20230609 - I think win needs to be 2DP not 8
+        //win: precisionMoneyMapper(accumulatedRoundWin),
+        win: Number(accumulatedRoundWin.toFixed(2)),
         data: {action, baseGameRespinsSession, bonusGameRespinsSessions}
     };
 }
