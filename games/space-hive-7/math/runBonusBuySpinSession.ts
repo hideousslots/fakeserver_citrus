@@ -26,11 +26,10 @@ export function runBonusBuySpinSession(integerRng: IntegerRng,
     let accumulatedScattersCollected = 0;
 
     let reelLengths = initialReelLengths;
-    let spinResult;
     const accumulatedRoundWinBetMultiple = precisionMoneyMapper(accumulatedRoundWin / bet);
     const currentGameProfile = gameProfilesRegistry.getUpdatedGameProfile(accumulatedRoundWinBetMultiple);
 
-    spinResult = spin(integerRng, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
+    const spinResult = spin(integerRng, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
         currentGameProfile, specialModeId, accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
 
     spinResult.freeSpinIndex = freeSpinIndex;
