@@ -33,7 +33,7 @@ export function runRespinsSession(integerRng: IntegerRng,
         spinResult = spin(integerRng, bet, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
             currentGameProfile, SpecialModeType.None, accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
 
-        spinResult.freeSpinIndex = 10 - freeSpinIndex;
+        spinResult.freeSpinIndex = freeSpinIndex;
 
         reelLengths = spinResult.newReelLengths;
         accumulatedRespinsSessionWin = precisionMoneyMapper(accumulatedRespinsSessionWin + spinResult.win);

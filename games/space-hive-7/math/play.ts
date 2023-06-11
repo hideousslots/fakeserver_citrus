@@ -30,36 +30,7 @@ export default function play(bet: number, action: string) {
 
     let coin: number = 0;
 
-    if(action === ActionType.Main) {
-        //Normal play
-
-        coin = precisionMoneyMapper(bet/mathConfig.coinsPerBet_main);
-    
-        bonusProfile =  mathConfig.bonusGameProfilesDistribution;
-        baseGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
-            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
-        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                               
-    } else if(action === ActionType.Ante) {
-        //Ante play
-        //Bet comes in as (currently) 15 coins. Get the true coin size, and set the bet as if it were normal
-        //For example an ante bet of 15 is a coin value of 1 and a true bet of 10
-        coin = precisionMoneyMapper(bet / mathConfig.coinsPerBet_ante);
-        bet = precisionMoneyMapper(coin * mathConfig.coinsPerBet_main);
-        
-        bonusProfile =  mathConfig.bonusGameProfilesDistribution;
-        baseGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
-            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
-        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                               
-    } else if(action === ActionType.BonusBuy) {
-        //Bonus buy mode (use dead reels and force scatter)
-
-        coin = precisionMoneyMapper(bet/mathConfig.coinsPerBet_bonusBuy);
-
-        bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
-        baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
-            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, SpecialModeType.BonusBuySpin);    
-        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                                
-    } else if(action === ActionType.CoinsBonusBuy) {
+    if(action === ActionType.CoinsBonusBuy) {
         //Coin bonus buy mode (use dead reels and force scatter)
         //NB Uses special full path
 
@@ -90,12 +61,40 @@ export default function play(bet: number, action: string) {
             win: precisionMoneyMapper(accumulatedRoundWin),
             data: {action, baseGameRespinsSession, bonusGameRespinsSessions}
         };
+    }
+
+    if(action === ActionType.Main) {
+        //Normal play
+
+        coin = precisionMoneyMapper(bet/mathConfig.coinsPerBet_main);
+    
+        bonusProfile =  mathConfig.bonusGameProfilesDistribution;
+        baseGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                               
+    } else if(action === ActionType.Ante) {
+        //Ante play
+        //Bet comes in as (currently) 15 coins. Get the true coin size, and set the bet as if it were normal
+        //For example an ante bet of 15 is a coin value of 1 and a true bet of 10
+        coin = precisionMoneyMapper(bet / mathConfig.coinsPerBet_ante);
+        bet = precisionMoneyMapper(coin * mathConfig.coinsPerBet_main);
+        
+        bonusProfile =  mathConfig.bonusGameProfilesDistribution;
+        baseGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                               
+    } else if(action === ActionType.BonusBuy) {
+        //Bonus buy mode (use dead reels and force scatter)
+
+        coin = precisionMoneyMapper(bet / mathConfig.coinsPerBet_main);
+
+        bonusProfile = mathConfig.bonusBuyGameProfilesDistribution;
+        baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, coin, precisionMoneyMapper, 0, mathConfig.baseGameInitialReelLengths,
+            mathConfig.baseGameReelSetsDistributions, mathConfig.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0, SpecialModeType.BonusBuySpin);    
+        baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = mathConfig.baseGameInitialReelLengths;                                
     } else {
         //Need to know what a valid fail is
-        return {
-            win: precisionMoneyMapper(0),
-            data: {action, baseGameRespinsSession:[], bonusGameRespinsSessions:[]}
-        };
+        throw "invalid Action"
     }
 
     accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;
@@ -109,7 +108,7 @@ export default function play(bet: number, action: string) {
         const bonusGameProfilesRegistry = new GameProfilesRegistry(mathConfig.bonusGameProfileFallbacks, initialBonusGameProfile);
         let currentBonusGameReelLengths = mathConfig.bonusGameInitialReelLengths;
 
-        for (let freeSpinIndex = 0; freeSpinIndex < mathConfig.bonusGameFreeSpinsAmount; freeSpinIndex++) {
+        for (let freeSpinIndex = mathConfig.bonusGameFreeSpinsAmount; freeSpinIndex > 0; freeSpinIndex--) {
 
             const bonusGameRespinsSession = runRespinsSession(integerRng, bet, coin, precisionMoneyMapper, accumulatedRoundWin,
                 currentBonusGameReelLengths, mathConfig.bonusGameReelSetsDistributions, mathConfig.bonusGameFeaturesDistributions, bonusGameProfilesRegistry, freeSpinIndex);
