@@ -5,8 +5,11 @@ import {mathConfig} from "./config/mathConfig";
 import {SpaceHiveSymbol} from "./config/SpaceHiveSymbol";
 
 export function modifyReelsForReplace(integerRng: IntegerRng, payload: number, reels: SpaceHiveSymbol[][]): void {
-    const symbol = mathConfig.replaceSymbolPayloadLookup[payload].symbol;
-    const ways = mathConfig.replaceSymbolPayloadLookup[payload].ways;
+
+    const currentMaths =  mathConfig()
+
+    const symbol = currentMaths.replaceSymbolPayloadLookup[payload].symbol;
+    const ways = currentMaths.replaceSymbolPayloadLookup[payload].ways;
 
     // middle 4 reels
     const startReel = 1;
@@ -48,7 +51,8 @@ export function modifyReelsForReplace(integerRng: IntegerRng, payload: number, r
 }
 
 export function expandFeatureReels(featureReels, payload) {
-    const bookSymbol = mathConfig.replaceSymbolPayloadLookup[payload].symbol;
+    const currentMaths =  mathConfig()
+    const bookSymbol = currentMaths.replaceSymbolPayloadLookup[payload].symbol;
     const featureReelsExpanded = featureReels.map((column) => [...column]);
   
     // Fill the first and last reels with the placeholder

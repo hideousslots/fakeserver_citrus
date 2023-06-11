@@ -1,8 +1,10 @@
 import {mathConfig} from "./mathConfig";
 
 export function getPlayerConfig() {
+    const currentMaths =  mathConfig()
+
     return {
-        payTable: mathConfig.payTable,
-        bookPayTable: mathConfig.bookPayTable
+        payTable: currentMaths.payTable,
+        bookPayTable: currentMaths.bookPayTable
     };
 }

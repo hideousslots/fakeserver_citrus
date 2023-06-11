@@ -19,6 +19,7 @@ export function runCoinBonusBuySpinSession(integerRng: IntegerRng,
                                   reelLengthsForSpins: number[][],
                                   specialModeType: SpecialModeType): SpinResult[] {
 
+    const currentMaths =  mathConfig()
     const spinResults = [];
 
     let accumulatedRespinsSessionWin = 0;
@@ -40,7 +41,7 @@ export function runCoinBonusBuySpinSession(integerRng: IntegerRng,
         if(spinIndex < (spinsRequired + 1)) {
             spinResult.newReelLengths = reelLengthsForSpins[spinIndex + 1];
         } else {
-            spinResult.newReelLengths = mathConfig.baseGameInitialReelLengths;
+            spinResult.newReelLengths = currentMaths.baseGameInitialReelLengths;
         }
 
         accumulatedRespinsSessionWin = precisionMoneyMapper(accumulatedRespinsSessionWin + spinResult.win);

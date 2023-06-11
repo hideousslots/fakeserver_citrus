@@ -18,11 +18,13 @@ export function pickInstantPrizeCoins(integerRng: IntegerRng,
                                       gameProfileIndex: number,
                                       reels: SpaceHiveSymbol[][]): InstantPrizeCoin[] {
 
-    const availablePositions = getPositionsOnReels(reels, mathConfig.instantPrizeCoinsConfig.availableColumns);
+    const currentMaths =  mathConfig()
+
+    const availablePositions = getPositionsOnReels(reels, currentMaths.instantPrizeCoinsConfig.availableColumns);
 
     const instantPrizeCoins = [];
 
-    const profile = mathConfig.instantPrizeCoinsConfig[`${gameType}GameProfiles`][gameProfileIndex];
+    const profile = currentMaths.instantPrizeCoinsConfig[`${gameType}GameProfiles`][gameProfileIndex];
 
     let totalBetMultiplier = 0;
 
@@ -35,10 +37,10 @@ export function pickInstantPrizeCoins(integerRng: IntegerRng,
     profile.randomBetMultiplierDistributionsIndices.forEach(distributionIndex => {
 
         const distribution = totalBetMultiplier < profile.threshold
-            ? mathConfig.instantPrizeCoinsConfig.betMultipliersDistributions[distributionIndex]
-            : mathConfig.instantPrizeCoinsConfig.betMultipliersDistributions[profile.fallbackDistributionIndex];
+            ? currentMaths.instantPrizeCoinsConfig.betMultipliersDistributions[distributionIndex]
+            : currentMaths.instantPrizeCoinsConfig.betMultipliersDistributions[profile.fallbackDistributionIndex];
 
-        const betMultiplier = pickValueFromDistribution(integerRng, distribution);
+        const betMultiplier: number = pickValueFromDistribution(integerRng, distribution);
 
         if (betMultiplier) { //is this appending 0 value coins? maybe if (betMultiplier != 0)
             totalBetMultiplier += betMultiplier;

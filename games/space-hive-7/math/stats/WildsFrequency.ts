@@ -9,6 +9,7 @@ interface IMapReduceData {
 
 export default class WildsFrequency extends Stats<any> {
     private wildsFrequencyOnReels: number[][] = this.clearResults();
+    private currentMaths =  mathConfig()
 
     value() {
         return null;
@@ -34,7 +35,7 @@ export default class WildsFrequency extends Stats<any> {
     }
 
     clearResults() {
-        return this.wildsFrequencyOnReels = mathConfig.baseGameInitialReelLengths.map(reelLength =>
+        return this.wildsFrequencyOnReels = this.currentMaths.baseGameInitialReelLengths.map(reelLength =>
             new Array<number>(reelLength).fill(0)
         );
     }

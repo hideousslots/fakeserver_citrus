@@ -17,24 +17,26 @@ interface IData {
     bonusGameRespinsSessions: SpinResult[][];
 }
 
+const currentMaths = mathConfig() //this is going to pick up the default maths always
+
 export const index: IGame<IData> = {
     name: "space-hive-7",
     bets: {
         "main": {
             available: [0.10, 0.20, 0.50, 1, 2, 5, 8, 10, 20, 30, 40, 50, 100],
-            default: 1, maxWin: 13000, coin: mathConfig.coinsPerBet_main
+            default: 1, maxWin: 13000, coin: currentMaths.coinsPerBet_main
         },
         "ante": {
             available: [0.10, 0.20, 0.50, 1, 2, 5, 8, 10, 20, 30, 40, 50, 100],
-            default: 1, maxWin: 13000, coin: mathConfig.coinsPerBet_ante
+            default: 1, maxWin: 13000, coin: currentMaths.coinsPerBet_ante
         },
         "bonusbuy": { //this isn't being picked up
             available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
-            default: 100, maxWin: 13000, coin: mathConfig.coinsPerBet_bonusBuy
+            default: 100, maxWin: 13000, coin: currentMaths.coinsPerBet_bonusBuy
         },
         "coinsbonusbuy": { //this isn't being picked up
             available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
-            default: 100, maxWin: 13000, coin: mathConfig.coinsPerBet_coinsBonusBuy
+            default: 100, maxWin: 13000, coin: currentMaths.coinsPerBet_coinsBonusBuy
         },
     },
 

@@ -56,6 +56,7 @@ export function spin(integerRng: IntegerRng,
                      initialAccumulatedRoundWin: number,
                      initialScatters: number): SpinResult {
 
+    const currentMaths =  mathConfig()
     const waysAmount = reelLengths.reduce((previousWaysAmount, currentReelLength) => previousWaysAmount * currentReelLength, 1);
     const waysAmountLevel = getWaysAmountLevel(waysAmount);
 
@@ -70,7 +71,7 @@ export function spin(integerRng: IntegerRng,
         reelSetIndex = pickReelSetIndex(integerRng, reelSetsDistributions, gameProfile, waysAmountLevel);
     }
 
-    const indexReels = generateReels(integerRng, mathConfig.reelSets[reelSetIndex], reelLengths);
+    const indexReels: SpaceHiveSymbol[][] = generateReels(integerRng, currentMaths.reelSets[reelSetIndex], reelLengths);
 
     //Special mode spins enforce some other changes
 
@@ -97,7 +98,7 @@ export function spin(integerRng: IntegerRng,
         featureType = FeatureType.None;
         payload = 0;
     } else if (specialModeType === SpecialModeType.CoinBonusBuySubsequentSpin) {
-        const feature: GameFeature = pickGameFeatureFromDistribution(integerRng, mathConfig.bonusBuyCoinGameProfileDistribution);
+        const feature: GameFeature = pickGameFeatureFromDistribution(integerRng, currentMaths.bonusBuyCoinGameProfileDistribution);
 
         featureType = feature.featureType;
         payload = feature.payload;    
@@ -180,7 +181,7 @@ export function spin(integerRng: IntegerRng,
             featureReelsExpanded = expandFeatureReels(featureReels, payload);
             replaceWins = calculateBookWins(
                 featureReelsExpanded,
-                mathConfig.bookPayTable as unknown as Record<SpaceHiveSymbol, number[]>,
+                currentMaths.bookPayTable as unknown as Record<SpaceHiveSymbol, number[]>,
                 coin,
                 precisionMoneyMapper
                 );
@@ -191,7 +192,7 @@ export function spin(integerRng: IntegerRng,
 
     const waysWins = calculateWaysWins(
         featureReels,
-        mathConfig.payTable as unknown as Record<SpaceHiveSymbol, number[]>,
+        currentMaths.payTable as unknown as Record<SpaceHiveSymbol, number[]>,
         symbol => symbol === SpaceHiveSymbol.Wild,
         coin,
         precisionMoneyMapper);
@@ -207,7 +208,7 @@ export function spin(integerRng: IntegerRng,
 
     const newReelLengths = [...reelLengths];
     columnsToExpand.forEach(column =>
-        newReelLengths[column] = Math.min(reelLengths[column] + 1, mathConfig.maxExpandedReelLengths[column]));
+        newReelLengths[column] = Math.min(reelLengths[column] + 1, currentMaths.maxExpandedReelLengths[column]));
 
     const collectedScattersPositions = getSymbolsPositions(featureReels, SpaceHiveSymbol.Scatter);
 

@@ -9,8 +9,10 @@ export function calculateReverseWins(waysWins: WaysWin<SpaceHiveSymbol>[],
                                      precisionMoneyMapper: (money: number) => number)
     : WaysWin<SpaceHiveSymbol>[] {
 
+    const currentMaths =  mathConfig()
+
     const oak6FilteredPaytable = Object.fromEntries(
-        Object.entries(mathConfig.payTable).filter(([symbol]) =>
+        Object.entries(currentMaths.payTable).filter(([symbol]) =>
             waysWins.every(waysWin => waysWin.oakIndex < symbolReels.length || waysWin.symbol.toString() !== symbol))
     );
 

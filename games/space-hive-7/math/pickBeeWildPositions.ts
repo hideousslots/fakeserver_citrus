@@ -9,12 +9,13 @@ export function pickBeeWildPositions(integerRng: IntegerRng,
                                      symbolReels: SpaceHiveSymbol[][],
                                      wildsAmount: number): Position[] {
 
+    const currentMaths =  mathConfig()
     const wildPositions = [];
 
-    let availablePositions = getPositionsOnReels(symbolReels, mathConfig.beeWildsFeatureConfig.remainingWildsColumns);
+    let availablePositions = getPositionsOnReels(symbolReels, currentMaths.beeWildsFeatureConfig.remainingWildsColumns);
 
     const columnsToApplyFirst =
-        pickValueFromDistribution(integerRng, mathConfig.beeWildsFeatureConfig.initialWildColumnsDistribution);
+        pickValueFromDistribution(integerRng, currentMaths.beeWildsFeatureConfig.initialWildColumnsDistribution) as Array<any>;
 
     columnsToApplyFirst.forEach(column => {
         const row = integerRng.randomInteger(symbolReels[column].length);
