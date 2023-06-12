@@ -11,7 +11,7 @@ import {runCoinBonusBuySpinSession} from "./runCoinBonusBuySpinSession";
 import { SpinResult } from "./spin";
 import { SpecialModeType } from "./config/SpecialModeType";
 
-export default function play(bet: number, action: string) {
+export default function play(stake: number, action: string) {
 
     const precisionMoneyMapper = money => Number(money.toFixed(2));
     anteMode(false);
@@ -30,6 +30,7 @@ export default function play(bet: number, action: string) {
     let bonusProfile;
 
     let coin: number = 0;
+    let bet: number = stake; //For most variations, stake is bet. However, stake is the full amount of the wager, including (if needed) ante
 
     if(action === ActionType.CoinsBonusBuy) {
         //Coin bonus buy mode (use dead reels and force scatter)
@@ -80,7 +81,8 @@ export default function play(bet: number, action: string) {
         anteMode(true);
         currentMaths = mathConfig();
 
-        coin = precisionMoneyMapper(bet / currentMaths.coinsPerBet_ante);
+        //NB Coin *and* bet recalculated from stake here!
+        coin = precisionMoneyMapper(stake / currentMaths.coinsPerBet_ante);
         bet = precisionMoneyMapper(coin * currentMaths.coinsPerBet_main);
         
         bonusProfile =  currentMaths.bonusGameProfilesDistribution;
@@ -123,7 +125,7 @@ export default function play(bet: number, action: string) {
             currentBonusGameReelLengths = getLastElement(bonusGameRespinsSession).newReelLengths;
         }
 
-        let sessionLength: number = bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1].length;
+        const sessionLength: number = bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1].length;
         bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1][sessionLength -1].newReelLengths = currentMaths.baseGameInitialReelLengths;                                
 
        // fs.appendFileSync('testData.json', JSON.stringify({baseGameRespinsSession, bonusGameRespinsSessions}));
@@ -133,7 +135,6 @@ export default function play(bet: number, action: string) {
         //SNC 20230609 - I think win needs to be 2DP not 8
         //win: precisionMoneyMapper(accumulatedRoundWin),
         win: Number(accumulatedRoundWin.toFixed(2)),
-        data: {action, baseGameRespinsSession, bonusGameRespinsSessions},
-        bet: bet,
+        data: {action, stake, bet, coin, baseGameRespinsSession, bonusGameRespinsSessions},
     };
 }
