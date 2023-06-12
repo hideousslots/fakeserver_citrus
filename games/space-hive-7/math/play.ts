@@ -61,7 +61,7 @@ export default function play(stake: number, action: string) {
         accumulatedRoundWin = getLastElement(bonusGameRespinsSession).accumulatedRoundWin;
         return {
             win: precisionMoneyMapper(accumulatedRoundWin),
-            data: {action, baseGameRespinsSession, bonusGameRespinsSessions}
+            data: {action, stake, bet, coin, baseGameRespinsSession, bonusGameRespinsSessions}
         };
     }
 
