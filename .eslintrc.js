@@ -19,8 +19,8 @@ module.exports = {
         "@typescript-eslint/no-inferrable-types": "off",
         "@typescript-eslint/no-empty-function": "off",
         "semi": ["error", "always"],
-        "comma-dangle": ["error", "always-multiline"],
-        "quotes": ["error", "double"],
+        //"comma-dangle": ["error", "always-multiline"],
+        //"quotes": ["error", "double"],
         "eqeqeq": ["error", "always"]
     },
 };
