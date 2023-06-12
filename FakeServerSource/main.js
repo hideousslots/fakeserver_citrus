@@ -98,7 +98,7 @@ function FakeServer(_interface) {
             wager: gameResponse,
             balance: sessionData.balance
         };
-        console.log('Round played: ' + response.roundId + ' Win: ' + response.wager.win);
+        console.log('Round played: ' + response.roundId + ' Bet: ' + response.wager.bet + ' Win: ' + response.wager.win);
 
         res.send(JSON.stringify(response));
     });

@@ -37,7 +37,7 @@ function CurrentSession() {
 
     //Public data
 
-    public.balance = 10;
+    public.balance = 1000;
     public.nextRoundIndex = 1;
 
     public.roundsPlayedCount = 0;
