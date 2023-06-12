@@ -68,7 +68,7 @@ function FakeServer(_interface) {
                 fixedResponse.data.action = 'main';
             }
         }
-    }
+    };
 
     app.post('/game/play', async (req, res) => {
 
@@ -125,7 +125,7 @@ function FakeServer(_interface) {
         if(req.query.repeatrecent !== undefined) {
             //Try to set repeat from recent data
 
-            let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.repeatrecent});
+            let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.repeatrecent;});
             // console.log('found repeat data' + JSON.stringify(repeatData));
             SetFixedResponse(repeatData.result);
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
@@ -149,20 +149,20 @@ function FakeServer(_interface) {
         }
 
         if(req.query.addrecentlocal !== undefined) {
-            let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.addrecentlocal});
+            let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.addrecentlocal;});
             // console.log('found repeat data' + JSON.stringify(repeatData));
             if(repeatData !== undefined) {
-                localRepeat.Add(req.query.addrecentlocal, repeatData)
+                localRepeat.Add(req.query.addrecentlocal, repeatData);
             }
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
             return;
         }
 
         if(req.query.addrecentglobal !== undefined) {
-            let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.addrecentglobal});
+            let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.addrecentglobal;});
             // console.log('found repeat data' + JSON.stringify(repeatData));
             if(repeatData !== undefined) {
-                globalRepeat.Add(req.query.addrecentglobal, repeatData)
+                globalRepeat.Add(req.query.addrecentglobal, repeatData);
             }
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
             return;
@@ -172,7 +172,7 @@ function FakeServer(_interface) {
             //Try to set repeat from recent data
 
             // console.log(JSON.stringify(sessionData.recentRoundData));
-            let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.repeatrecent});
+            let repeatData = sessionData.recentRoundData.find((existing) => {return existing.roundId === req.query.repeatrecent;});
             // console.log('found repeat data' + JSON.stringify(repeatData));
             SetFixedResponse(repeatData.result);
             res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
@@ -204,7 +204,7 @@ function FakeServer(_interface) {
         response += '<hr><div><div align="center"><h1>Current fixed response</h1></div>';
         
         if(fixedResponse === undefined) {
-            response += '<div align="center">NO FIXED RESPONSE - Random Game Will Play</div>'
+            response += '<div align="center">NO FIXED RESPONSE - Random Game Will Play</div>';
         } else {
             response += '<div align="center">' + JSON.stringify(fixedResponse) + '</div>';
             response += '<div align="center"><A href="?clearfixedresponse=true">CLEAR FIXED RESPONSE</A></div>';
@@ -229,13 +229,13 @@ function FakeServer(_interface) {
 
         response += '<hr><div><div align="center"><h1>Recent Games</h1></div>';
         sessionData.recentRoundData.forEach((round) => {
-            response += '<hr><div>'
+            response += '<hr><div>';
             response += '<div align="center"><b>RoundId: ' + round.roundId + '</b></div>';
-            response += '<div align="center">' + JSON.stringify(round.result) + '</div>'
+            response += '<div align="center">' + JSON.stringify(round.result) + '</div>';
             response += '<div align="center"><A href="?repeatrecent=' + round.roundId + '"> REPEAT THIS </A></div>';
             response += '<div align="center"><A href="?addrecentlocal=' + round.roundId + '"> ADD TO LOCAL REPEATS </A></div>';
             response += '<div align="center"><A href="?addrecentglobal=' + round.roundId + '"> ADD TO GLOBAL REPEATS </A></div>';
-            response += '<hr></div>'
+            response += '<hr></div>';
         });
         response += '</div>';
         
@@ -260,7 +260,7 @@ function FakeServer(_interface) {
         });
 
         //tester.StartTester();
-    }
+    };
 
     startup();
 

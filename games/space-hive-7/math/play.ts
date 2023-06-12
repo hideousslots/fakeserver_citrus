@@ -101,7 +101,7 @@ export default function play(stake: number, action: string) {
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = currentMaths.baseGameInitialReelLengths;                                
     } else {
         //Need to know what a valid fail is
-        throw "invalid Action"
+        throw "invalid Action";
     }
 
     accumulatedRoundWin = getLastElement(baseGameRespinsSession).accumulatedRoundWin;

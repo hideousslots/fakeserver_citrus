@@ -56,7 +56,7 @@ export function spin(integerRng: IntegerRng,
                      initialAccumulatedRoundWin: number,
                      initialScatters: number): SpinResult {
 
-    const currentMaths =  mathConfig()
+    const currentMaths =  mathConfig();
     const waysAmount = reelLengths.reduce((previousWaysAmount, currentReelLength) => previousWaysAmount * currentReelLength, 1);
     const waysAmountLevel = getWaysAmountLevel(waysAmount);
 

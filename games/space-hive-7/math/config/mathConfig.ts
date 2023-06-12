@@ -1935,7 +1935,7 @@ anteConfig.baseGameReelSetsDistributions.BaseGameLow = {
         values: [4, 5, 6],
         weights: [40000, 40000, 920000],
     },
-}
+};
 
 export function anteMode(ante: boolean): void {
     isAnte = ante;
