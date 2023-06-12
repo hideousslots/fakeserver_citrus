@@ -93,12 +93,12 @@ function FakeServer(_interface) {
 
         const roundId = sessionData.NoteRoundPlayed(requestData.bet, gameResponse.win, gameResponse);
 
-        response = {
+        const response = {
             roundId: roundId,
             wager: gameResponse,
             balance: sessionData.balance
         };
-        console.log('Round played: ' + response.roundId + ' Bet: ' + response.wager.bet + ' Win: ' + response.wager.win);
+        console.log('Round played: ' + response.roundId + ' Stake: ' + response.wager.data.stake + ' Bet: ' + response.wager.data.bet+ ' Coin: ' + response.wager.data.coin+ ' Win: ' + response.wager.win);
 
         res.send(JSON.stringify(response));
     });
