@@ -249,14 +249,14 @@ function FakeServer(_interface) {
     const startup = async () => {
         console.log('Fake server ready\nGame: ' + gameInterface.name + '\n... waiting for RNG initialisation\n');
         await delay(1000);
-        console.log('Should have waited long enough for the RNG to initialse now... Time to try...\n');
+        console.log('Should have waited long enough for the RNG to initialise now... Time to try...\n');
         let testResult = gameInterface.play({ bet: 1, action: "main", state: null, variant: null, promo: null });
         console.log('\nTest result...' + ((testResult.win !== undefined) ? 'OK' : 'Error'));
         console.log('\nand we are off...\n');
 
         app.listen(port, () => {
             console.log('FAKE SERVER running on port ' + port);
-            console.log('Web interface at http://127.0.0.1:' + port);
+            console.log('Web interface will depend on usage. For a local build localhost:' + port + ' should suffice');
         });
 
         //tester.StartTester();

@@ -18,4 +18,13 @@ e.g
         server: "http://127.0.0.1:3002",
         or
         server: "http://0.0.0.0:3002",
+
+# DOCKER
+
+It's now possible to get this fake server into a docker container
+You can build it with:
+
+docker build -t fakeserverimage .
+
+refer to docker instructions online for any issues
         
