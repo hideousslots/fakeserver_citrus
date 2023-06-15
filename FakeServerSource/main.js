@@ -72,6 +72,7 @@ function FakeServer(_interface) {
 
     app.post('/game/play', async (req, res) => {
 
+        console.log('request ' + JSON.stringify(req.body) + ' ip ' + req.socket.remoteAddress);
         let requestData = {
             bet: req.body.bet,
             action: req.body.action,
@@ -191,13 +192,13 @@ function FakeServer(_interface) {
 
         //Test data (temporary space)
 
-        response += '<hr><div align="center">TEST DATA SIMPLE RESULTS</div>';
-        response += '<div align="center">' + tester.GetSimpleResults() + '</div>';
-        if(tester.IsTesterOn()) {
-            response += '<div align="center"><A href="?tester_off=1">TURN TESTER OFF</A></div>';
-        } else {
-            response += '<div align="center"><A href="?tester_on=1">TURN TESTER ON</A></div>';            
-        }
+        // response += '<hr><div align="center">TEST DATA SIMPLE RESULTS</div>';
+        // response += '<div align="center">' + tester.GetSimpleResults() + '</div>';
+        // if(tester.IsTesterOn()) {
+        //     response += '<div align="center"><A href="?tester_off=1">TURN TESTER OFF</A></div>';
+        // } else {
+        //     response += '<div align="center"><A href="?tester_on=1">TURN TESTER ON</A></div>';            
+        // }
 
         //Any current fixed response?
 
