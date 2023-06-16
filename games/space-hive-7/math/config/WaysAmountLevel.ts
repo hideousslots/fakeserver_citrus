@@ -3,4 +3,5 @@ export enum WaysAmountLevel {
     LowWays = "LowWays",
     MedWays = "MedWays",
     HighWays = "HighWays",
+    MaxWays = "MaxWays",
 }

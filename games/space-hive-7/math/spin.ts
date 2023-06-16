@@ -18,6 +18,8 @@ import getSymbolsPositions from "../../../common/reels/getSymbolsPositions";
 import {Distribution} from "../../../common/distributions/Distribution";
 import {modifyReelsForReplace, expandFeatureReels, calculateBookWins} from "./bookWins";
 import { SpecialModeType } from "./config/SpecialModeType";
+import { pushWin } from "./pushWin";
+
 
 export interface ScatterInfo {
     collected: number;
@@ -41,6 +43,7 @@ export interface SpinResult {
     accumulatedRespinsSessionWin: number;
     accumulatedRoundWin: number;
     freeSpinIndex: number;
+    debug: any;
 }
 
 export function spin(integerRng: IntegerRng,
@@ -56,12 +59,14 @@ export function spin(integerRng: IntegerRng,
                      initialAccumulatedRoundWin: number,
                      initialScatters: number): SpinResult {
 
-    const currentMaths =  mathConfig();
+    const currentMaths =  mathConfig()
     const waysAmount = reelLengths.reduce((previousWaysAmount, currentReelLength) => previousWaysAmount * currentReelLength, 1);
     const waysAmountLevel = getWaysAmountLevel(waysAmount);
 
-    //Special mode spins enforce some changes
+    //debug info
+    let debug = null;
 
+    //Special mode spins enforce some changes
     let reelSetIndex: number;
     
     if((specialModeType === SpecialModeType.BonusBuySpin) || (specialModeType === SpecialModeType.CoinBonusBuyFirstSpin) || (specialModeType === SpecialModeType.CoinBonusBuySubsequentSpin)) {
@@ -71,7 +76,7 @@ export function spin(integerRng: IntegerRng,
         reelSetIndex = pickReelSetIndex(integerRng, reelSetsDistributions, gameProfile, waysAmountLevel);
     }
 
-    const indexReels: SpaceHiveSymbol[][] = generateReels(integerRng, currentMaths.reelSets[reelSetIndex], reelLengths);
+    const indexReels = generateReels(integerRng, currentMaths.reelSets[reelSetIndex], reelLengths) as SpaceHiveSymbol[][];
 
     //Special mode spins enforce some other changes
 
@@ -116,20 +121,27 @@ export function spin(integerRng: IntegerRng,
     let replaceWins = null;           
   
     switch (featureType) {
+        case FeatureType.GuaranteedWin: {
+            pushWin(integerRng, featureReels, payload.symbol, payload.oak, payload.waysAmount);
+            debug = payload;
+            break;
+        }
         case FeatureType.BeeWilds: {
+            
             beeWildPositions = pickBeeWildPositions(integerRng, indexReels, payload);
             beeWildPositions.forEach(
                 position => featureReels[position.column][position.row] = SpaceHiveSymbol.Wild);
             break;
         }
         case FeatureType.InstantPrize: {
+            
             instantPrizeCoins = pickInstantPrizeCoins(integerRng, bet, precisionMoneyMapper, "base", payload, indexReels);
             instantPrizeCoins.forEach(
                 coinsPrize => featureReels[coinsPrize.position.column][coinsPrize.position.row] = SpaceHiveSymbol.PlaceHolder);
             break;
         }
         case FeatureType.ExpandedInstantPrize: {
-
+            
             expandedInstantPrizeData = {
                  coinDataBefore: [],
                  coinDataAfter: [],
@@ -177,6 +189,7 @@ export function spin(integerRng: IntegerRng,
         }
 
         case FeatureType.BookReplacement: {
+            
             modifyReelsForReplace(integerRng, payload, featureReels);
             featureReelsExpanded = expandFeatureReels(featureReels, payload);
             replaceWins = calculateBookWins(
@@ -241,7 +254,8 @@ export function spin(integerRng: IntegerRng,
         win: precisionMoneyMapper(win),
         accumulatedRespinsSessionWin: precisionMoneyMapper(initialAccumulatedRespinsSessionWin + win),
         accumulatedRoundWin: precisionMoneyMapper(initialAccumulatedRoundWin + win),
-        freeSpinIndex: 0
+        freeSpinIndex: 0,
+        debug: debug,
     };
 }
 

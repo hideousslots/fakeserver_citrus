@@ -5,6 +5,7 @@ import {BonusGameProfile} from "./BonusGameProfile";
 const {BaseGameMedium, BaseGameHigh, BaseGameLow} = BaseGameProfile;
 const {UltraLow, BonusLow, BonusNewLow, ReplaceHeavy, InstantHeavy, BonusHigh} = BonusGameProfile;
 const {None} = FeatureType;
+const {GuaranteedWin} = FeatureType;
 const {BeeWilds} = FeatureType;
 const {InstantPrize} = FeatureType;
 const {ExpandedInstantPrize} = FeatureType;
@@ -74,8 +75,10 @@ const standardConfig = {
     },
 
     baseGameProfilesDistribution: {
-        values: [BaseGameLow, BaseGameMedium, BaseGameHigh],
-        weights: [6000, 3850, 150],
+        // values: [BaseGameLow, BaseGameMedium, BaseGameHigh],
+        // weights: [6000, 3850, 150],
+        values: [BaseGameLow, BaseGameMedium],
+        weights: [4000, 1000],
     },
 
     baseGameProfileFallbacks: {
@@ -141,63 +144,76 @@ const standardConfig = {
     },
 
     waysAmountLevelThresholds: {
-        MinWays: 576,
-        LowWays: 7201,
-        MedWays: 32401,
-        HighWays: Number.MAX_SAFE_INTEGER,
+        MinWays: 576,                       //First Respin
+        LowWays: 4400,                      //2 - 4th Respin
+        MedWays: 7201,                      // ~3rd Respin Onwards
+        HighWays: 32401,                    // Very High Ways - Mostly seen in bonus
+        MaxWays: Number.MAX_SAFE_INTEGER,   // Mas Ways Used a lot in bonus
     },
 
     baseGameReelSetsDistributions: {
         BaseGameLow: {
             MinWays: {
-                values: [3, 6], //Base 
-                weights: [250000, 750000],
+                values: [1, 6], //Base 
+                weights: [500000, 750000],
             },
             LowWays: {
-                values: [3, 4, 5, 6], //Base
-                weights: [20000, 30000, 30000, 920000],
+                values: [4, 5, 6], //Base
+                weights: [450000, 450000, 100000],
             },
             MedWays: {
-                values: [4, 5, 6],
-                weights: [40000, 40000, 920000],
+                values: [1, 6],
+                weights: [150000, 8500000],
             },
             HighWays: {
-                values: [4, 5, 6],
-                weights: [40000, 40000, 920000],
+                values: [1, 6],
+                weights: [800000, 9200000],
+            },
+            MaxWays: {
+                values: [1, 6],
+                weights: [600000, 9400000],
             },
         },
         BaseGameMedium: {
             MinWays: {
-                values: [0, 1, 2, 6],
-                weights: [100000, 350000, 100000, 450000],
+                values: [6],
+                weights: [1],
             },
             LowWays: {
-                values: [0, 1, 2, 6],
-                weights: [100000, 430000, 100000, 370000],
+                values: [6],
+                weights: [1],
             },
             MedWays: {
                 values: [0, 1, 2, 6],
-                weights: [150000, 150000, 150000, 550000],
+                weights: [100000, 430000, 100000, 370000],
             },
             HighWays: {
+                values: [0, 1, 2, 6],
+                weights: [150000, 150000, 150000, 550000],
+            },
+            MaxWays: {
                 values: [0, 1, 2, 6],
                 weights: [100000, 150000, 100000, 650000],
             },
         },
         BaseGameHigh: {
             MinWays: {
-                values: [1],
+                values: [6],
                 weights: [1000000],
             },
             LowWays: {
+                values: [6],
+                weights: [1],
+            },
+            MedWays: {
                 values: [0, 1, 2],
                 weights: [100000, 800000, 100000],
             },
-            MedWays: {
+            HighWays: {
                 values: [0, 1, 2, 6],
                 weights: [150000, 200000, 150000, 500000],
             },
-            HighWays: {
+            MaxWays: {
                 values: [0, 2, 6],
                 weights: [200000, 200000, 600000],
             },
@@ -215,10 +231,14 @@ const standardConfig = {
                 weights: [55, 15, 30],
             },
             MedWays: {
+                values: [1, 2, 6],
+                weights: [55, 15, 30],
+            },
+            HighWays: {
                 values: [1, 6],
                 weights: [20, 80],
             },
-            HighWays: {
+            MaxWays: {
                 values: [1, 6],
                 weights: [18, 82],
             },
@@ -233,10 +253,14 @@ const standardConfig = {
                 weights: [55, 15, 30],
             },
             MedWays: {
+                values: [1, 2, 6],
+                weights: [55, 15, 30],
+            },
+            HighWays: {
                 values: [1, 6],
                 weights: [20, 80],
             },
-            HighWays: {
+            MaxWays: {
                 values: [1, 6],
                 weights: [18, 82],
             },
@@ -252,9 +276,13 @@ const standardConfig = {
             },
             MedWays: {
                 values: [6, 7, 8],
-                weights: [500000, 250000, 250000],
+                weights: [300000, 350000, 350000],
             },
             HighWays: {
+                values: [6, 7, 8],
+                weights: [500000, 250000, 250000],
+            },
+            MaxWays: {
                 values: [6, 7, 8],
                 weights: [500000, 250000, 250000],
             },
@@ -273,6 +301,10 @@ const standardConfig = {
                 weights: [50, 25, 25],
             },
             HighWays: {
+                values: [1, 7, 8],
+                weights: [50, 25, 25],
+            },
+            MaxWays: {
                 values: [0, 1, 2, 6],
                 weights: [15, 15, 15, 55],
             },
@@ -288,9 +320,13 @@ const standardConfig = {
             },
             MedWays: {
                 values: [1, 6],
-                weights: [75, 25],
+                weights: [70, 30],
             },
             HighWays: {
+                values: [1, 6],
+                weights: [75, 25],
+            },
+            MaxWays: {
                 values: [1, 6],
                 weights: [70, 30],
             },
@@ -306,9 +342,13 @@ const standardConfig = {
             },
             MedWays: {
                 values: [1, 6],
-                weights: [75, 25],
+                weights: [70, 30],
             },
             HighWays: {
+                values: [1, 6],
+                weights: [75, 25],
+            },
+            MaxWays: {
                 values: [1, 6],
                 weights: [70, 30],
             },
@@ -327,6 +367,10 @@ const standardConfig = {
                 weights: [50, 25, 25],
             },
             HighWays: {
+                values: [1, 7, 8],
+                weights: [50, 25, 25],
+            },
+            MaxWays: {
                 values: [0, 1, 2, 6],
                 weights: [15, 15, 15, 55],
             },
@@ -357,7 +401,18 @@ const standardConfig = {
                 ],
                 weights: [970000, 15000, 5000, 4000, 3000, 3000],
             },
-            MedWays: {
+            MedWays:  {
+                values: [
+                    {featureType: None},
+                    {featureType: BeeWilds, payload: 2},
+                    {featureType: BeeWilds, payload: 3},
+                    {featureType: InstantPrize, payload: 0},
+                    {featureType: InstantPrize, payload: 1},
+                    {featureType: InstantPrize, payload: 2},
+                ],
+                weights: [970000, 15000, 5000, 4000, 3000, 3000],
+            },
+            HighWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -367,7 +422,7 @@ const standardConfig = {
                 ],
                 weights: [970000, 15000, 6500, 4250, 4250],
             },
-            HighWays: {
+            MaxWays: {
                 values: [
                     {featureType: None},
                 ],
@@ -378,6 +433,30 @@ const standardConfig = {
             MinWays: {
                 values: [
                     {featureType: None},
+                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 6, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 6, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 6, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 6, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 6, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 6, waysAmount: 1}},
                     {featureType: BeeWilds, payload: 2},
                     {featureType: BeeWilds, payload: 3},
                     {featureType: BeeWilds, payload: 4},
@@ -393,9 +472,59 @@ const standardConfig = {
                     {featureType: InstantPrize, payload: 10},
                     {featureType: InstantPrize, payload: 11},
                 ],
-                weights: [952500, 30000, 4500, 2100, 900, 1400, 1100, 1100, 1000, 900, 1100, 1100, 1000, 700, 600],
+                weights: [  4007500, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000,
+                            40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000,
+                            40000, 40000, 40000, 40000,
+                            30000, 4500, 2100, 900, 1400, 1100, 1100, 1000, 900, 1100, 1100, 1000, 700, 600],
             },
             LowWays: {
+                values: [
+                    {featureType: None},
+                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 3, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 3, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 3, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 3, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 3, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 3, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 3, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 3, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 3, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 3, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 3, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 3, waysAmount: 2}},
+                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
+                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
+                    {featureType: BeeWilds, payload: 2},
+                    {featureType: BeeWilds, payload: 3},
+                    {featureType: BeeWilds, payload: 4},
+                    {featureType: BeeWilds, payload: 5},
+                    {featureType: InstantPrize, payload: 2},
+                    {featureType: InstantPrize, payload: 3},
+                    {featureType: InstantPrize, payload: 4},
+                    {featureType: InstantPrize, payload: 5},
+                    {featureType: InstantPrize, payload: 6},
+                    {featureType: InstantPrize, payload: 7},
+                    {featureType: InstantPrize, payload: 8},
+                    {featureType: InstantPrize, payload: 9},
+                    {featureType: InstantPrize, payload: 10},
+                    {featureType: InstantPrize, payload: 11},
+                ],
+                weights: [  1, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000,
+                            40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000, 40000,
+                            40000, 40000, 40000, 40000,
+                            30000, 4500, 2100, 900, 1400, 1100, 1100, 1000, 900, 1100, 1100, 1000, 700, 600],
+            },
+            MedWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -415,7 +544,7 @@ const standardConfig = {
                 ],
                 weights: [925000, 38500, 8000, 2500, 1000, 3500, 2750, 2750, 2500, 2250, 2750, 2750, 2500, 1750, 1500],
             },
-            MedWays: {
+            HighWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -434,7 +563,7 @@ const standardConfig = {
                 ],
                 weights: [910000, 40000, 9000, 1000, 5600, 4400, 4400, 4000, 3600, 4400, 4400, 4000, 2800, 2400],
             },
-            HighWays: {
+            MaxWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -537,6 +666,31 @@ const standardConfig = {
                 ],
                 weights: [900000, 30000, 12000, 2500, 2500, 1500, 1500, 5000, 5000, 5000, 4500, 4500, 4000, 4000, 4000, 3000, 3000, 3000, 3000, 2000],
             },
+            MaxWays: {
+                values: [
+                    {featureType: None},
+                    {featureType: BeeWilds, payload: 2},
+                    {featureType: BeeWilds, payload: 3},
+                    {featureType: BeeWilds, payload: 4},
+                    {featureType: BeeWilds, payload: 5},
+                    {featureType: BeeWilds, payload: 6},
+                    {featureType: BeeWilds, payload: 7},
+                    {featureType: InstantPrize, payload: 4},
+                    {featureType: InstantPrize, payload: 5},
+                    {featureType: InstantPrize, payload: 6},
+                    {featureType: InstantPrize, payload: 7},
+                    {featureType: InstantPrize, payload: 8},
+                    {featureType: InstantPrize, payload: 9},
+                    {featureType: InstantPrize, payload: 10},
+                    {featureType: InstantPrize, payload: 11},
+                    {featureType: InstantPrize, payload: 12},
+                    {featureType: InstantPrize, payload: 13},
+                    {featureType: InstantPrize, payload: 14},
+                    {featureType: InstantPrize, payload: 15},
+                    {featureType: InstantPrize, payload: 16},
+                ],
+                weights: [900000, 30000, 12000, 2500, 2500, 1500, 1500, 5000, 5000, 5000, 4500, 4500, 4000, 4000, 4000, 3000, 3000, 3000, 3000, 2000],
+            },
         },
     },
 
@@ -561,6 +715,12 @@ const standardConfig = {
                 weights: [1],
             },
             HighWays: {
+                values: [
+                    {featureType: None},
+                ],
+                weights: [1],
+            },
+            MaxWays: {
                 values: [
                     {featureType: None},
                 ],
@@ -658,9 +818,40 @@ const standardConfig = {
                     {featureType: ExpandedInstantPrize, payload: 1},
                     {featureType: ExpandedInstantPrize, payload: 2},
                 ],
-                weights: [840000, 78400, 1600, 2940, 60, 2940, 60, 2940, 60, 2940, 60, 2940, 60, 2850, 150, 2850, 150, 2850, 150, 2850, 150, 2850, 150, 40000, 7500, 2500],
+                weights: [800000, 95000, 5000, 3880, 120, 3880, 120, 3880, 120, 3880, 120, 3880, 120, 3960, 40, 3960, 40, 3960, 40, 3960, 40, 3960, 40, 48000, 9000, 3000],
             },
             HighWays: {
+                values: [
+                    {featureType: None},
+                    {featureType: BeeWilds, payload: 2},
+                    {featureType: BeeWilds, payload: 3},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 1},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 3},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 5},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 7},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 9},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 11},
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 14},
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 17},
+                    {featureType: BookReplacement, payload: 19},
+                    {featureType: BookReplacement, payload: 20},
+                    {featureType: BookReplacement, payload: 22},
+                    {featureType: BookReplacement, payload: 23},
+                    {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 2},
+                ],
+                weights: [840000, 78400, 1600, 2940, 60, 2940, 60, 2940, 60, 2940, 60, 2940, 60, 2850, 150, 2850, 150, 2850, 150, 2850, 150, 2850, 150, 40000, 7500, 2500],
+            },
+            MaxWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -748,9 +939,29 @@ const standardConfig = {
                     {featureType: ExpandedInstantPrize, payload: 1},
                     {featureType: ExpandedInstantPrize, payload: 2},
                 ],
-                weights: [890000, 10000, 1500, 1500, 1500, 1500, 1500, 12000, 11000, 8500, 5500, 5500, 48000, 7500, 4500],
+                weights: [925000, 15000, 600, 600, 600, 600, 600, 4800, 4400, 3400, 2200, 2200, 32000, 5000, 3000],
             },
             HighWays: {
+                values: [
+                    {featureType: None},
+                    {featureType: BeeWilds, payload: 2},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 19},                    
+                    {featureType: BookReplacement, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 2},
+                ],
+                weights: [890000, 10000, 1500, 1500, 1500, 1500, 1500, 12000, 11000, 8500, 5500, 5500, 48000, 7500, 4500],
+            },
+            MaxWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -880,6 +1091,58 @@ const standardConfig = {
                     {featureType: BeeWilds, payload: 2},
                     {featureType: BeeWilds, payload: 3},
                     {featureType: BeeWilds, payload: 4},
+                    {featureType: BeeWilds, payload: 5},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 1},
+                    {featureType: BookReplacement, payload: 1},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 3},
+                    {featureType: BookReplacement, payload: 3},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 5},
+                    {featureType: BookReplacement, payload: 5},
+                    {featureType: BookReplacement, payload: 5},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 7},
+                    {featureType: BookReplacement, payload: 7},
+                    {featureType: BookReplacement, payload: 7},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 9},
+                    {featureType: BookReplacement, payload: 9},
+                    {featureType: BookReplacement, payload: 9},
+                    {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 2},
+                    {featureType: ExpandedInstantPrize, payload: 3},
+                    {featureType: ExpandedInstantPrize, payload: 4},
+                    {featureType: ExpandedInstantPrize, payload: 5},
+                    {featureType: ExpandedInstantPrize, payload: 6},
+                    {featureType: ExpandedInstantPrize, payload: 7},
+                    {featureType: ExpandedInstantPrize, payload: 8},
+                    {featureType: ExpandedInstantPrize, payload: 9},
+                    {featureType: ExpandedInstantPrize, payload: 10},
+                    {featureType: ExpandedInstantPrize, payload: 11},
+                    {featureType: ExpandedInstantPrize, payload: 12},
+                    {featureType: ExpandedInstantPrize, payload: 13},
+                    {featureType: ExpandedInstantPrize, payload: 14},
+                    {featureType: ExpandedInstantPrize, payload: 15},
+                    {featureType: ExpandedInstantPrize, payload: 16},
+                ],
+                weights: [890000, 41000, 5000, 2500, 1500, 3200, 800, 3200, 800, 3200, 800, 3200, 800, 3200, 800, 1600, 2000, 400, 1600, 2000, 400, 1600, 2000, 400, 1600, 2000, 400, 1600, 2000, 400, 2200, 2800, 3000, 3200, 3000, 2600, 1100, 600, 200, 200, 200, 200, 200, 200, 150, 100, 50],
+            },
+            HighWays: {
+                values: [
+                    {featureType: None},
+                    {featureType: BeeWilds, payload: 2},
+                    {featureType: BeeWilds, payload: 3},
+                    {featureType: BeeWilds, payload: 4},
                     {featureType: BookReplacement, payload: 0},
                     {featureType: BookReplacement, payload: 0},
                     {featureType: BookReplacement, payload: 1},
@@ -925,7 +1188,7 @@ const standardConfig = {
                 ],
                 weights: [935000, 12000, 6000, 2000, 2550, 450, 2550, 450, 2550, 450, 2550, 450, 2550, 450, 1560, 1200, 240, 1590, 1230, 180, 1620, 1260, 120, 1650, 1260, 90, 1680, 1260, 60, 1650, 2100, 2250, 2400, 2250, 1950, 825, 450, 150, 150, 150, 150, 150, 150, 113, 75, 38],
             },
-            HighWays: {
+            MaxWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -1069,6 +1332,50 @@ const standardConfig = {
                     {featureType: BeeWilds, payload: 2},
                     {featureType: BeeWilds, payload: 3},
                     {featureType: BeeWilds, payload: 4},
+                    {featureType: BeeWilds, payload: 5},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 1},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 3},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 5},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 7},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 9},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 11},
+                    {featureType: BookReplacement, payload: 12},                    
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 14},
+                    {featureType: BookReplacement, payload: 15},
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 17},
+                    {featureType: BookReplacement, payload: 18},                    
+                    {featureType: BookReplacement, payload: 19},
+                    {featureType: BookReplacement, payload: 20},
+                    {featureType: BookReplacement, payload: 21},
+                    {featureType: BookReplacement, payload: 22},
+                    {featureType: BookReplacement, payload: 23},
+                    {featureType: BookReplacement, payload: 24},
+                    {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 2},
+                    {featureType: ExpandedInstantPrize, payload: 3},
+                    {featureType: ExpandedInstantPrize, payload: 4},
+                    {featureType: ExpandedInstantPrize, payload: 5},
+                    {featureType: ExpandedInstantPrize, payload: 6},
+                    {featureType: ExpandedInstantPrize, payload: 7},
+                ],
+                weights: [870000, 4100, 500, 250, 150, 4500, 500, 4500, 500, 4500, 500, 4500, 500, 4500, 500, 12900, 1800, 300, 
+                    12900, 1800, 300, 12900, 1800, 300, 12900, 1800, 300, 12900, 1800, 300, 3125, 5250, 5750, 3125, 3063, 2250, 1500, 938],
+            },
+            HighWays: {
+                values: [
+                    {featureType: None},
+                    {featureType: BeeWilds, payload: 2},
+                    {featureType: BeeWilds, payload: 3},
+                    {featureType: BeeWilds, payload: 4},
                     {featureType: BookReplacement, payload: 0},
                     {featureType: BookReplacement, payload: 1},
                     {featureType: BookReplacement, payload: 2},
@@ -1106,7 +1413,7 @@ const standardConfig = {
                 weights: [875000, 6000, 3000, 1000, 6790, 210, 6790, 210, 5820, 180, 4850, 150, 4850, 150, 14560, 1200, 
                     240, 12740, 1050, 210, 12740, 1050, 210, 11830, 975, 195, 11830, 975, 195, 1875, 3150, 3450, 1875, 1838, 1350, 900, 563],
             },
-            HighWays: {
+            MaxWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -1281,6 +1588,59 @@ const standardConfig = {
                     {featureType: BookReplacement, payload: 22},
                     {featureType: BookReplacement, payload: 23},
                     {featureType: BookReplacement, payload: 24},
+                    {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 2},
+                    {featureType: ExpandedInstantPrize, payload: 3},
+                    {featureType: ExpandedInstantPrize, payload: 4},
+                    {featureType: ExpandedInstantPrize, payload: 5},
+                    {featureType: ExpandedInstantPrize, payload: 6},
+                    {featureType: ExpandedInstantPrize, payload: 7},
+                    {featureType: ExpandedInstantPrize, payload: 8},
+                    {featureType: ExpandedInstantPrize, payload: 9},
+                    {featureType: ExpandedInstantPrize, payload: 10},
+                    {featureType: ExpandedInstantPrize, payload: 11},
+                    {featureType: ExpandedInstantPrize, payload: 12},
+                    {featureType: ExpandedInstantPrize, payload: 13},
+                    {featureType: ExpandedInstantPrize, payload: 14},
+                    {featureType: ExpandedInstantPrize, payload: 15},
+                    {featureType: ExpandedInstantPrize, payload: 16},
+                ],
+                weights: [920000, 14250, 750, 675, 75, 675, 75, 675, 75, 675, 75, 675, 75,
+                1935, 270, 45, 1935, 270, 45, 1935, 270, 45, 1935, 270, 45, 1935, 270, 45,
+                4500, 8000, 9500, 8500, 3500, 3500, 3250, 3000, 2500, 1250, 1250, 350, 350, 250, 100, 100, 100,
+                ],
+            },
+            HighWays: {
+                values: [
+                    {featureType: None},
+                    {featureType: BeeWilds, payload: 2},
+                    {featureType: BeeWilds, payload: 3},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 1},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 3},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 5},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 7},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 9},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 11},                    
+                    {featureType: BookReplacement, payload: 12},   
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 14},
+                    {featureType: BookReplacement, payload: 15},   
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 17},                    
+                    {featureType: BookReplacement, payload: 18},                    
+                    {featureType: BookReplacement, payload: 19},
+                    {featureType: BookReplacement, payload: 20},
+                    {featureType: BookReplacement, payload: 21},
+                    {featureType: BookReplacement, payload: 22},
+                    {featureType: BookReplacement, payload: 23},
+                    {featureType: BookReplacement, payload: 24},
                     {featureType: ExpandedInstantPrize, payload: 1},
                     {featureType: ExpandedInstantPrize, payload: 2},
                     {featureType: ExpandedInstantPrize, payload: 3},
@@ -1304,7 +1664,7 @@ const standardConfig = {
                     6300, 11200, 13300, 11900, 4900, 4900, 4550, 4200, 3500, 1750, 1750, 490, 490, 350, 140, 140, 140,
                     ],
             },
-            HighWays: {
+            MaxWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
@@ -1482,12 +1842,71 @@ const standardConfig = {
                     {featureType: ExpandedInstantPrize, payload: 19},
                     {featureType: ExpandedInstantPrize, payload: 20},
                 ],
+                weights: [750000, 15000, 15000, 15000, 2500, 2500, 4900, 2100, 4900, 2100, 4900, 2100, 4900, 2100, 4900, 2100,
+                    3900, 5200, 3900, 3900, 5200, 3900, 3900, 5200, 3900, 3900, 5200, 3900, 3900, 5200, 3900,
+                10000, 10000, 15000, 15000, 7000, 7000, 5000, 5000, 4000, 4000, 4000, 3500, 3500, 2250, 2250, 500, 500, 500, 500, 500,
+                ],
+            },
+            HighWays: {
+                values: [
+                    {featureType: None},
+                    {featureType: BeeWilds, payload: 3},
+                    {featureType: BeeWilds, payload: 4},
+                    {featureType: BeeWilds, payload: 5},
+                    {featureType: BeeWilds, payload: 6},
+                    {featureType: BeeWilds, payload: 7},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 1},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 3},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 5},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 7},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 9},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 11},
+                    {featureType: BookReplacement, payload: 12},                    
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 14},
+                    {featureType: BookReplacement, payload: 15},
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 17},
+                    {featureType: BookReplacement, payload: 18},                    
+                    {featureType: BookReplacement, payload: 19},
+                    {featureType: BookReplacement, payload: 20},
+                    {featureType: BookReplacement, payload: 21},
+                    {featureType: BookReplacement, payload: 22},
+                    {featureType: BookReplacement, payload: 23},
+                    {featureType: BookReplacement, payload: 24},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 2},
+                    {featureType: ExpandedInstantPrize, payload: 3},
+                    {featureType: ExpandedInstantPrize, payload: 4},
+                    {featureType: ExpandedInstantPrize, payload: 5},
+                    {featureType: ExpandedInstantPrize, payload: 6},
+                    {featureType: ExpandedInstantPrize, payload: 7},
+                    {featureType: ExpandedInstantPrize, payload: 8},
+                    {featureType: ExpandedInstantPrize, payload: 9},
+                    {featureType: ExpandedInstantPrize, payload: 10},
+                    {featureType: ExpandedInstantPrize, payload: 11},
+                    {featureType: ExpandedInstantPrize, payload: 12},
+                    {featureType: ExpandedInstantPrize, payload: 13},
+                    {featureType: ExpandedInstantPrize, payload: 14},
+                    {featureType: ExpandedInstantPrize, payload: 15},
+                    {featureType: ExpandedInstantPrize, payload: 16},
+                    {featureType: ExpandedInstantPrize, payload: 17},
+                    {featureType: ExpandedInstantPrize, payload: 18},
+                    {featureType: ExpandedInstantPrize, payload: 19},
+                    {featureType: ExpandedInstantPrize, payload: 20},
+                ],
                 weights: [700000, 40000, 30000, 20000, 5000, 5000, 3600, 2400, 3600, 2400, 3600, 2400, 3600, 2400, 3600, 2400,
                     4200, 5600, 4200, 4200, 5600, 4200, 4200, 5600, 4200, 4200, 5600, 4200, 4200, 5600, 4200, 
                 10000, 10000, 15000, 15000, 7000, 7000, 5000, 5000, 4000, 4000, 4000, 3500, 3500, 2250, 2250, 500, 500, 500, 500, 500,
                 ],
             },
-            HighWays: {
+            MaxWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 3},
@@ -1843,99 +2262,110 @@ const standardConfig = {
             {symbol: 9, ways: 4},   //24
     ],
     reelSets: [
-        [
+        [   //0
             [3, 0, 2, 7, 0, 2, 0, 6, 7, 4, 2, 7, 5, 2, 3, 1, 9, 2, 1, 0, 1, 3, 0, 8, 2, 4, 0, 3, 3, 8, 1, 1, 5, 2, 4, 5, 9, 3, 1, 0, 1, 8, 6, 5, 3, 6, 4, 2, 1, 0, 0, 5, 0, 4, 1, 7, 0, 0, 6, 3],
             [4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 7, 7, 7, 0, 0, 0, 6, 6, 6, 6, 6, 1, 1, 1, 5, 5, 5, 0, 9, 0, 2, 2, 2, 1, 1, 1, 5, 5, 5, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0, 4, 9, 2, 0, 8, 8, 9, 9, 3],
             [4, 4, 4, 0, 0, 0, 8, 8, 8, 3, 3, 3, 6, 6, 6, 1, 1, 1, 6, 1, 7, 7, 7, 0, 9, 0, 5, 5, 5, 2, 2, 2, 3, 3, 3, 1, 1, 1, 5, 5, 0, 0, 0, 2, 2, 2, 0, 4, 4, 3, 3, 2, 2, 1, 1, 1, 9, 9, 9, 7],
             [3, 3, 3, 4, 4, 4, 4, 0, 0, 0, 1, 0, 0, 0, 8, 8, 8, 1, 1, 1, 1, 1, 1, 2, 2, 2, 6, 6, 6, 2, 2, 2, 0, 0, 5, 5, 5, 7, 7, 7, 5, 5, 3, 3, 3, 3, 4, 4, 4, 2, 2, 1, 1, 9, 9, 0, 3, 3, 6, 9],
             [0, 0, 0, 4, 4, 4, 2, 2, 2, 7, 7, 7, 5, 5, 5, 0, 0, 0, 4, 4, 7, 8, 8, 8, 2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 6, 6, 6, 0, 3, 3, 3, 6, 9, 9, 3, 3, 3, 3, 3, 5, 5, 2, 2, 9],
             [3, 0, 2, 7, 0, 2, 0, 6, 7, 4, 2, 7, 5, 2, 3, 1, 9, 2, 1, 0, 1, 3, 0, 8, 2, 4, 0, 3, 3, 8, 1, 1, 5, 2, 4, 5, 9, 3, 1, 0, 1, 8, 6, 5, 3, 6, 4, 2, 1, 0, 0, 5, 0, 4, 1, 7, 0, 0, 6, 3],
-        ], [
-            [0, 0, 2, 1, 4, 3, 1, 3, 8, 1, 2, 1, 6, 5, 1, 2, 7, 0, 6, 9, 9, 7, 4, 2, 2, 4, 1, 0, 6, 2, 5, 8, 7, 0, 5, 6, 3, 4, 9, 5, 3, 0, 0, 2, 3, 3, 0, 4, 7, 8, 5, 3, 1, 6, 4, 6, 0, 4, 1, 5],
-            [2, 6, 0, 7, 4, 8, 5, 2, 1, 8, 0, 2, 4, 3, 1, 3, 3, 1, 4, 5, 9, 0, 3, 0, 2, 6, 7, 4, 3, 1, 0, 4, 6, 4, 7, 0, 0, 2, 1, 0, 2, 1, 5, 5, 1, 6, 9, 6, 1, 4, 1, 5, 0, 3, 2, 9, 0, 3, 5, 0],
-            [7, 5, 9, 5, 8, 0, 3, 0, 7, 4, 8, 0, 9, 0, 3, 2, 0, 7, 0, 0, 4, 2, 0, 6, 5, 5, 3, 4, 2, 7, 3, 1, 6, 1, 0, 9, 3, 5, 6, 6, 4, 2, 8, 2, 0, 9, 2, 2, 2, 4, 1, 1, 1, 3, 1, 3, 3, 9, 1, 1],
-            [3, 0, 4, 3, 3, 1, 4, 0, 0, 3, 9, 1, 2, 2, 0, 2, 2, 2, 1, 1, 6, 1, 4, 5, 9, 1, 0, 4, 8, 1, 0, 7, 9, 0, 5, 6, 9, 2, 6, 7, 1, 4, 3, 3, 3, 3, 8, 9, 0, 2, 4, 5, 4, 6, 7, 0, 5, 5, 2, 3],
-            [9, 6, 4, 1, 8, 5, 2, 7, 2, 0, 3, 1, 2, 8, 0, 3, 7, 6, 3, 6, 0, 7, 5, 3, 1, 5, 0, 0, 2, 3, 0, 2, 4, 9, 1, 2, 4, 8, 3, 7, 0, 1, 0, 0, 5, 2, 0, 1, 5, 1, 3, 4, 2, 4, 6, 1, 9, 3, 0, 1],
-            [7, 1, 1, 3, 0, 0, 3, 2, 3, 4, 0, 1, 0, 4, 0, 2, 4, 6, 2, 1, 0, 8, 1, 9, 1, 0, 8, 1, 2, 0, 5, 9, 7, 5, 1, 5, 2, 5, 3, 4, 6, 8, 5, 1, 1, 3, 2, 2, 2, 3, 9, 7, 3, 6, 0, 4, 7, 3, 0, 6],
-        ], [
+        ], [//1 DATA HAS BEEN CHANGED
+            [0, 0, 2, 1, 4, 3, 1, 3, 8, 1, 2, 1, 6, 5, 1, 2, 7, 0, 6, 9, 9, 7, 4, 2, 2, 4, 1, 0, 6, 2, 5, 8, 7, 0, 5, 6, 3, 4, 9, 5, 3, 0, 0, 2, 3, 3, 0, 4, 7, 8, 5, 3, 1, 6, 4, 6, 0, 4, 1, 5, ],
+            [2, 6, 0, 7, 4, 8, 5, 2, 1, 8, 0, 2, 4, 3, 1, 3, 0, 1, 4, 5, 9, 0, 3, 0, 2, 6, 7, 4, 3, 1, 0, 4, 6, 4, 7, 0, 0, 2, 1, 0, 2, 1, 5, 5, 1, 6, 9, 6, 1, 4, 1, 5, 0, 3, 2, 9, 0, 3, 5, 0, ],
+            [7, 5, 9, 5, 8, 0, 3, 0, 7, 4, 8, 1, 9, 0, 3, 2, 0, 7, 0, 0, 4, 2, 0, 6, 5, 5, 3, 4, 2, 7, 3, 1, 6, 1, 0, 9, 3, 5, 6, 6, 4, 2, 8, 2, 0, 9, 2, 2, 2, 4, 1, 1, 1, 3, 1, 3, 3, 9, 1, 1, ],
+            [3, 0, 4, 3, 3, 1, 4, 0, 0, 3, 9, 1, 4, 2, 0, 2, 6, 2, 1, 1, 6, 1, 4, 5, 9, 1, 0, 4, 8, 1, 0, 7, 9, 0, 5, 6, 9, 2, 6, 7, 1, 4, 0, 3, 0, 3, 8, 9, 0, 2, 4, 5, 4, 6, 7, 0, 5, 5, 2, 3, ],
+            [9, 6, 4, 1, 8, 5, 2, 7, 2, 0, 3, 1, 2, 8, 0, 3, 7, 6, 3, 6, 0, 7, 5, 3, 1, 5, 0, 0, 2, 3, 0, 2, 4, 9, 1, 2, 4, 8, 3, 7, 0, 1, 0, 0, 5, 2, 0, 1, 5, 1, 3, 4, 2, 4, 6, 1, 9, 3, 0, 1, ],
+            [7, 1, 1, 3, 0, 0, 3, 2, 3, 4, 0, 1, 0, 4, 0, 2, 4, 6, 2, 1, 0, 8, 1, 9, 1, 0, 8, 1, 2, 0, 5, 9, 7, 5, 1, 5, 2, 5, 3, 4, 6, 8, 5, 1, 1, 3, 2, 2, 2, 3, 9, 7, 3, 6, 0, 4, 7, 3, 0, 6, ],
+        ], [//2
             [6, 6, 4, 4, 7, 7, 3, 3, 5, 5, 2, 2, 1, 1, 6, 6, 3, 3, 0, 0, 0, 0, 9, 9, 2, 2, 1, 1, 1, 1, 6, 6, 7, 7, 1, 1, 5, 5, 3, 3, 2, 2, 8, 8, 4, 4, 0, 0, 8, 4, 4, 5, 5, 0, 0, 0, 9, 0, 2, 3],
             [9, 9, 8, 8, 7, 7, 5, 5, 4, 4, 4, 4, 0, 0, 4, 4, 3, 3, 2, 2, 1, 5, 5, 1, 1, 1, 1, 2, 2, 1, 1, 7, 0, 0, 0, 0, 0, 0, 5, 5, 5, 9, 8, 6, 6, 2, 2, 3, 3, 6, 6, 8, 0, 3, 3, 4, 6, 9, 5, 1],
             [9, 9, 1, 1, 1, 1, 0, 0, 3, 3, 2, 2, 0, 0, 5, 2, 2, 0, 8, 3, 3, 8, 3, 3, 9, 1, 1, 0, 0, 4, 4, 8, 8, 7, 7, 4, 4, 1, 1, 2, 2, 9, 0, 5, 5, 0, 0, 5, 5, 4, 4, 5, 5, 6, 6, 8, 1, 0, 7, 6],
             [2, 2, 0, 0, 1, 1, 7, 7, 3, 3, 5, 5, 0, 2, 2, 4, 4, 1, 1, 1, 1, 1, 4, 4, 5, 5, 9, 0, 0, 8, 0, 0, 3, 3, 3, 3, 6, 6, 8, 8, 6, 6, 4, 4, 4, 1, 0, 0, 2, 2, 2, 2, 9, 9, 5, 8, 3, 3, 9, 0],
             [1, 1, 1, 1, 7, 7, 0, 0, 7, 3, 3, 9, 4, 4, 2, 2, 3, 3, 9, 3, 3, 1, 1, 6, 6, 8, 8, 8, 9, 6, 6, 0, 0, 8, 8, 2, 2, 8, 5, 5, 0, 0, 0, 0, 1, 1, 9, 5, 5, 9, 9, 5, 2, 2, 9, 4, 4, 3, 9, 0],
             [1, 1, 1, 1, 7, 7, 0, 0, 7, 3, 3, 0, 4, 4, 2, 2, 3, 3, 5, 3, 3, 1, 1, 6, 6, 8, 8, 0, 4, 6, 6, 0, 0, 6, 8, 2, 2, 3, 5, 5, 0, 0, 0, 0, 1, 1, 2, 5, 5, 9, 9, 5, 2, 2, 0, 4, 4, 3, 4, 0],
-        ], [
+        ], [//3
             [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 10, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
             [6, 1, 1, 0, 5, 4, 0, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 10, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 10, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 10, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
-            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 10, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+            [4, 2, 4, 2, 1, 4, 4, 2, 3, 7, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 10, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
+            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 4, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
+            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 8, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
             [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 10, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-        ], [
+        ], [//4
             [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 10, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
-            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 10, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
-            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 10, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 10],
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 10, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
+            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 1, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
+            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 2, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 10],
+            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 10, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
             [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
             [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-        ], [
+        ], [//5
             [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
             [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
             [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
             [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 10, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
-            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 10, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
+            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 10, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 10, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
             [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
-        ], [
+        ], [//6
             [1, 7, 7, 3, 5, 5, 7, 5, 1, 3, 5, 5, 9, 5, 3, 1, 7, 5, 3, 5, 1, 5, 7, 9, 1, 3, 9, 3, 1, 1, 5, 5, 3, 1, 3, 3, 5, 7, 5, 5, 9, 7, 9, 5, 7, 3, 9, 7, 9, 1, 3, 5, 5, 1, 3, 1, 3, 7, 7, 5],
             [4, 8, 4, 4, 8, 8, 2, 8, 2, 4, 8, 4, 2, 4, 6, 8, 0, 2, 2, 8, 4, 4, 2, 8, 2, 8, 2, 0, 4, 4, 8, 6, 4, 8, 4, 2, 8, 2, 0, 6, 6, 2, 8, 0, 4, 8, 6, 8, 2, 4, 0, 2, 4, 8, 8, 2, 2, 4, 6, 2],
             [5, 7, 5, 7, 1, 1, 1, 5, 5, 7, 9, 5, 1, 5, 1, 7, 5, 7, 7, 3, 5, 3, 7, 5, 9, 7, 5, 9, 9, 3, 7, 3, 1, 7, 5, 3, 5, 3, 5, 3, 7, 3, 5, 3, 5, 1, 5, 5, 3, 1, 5, 1, 3, 5, 1, 1, 9, 7, 9, 9],
             [6, 8, 4, 0, 2, 8, 8, 2, 2, 4, 2, 8, 6, 8, 6, 2, 4, 6, 4, 2, 4, 4, 8, 8, 0, 8, 2, 8, 2, 0, 8, 8, 4, 2, 4, 4, 6, 4, 2, 2, 8, 4, 6, 0, 8, 4, 2, 0, 2, 8, 6, 4, 8, 2, 8, 4, 4, 2, 2, 6],
             [7, 7, 5, 3, 5, 7, 7, 1, 3, 3, 5, 3, 7, 1, 1, 5, 3, 1, 9, 1, 5, 1, 1, 5, 3, 5, 7, 3, 1, 7, 3, 5, 1, 9, 5, 1, 3, 5, 9, 1, 9, 3, 9, 7, 3, 7, 3, 5, 3, 5, 9, 1, 3, 5, 9, 7, 3, 5, 5, 7],
             [2, 8, 8, 6, 6, 8, 4, 4, 6, 8, 8, 4, 8, 8, 0, 2, 8, 4, 8, 4, 4, 0, 8, 4, 8, 2, 8, 0, 2, 4, 2, 2, 2, 8, 4, 8, 4, 2, 2, 6, 2, 4, 4, 2, 6, 2, 2, 4, 2, 0, 2, 4, 2, 4, 6, 0, 8, 8, 4, 8],
-        ], [
+        ], [//7
             [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 9, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
             [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 9, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
             [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 6, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
             [1, 1, 4, 3, 2, 1, 2, 4, 0, 2, 1, 1, 2, 2, 2, 0, 3, 4, 5, 0, 4, 3, 2, 0, 1, 1, 0, 3, 2, 0, 1, 4, 1, 6, 3, 4, 0, 3, 3, 0, 7, 2, 0, 4, 0, 3, 4, 0, 1, 8, 2, 3, 0, 4, 3, 2, 4, 1, 3, 9],
             [1, 1, 4, 3, 2, 1, 2, 4, 0, 2, 1, 1, 2, 2, 2, 0, 3, 4, 5, 0, 4, 3, 2, 0, 1, 1, 0, 3, 2, 0, 1, 4, 1, 6, 3, 4, 0, 3, 3, 0, 7, 2, 0, 4, 0, 3, 4, 0, 1, 8, 2, 3, 0, 4, 3, 2, 4, 1, 3, 9],
             [1, 1, 4, 3, 2, 1, 2, 4, 0, 2, 1, 1, 2, 2, 2, 0, 3, 4, 5, 0, 4, 3, 2, 0, 1, 1, 0, 3, 2, 0, 1, 4, 1, 6, 3, 4, 0, 3, 3, 0, 7, 2, 0, 4, 0, 3, 4, 0, 1, 8, 2, 3, 0, 4, 3, 2, 4, 1, 3, 9],
-        ], [
+        ], [//8
             [1, 1, 4, 3, 2, 1, 2, 4, 3, 2, 1, 1, 2, 2, 2, 0, 2, 4, 5, 0, 4, 3, 2, 0, 1, 1, 0, 3, 2, 0, 1, 4, 1, 6, 3, 4, 0, 3, 3, 0, 7, 2, 0, 4, 0, 3, 4, 0, 1, 8, 2, 3, 0, 4, 3, 2, 4, 1, 3, 9],
             [1, 1, 4, 3, 2, 1, 2, 4, 3, 2, 1, 1, 2, 2, 2, 0, 2, 4, 5, 0, 4, 3, 2, 0, 1, 1, 0, 3, 2, 0, 1, 4, 1, 6, 3, 4, 0, 3, 3, 0, 7, 2, 0, 4, 0, 3, 4, 0, 1, 8, 2, 3, 0, 4, 3, 2, 4, 1, 3, 9],
             [1, 1, 4, 3, 2, 1, 2, 4, 3, 2, 1, 1, 2, 2, 2, 0, 2, 4, 5, 0, 4, 3, 2, 0, 1, 1, 0, 3, 2, 0, 1, 4, 1, 6, 3, 4, 0, 3, 3, 0, 7, 2, 0, 4, 0, 3, 4, 0, 1, 8, 2, 3, 0, 4, 3, 2, 4, 1, 3, 9],
             [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 6, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
             [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 9, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
             [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 9, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
-        ], [ //Ante - Replaces Reel Set 3
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 10, 2, 4, 2, 0, 4, 1, 6, 10, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
-            [6, 1, 1, 0, 5, 4, 10, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 10, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 10, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 10, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 10, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 10, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
-            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 10, 2, 3, 1, 4, 1, 2, 10, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 10, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 10, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 10, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-        ],
+        ], [ //9 = Ante - Replaces Reel Set 4 - NEEDS REWORKED
+            [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 10, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
+            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 1, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
+            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 2, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 10, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 10],
+            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 10, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
+            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
+        ], [ //10 = Ante - Replaces Reel Set 5 - NEEDS REWORKED
+            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
+            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 10, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 10, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
+            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 10, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 10, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
+            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 10, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 10, 7, 0, 7, 5, 5, 9, 5, 10, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
+            [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 10, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
+    ],
     ],
 };
 
 const anteConfig = structuredClone(standardConfig);
 anteConfig.baseGameReelSetsDistributions.BaseGameLow = {
     MinWays: {
-        values: [3, 9, 6], //Ante
-        weights: [17000, 233000, 750000],
+        values: [1, 6], //Base 
+        weights: [525000, 750000],
     },
     LowWays: {
-        values: [3, 9, 4, 5, 6], //Ante
-        weights: [10000, 10000, 30000, 30000, 920000],
+        values: [9, 10, 6], //Base
+        weights: [450000, 450000, 100000],
     },
     MedWays: {
-        values: [4, 5, 6],
-        weights: [40000, 40000, 920000],
+        values: [1, 6],
+        weights: [150000, 8500000],
     },
     HighWays: {
-        values: [4, 5, 6],
-        weights: [40000, 40000, 920000],
+        values: [1, 6],
+        weights: [800000, 9200000],
     },
-};
+    MaxWays: {
+        values: [1, 6],
+        weights: [600000, 9400000],
+    },
+}
 
 export function anteMode(ante: boolean): void {
     isAnte = ante;
