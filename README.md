@@ -28,3 +28,10 @@ docker build -t fakeserverimage .
 
 refer to docker instructions online for any issues
         
+export the docker image with:
+
+docker save fakeserverimage -o fakeserverimage.tar
+
+on target server, import docker image with:
+
+docker load fakeserverimage -i fakeserverimage.tar
