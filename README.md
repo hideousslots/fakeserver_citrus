@@ -30,8 +30,17 @@ refer to docker instructions online for any issues
         
 export the docker image with:
 
+win
 docker save fakeserverimage -o fakeserverimage.tar
 
 on target server, import docker image with:
-
+win
 docker load fakeserverimage -i fakeserverimage.tar
+linux
+docker load < fakeserverimage.tar
+
+publish and run a new container
+
+docker run --publish 3003:3003 fakeserverimage
+
+
