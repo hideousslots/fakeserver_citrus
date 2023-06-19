@@ -34,11 +34,11 @@ export const index: IGame<IData> = {
         },
         "bonusbuy": { //this isn't being picked up
             available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
-            default: 100, maxWin: 13000, coin: currentMaths.coinsPerBet_bonusBuy
+            default: 100, maxWin: 130, coin: currentMaths.coinsPerBet_bonusBuy
         },
-        "coinsbonusbuy": { //this isn't being picked up
+        "coinbonusbuy": { //this isn't being picked up
             available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
-            default: 100, maxWin: 13000, coin: currentMaths.coinsPerBet_coinsBonusBuy
+            default: 100, maxWin: 130, coin: currentMaths.coinsPerBet_coinBonusBuy
         },
     },
 
@@ -65,62 +65,14 @@ export const index: IGame<IData> = {
             return wagers[0].win - baseGameWin
         }).filter((wagers) => wagers[0].data.bonusGameRespinsSessions && wagers[0].data.bonusGameRespinsSessions.length > 0),
         biggestWin: new MaxWithLogging(wagers => wagers[0]?.win || 0),
-        over_0x: new WinBucket(wagers => wagers.some(wager => wager.win > 0 && wager.win < 1)),
-        over_1x: new WinBucket(wagers => wagers.some(wager => wager.win >= 1 && wager.win < 2)),
-        over_2x: new WinBucket(wagers => wagers.some(wager => wager.win >= 2 && wager.win < 3)),
-        over_3x: new WinBucket(wagers => wagers.some(wager => wager.win >= 3 && wager.win < 4)),
-        over_4x: new WinBucket(wagers => wagers.some(wager => wager.win >= 4 && wager.win < 5)),
-        over_5x: new WinBucket(wagers => wagers.some(wager => wager.win >= 5 && wager.win < 6)),
-        over_6x: new WinBucket(wagers => wagers.some(wager => wager.win >= 6 && wager.win < 7)),
-        over_7x: new WinBucket(wagers => wagers.some(wager => wager.win >= 7 && wager.win < 8)),
-        over_8x: new WinBucket(wagers => wagers.some(wager => wager.win >= 8 && wager.win < 9)),
-        over_9x: new WinBucket(wagers => wagers.some(wager => wager.win >= 9 && wager.win < 10)),
-        over_10x: new WinBucket(wagers => wagers.some(wager => wager.win >= 10 && wager.win < 11)),
-        over_11x: new WinBucket(wagers => wagers.some(wager => wager.win >= 11 && wager.win < 12)),
-        over_12x: new WinBucket(wagers => wagers.some(wager => wager.win >= 12 && wager.win < 13)),
-        over_13x: new WinBucket(wagers => wagers.some(wager => wager.win >= 13 && wager.win < 14)),
-        over_14x: new WinBucket(wagers => wagers.some(wager => wager.win >= 14 && wager.win < 15)),
-        over_15x: new WinBucket(wagers => wagers.some(wager => wager.win >= 15 && wager.win < 16)),
-        over_16x: new WinBucket(wagers => wagers.some(wager => wager.win >= 16 && wager.win < 17)),
-        over_17x: new WinBucket(wagers => wagers.some(wager => wager.win >= 17 && wager.win < 18)),
-        over_18x: new WinBucket(wagers => wagers.some(wager => wager.win >= 18 && wager.win < 19)),
-        over_19x: new WinBucket(wagers => wagers.some(wager => wager.win >= 19 && wager.win < 20)),
-        over_20x: new WinBucket(wagers => wagers.some(wager => wager.win >= 20 && wager.win < 21)),
-        over_21x: new WinBucket(wagers => wagers.some(wager => wager.win >= 21 && wager.win < 22)),
-        over_22x: new WinBucket(wagers => wagers.some(wager => wager.win >= 22 && wager.win < 23)),
-        over_23x: new WinBucket(wagers => wagers.some(wager => wager.win >= 23 && wager.win < 24)),
-        over_24x: new WinBucket(wagers => wagers.some(wager => wager.win >= 24 && wager.win < 25)),
-        over_25x: new WinBucket(wagers => wagers.some(wager => wager.win >= 25 && wager.win < 26)),
-        over_26x: new WinBucket(wagers => wagers.some(wager => wager.win >= 26 && wager.win < 27)),
-        over_27x: new WinBucket(wagers => wagers.some(wager => wager.win >= 27 && wager.win < 28)),
-        over_28x: new WinBucket(wagers => wagers.some(wager => wager.win >= 28 && wager.win < 29)),
-        over_29x: new WinBucket(wagers => wagers.some(wager => wager.win >= 29 && wager.win < 30)),
-        over_30x: new WinBucket(wagers => wagers.some(wager => wager.win >= 30 && wager.win < 31)),
-        over_31x: new WinBucket(wagers => wagers.some(wager => wager.win >= 31 && wager.win < 32)),
-        over_32x: new WinBucket(wagers => wagers.some(wager => wager.win >= 32 && wager.win < 33)),
-        over_33x: new WinBucket(wagers => wagers.some(wager => wager.win >= 33 && wager.win < 34)),
-        over_34x: new WinBucket(wagers => wagers.some(wager => wager.win >= 34 && wager.win < 35)),
-        over_35x: new WinBucket(wagers => wagers.some(wager => wager.win >= 35 && wager.win < 36)),
-        over_36x: new WinBucket(wagers => wagers.some(wager => wager.win >= 36 && wager.win < 37)),
-        over_37x: new WinBucket(wagers => wagers.some(wager => wager.win >= 37 && wager.win < 38)),
-        over_38x: new WinBucket(wagers => wagers.some(wager => wager.win >= 38 && wager.win < 39)),
-        over_39x: new WinBucket(wagers => wagers.some(wager => wager.win >= 39 && wager.win < 40)),
-        over_40x: new WinBucket(wagers => wagers.some(wager => wager.win >= 40 && wager.win < 41)),
-        over_41x: new WinBucket(wagers => wagers.some(wager => wager.win >= 41 && wager.win < 42)),
-        over_42x: new WinBucket(wagers => wagers.some(wager => wager.win >= 42 && wager.win < 43)),
-        over_43x: new WinBucket(wagers => wagers.some(wager => wager.win >= 43 && wager.win < 44)),
-        over_44x: new WinBucket(wagers => wagers.some(wager => wager.win >= 44 && wager.win < 45)),
-        over_45x: new WinBucket(wagers => wagers.some(wager => wager.win >= 45 && wager.win < 46)),
-        over_46x: new WinBucket(wagers => wagers.some(wager => wager.win >= 46 && wager.win < 47)),
-        over_47x: new WinBucket(wagers => wagers.some(wager => wager.win >= 47 && wager.win < 48)),
-        over_48x: new WinBucket(wagers => wagers.some(wager => wager.win >= 48 && wager.win < 49)),
-        over_49x: new WinBucket(wagers => wagers.some(wager => wager.win >= 49 && wager.win < 50)),
-        between_50_60x: new WinBucket(wagers => wagers.some(wager => wager.win >= 50 && wager.win < 60)),
-        between_60_60x: new WinBucket(wagers => wagers.some(wager => wager.win >= 60 && wager.win < 70)),
-        between_70_60x: new WinBucket(wagers => wagers.some(wager => wager.win >= 70 && wager.win < 80)),
-        between_80_60x: new WinBucket(wagers => wagers.some(wager => wager.win >= 80 && wager.win < 90)),
-        between_90_60x: new WinBucket(wagers => wagers.some(wager => wager.win >= 90 && wager.win < 100)),
-        over100x: new WinBucket(wagers => wagers.some(wager => wager.win >= 100)),
+        zero_bonus: new WinBucket(wagers => wagers.some(wager => wager.win === 0)),
+        over_0x: new WinBucket(wagers => wagers.some(wager => wager.win > 0 && wager.win < 4000)),
+        over_40x: new WinBucket(wagers => wagers.some(wager => wager.win >= 4000 && wager.win < 8000)),
+        over_80x: new WinBucket(wagers => wagers.some(wager => wager.win >= 8000 && wager.win < 12000)),
+        over_120x: new WinBucket(wagers => wagers.some(wager => wager.win >= 12000 && wager.win < 16000)),
+        over_160x: new WinBucket(wagers => wagers.some(wager => wager.win >= 16000)),
+        
+        
     },
     cheats: {
         "main": {
@@ -135,14 +87,7 @@ export const index: IGame<IData> = {
     },
 
     play({bet, action, state, variant, promo}): IPlayResponse<IData> {
-        //SNC - for now for action to bonusBuy
-        //action = "coinbonusbuy";
-        //action = "bonusbuy";
-        //action = "main";
         return play(bet, action);
-        //const result = play(bet, action);
-        //console.log(JSON.stringify(result));
-        //return result;
     },
 
     action(strategy): string {

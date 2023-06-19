@@ -13,7 +13,7 @@ import { SpecialModeType } from "./config/SpecialModeType";
 
 export default function play(stake: number, action: string) {
 
-    const precisionMoneyMapper = money => Number(money.toFixed(2));
+    const precisionMoneyMapper = money => Number(money.toFixed(8));
     anteMode(false);
     let currentMaths =  mathConfig();
     const integerRng = new FloatSourcedIntegerRng(() => rng());
@@ -30,13 +30,15 @@ export default function play(stake: number, action: string) {
     let bonusProfile;
 
     let coin: number = 0;
-    let bet: number = stake; //For most variations, stake is bet. However, stake is the full amount of the wager, including (if needed) ante
+    let bet: number = stake; //For main variation, stake is bet. However, stake is the full amount of the wager, including (if needed) ante or bonus scalers
 
-    if(action === ActionType.CoinsBonusBuy) {
+    if(action === ActionType.CoinBonusBuy) {
         //Coin bonus buy mode (use dead reels and force scatter)
         //NB Uses special full path
+        //Question - should we be checking here that the coin and/or stake and/or bet are valid?
 
-        coin = precisionMoneyMapper(bet/currentMaths.coinsPerBet_coinsBonusBuy);
+        coin = precisionMoneyMapper(bet/currentMaths.coinsPerBet_coinBonusBuy);
+        bet = precisionMoneyMapper(coin * currentMaths.coinsPerBet_main);
 
         bonusProfile = currentMaths.bonusBuyGameProfilesDistribution;        
         baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, coin, precisionMoneyMapper, 0, currentMaths.baseGameInitialReelLengths,
@@ -45,7 +47,7 @@ export default function play(stake: number, action: string) {
         const specialReelLengths: number[][] = [   
             pickValueFromDistribution(integerRng, currentMaths.bonusBuyCoinInitialReelLengthsDistribution),
             pickValueFromDistribution(integerRng, currentMaths.bonusBuyCoinInitialReelLengthsDistribution),
-            pickValueFromDistribution(integerRng, currentMaths.bonusBuyCoinInitialReelLengthsDistribution)
+            pickValueFromDistribution(integerRng, currentMaths.bonusBuyCoinInitialReelLengthsDistribution),
         ];
 
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = specialReelLengths[0];
@@ -61,12 +63,13 @@ export default function play(stake: number, action: string) {
         accumulatedRoundWin = getLastElement(bonusGameRespinsSession).accumulatedRoundWin;
         return {
             win: precisionMoneyMapper(accumulatedRoundWin),
-            data: {action, stake, bet, coin, baseGameRespinsSession, bonusGameRespinsSessions}
+            data: {action, stake, bet, coin, baseGameRespinsSession, bonusGameRespinsSessions},
         };
     }
 
     if(action === ActionType.Main) {
         //Normal play
+        //Question - should we be checking here that the coin and/or stake and/or bet are valid?
 
         coin = precisionMoneyMapper(bet/currentMaths.coinsPerBet_main);
     
@@ -81,6 +84,8 @@ export default function play(stake: number, action: string) {
         anteMode(true);
         currentMaths = mathConfig();
 
+        //Question - should we be checking here that the coin and/or stake and/or bet are valid?
+
         //NB Coin *and* bet recalculated from stake here!
         coin = precisionMoneyMapper(stake / currentMaths.coinsPerBet_ante);
         bet = precisionMoneyMapper(coin * currentMaths.coinsPerBet_main);
@@ -92,8 +97,11 @@ export default function play(stake: number, action: string) {
     } else if(action === ActionType.BonusBuy) {
         //Bonus buy mode (use dead reels and force scatter)
         
-
-        coin = precisionMoneyMapper(bet / currentMaths.coinsPerBet_main);
+        //Question - should we be checking here that the coin and/or stake and/or bet are valid?
+        
+        //NB Coin *and* bet recalculated from stake here!
+        coin = precisionMoneyMapper(bet / currentMaths.coinsPerBet_bonusBuy);
+        bet = precisionMoneyMapper(coin * currentMaths.coinsPerBet_main);
 
         bonusProfile = currentMaths.bonusBuyGameProfilesDistribution;
         baseGameRespinsSession = runBonusBuySpinSession(integerRng, bet, coin, precisionMoneyMapper, 0, currentMaths.baseGameInitialReelLengths,

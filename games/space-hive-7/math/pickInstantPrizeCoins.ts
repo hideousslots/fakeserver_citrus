@@ -18,7 +18,7 @@ export function pickInstantPrizeCoins(integerRng: IntegerRng,
                                       gameProfileIndex: number,
                                       reels: SpaceHiveSymbol[][]): InstantPrizeCoin[] {
 
-    const currentMaths =  mathConfig()
+    const currentMaths =  mathConfig();
 
     const availablePositions = getPositionsOnReels(reels, currentMaths.instantPrizeCoinsConfig.availableColumns);
 

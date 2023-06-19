@@ -18,8 +18,8 @@ const standardConfig = {
     coinsPerBet_main: 10,
     coinsPerBet_ante: 15,
     coinsPerBet_bonusBuy: 1000,
-    coinsPerBet_coinsBonusBuy: 1000,
-    
+    coinsPerBet_coinBonusBuy: 950,
+
     baseGameInitialReelLengths: [2, 3, 4, 4, 3, 2],
     bonusGameInitialReelLengths: [2, 3, 4, 4, 3, 2],
     maxExpandedReelLengths: [6, 6, 6, 6, 6, 6],
@@ -102,6 +102,7 @@ const standardConfig = {
 
     bonusBuyCoinGameProfileDistribution: {
         values: [
+        {featureType: None},
         {featureType: ExpandedInstantPrize, payload: 0},
         {featureType: ExpandedInstantPrize, payload: 1},
         {featureType: ExpandedInstantPrize, payload: 2},
@@ -125,11 +126,9 @@ const standardConfig = {
         {featureType: ExpandedInstantPrize, payload: 20},
         ],
 
-        weights: [  47619, 47619, 47619, 47619, 47619, 
-                    47619, 47619, 47619, 47619, 47619, 
-                    47619, 47619, 47619, 47619, 47619, 
-                    47619, 47619, 47619, 47619, 47619, 
-                    47619],
+        weights: [  4000, 4000, 2000, 2000, 2000, 2000, 500, 500, 150, 150, 150,
+                    300, 300, 10, 10, 10, 10, 1, 1, 1, 1,
+                    1],
 
     },
 
