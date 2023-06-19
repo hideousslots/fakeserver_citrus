@@ -140,9 +140,7 @@ export default function play(stake: number, action: string) {
     }
 
     return {
-        //SNC 20230609 - I think win needs to be 2DP not 8
-        //win: precisionMoneyMapper(accumulatedRoundWin),
-        win: Number(accumulatedRoundWin.toFixed(2)),
+        win: precisionMoneyMapper(accumulatedRoundWin),
         data: {action, stake, bet, coin, baseGameRespinsSession, bonusGameRespinsSessions},
     };
 }

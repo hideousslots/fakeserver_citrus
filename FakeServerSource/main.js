@@ -55,7 +55,8 @@ function FakeServer(_interface) {
     });
 
     app.get('/game/info', (req, res) => {
-        res.send('{"state":{},"bets":{"main":{"available":[0.1,0.2,0.5,1,2,5,8,10,20,30,40,50,100],"default":1,"coin":10}},"config":{"payTable":{"0":[1,3,10,15],"1":[1,3,10,15],"2":[1,3,10,15],"3":[1,5,20,30],"4":[1,5,20,30],"5":[3,6,30,40],"6":[3,6,30,40],"7":[6,8,40,60],"8":[6,8,60,80],"9":[8,20,80,100]},"bookPayTable":{"0":[1,3],"1":[1,3],"2":[1,3],"3":[1,5],"4":[1,5],"5":[2,3,6],"6":[2,3,6],"7":[4,6,8],"8":[4,6,8],"9":[5,8,20]}},"settings":{}}');
+        console.log('snc GAME INFO');
+        res.send('{"state":{},"bets":' + JSON.stringify(gameInterface.bets) + ',"settings":{}}');
     });
 
     app.post('/game/complete', (req, res) => {
@@ -87,6 +88,28 @@ function FakeServer(_interface) {
             game: req.body.game,
             provider: req.body.provider
         };
+
+        //Checking the bet
+
+        let betValid = false;
+        if (gameInterface.bets[requestData.action] !== undefined) {
+            if (gameInterface.bets[requestData.action].available.findIndex((existing) => { return existing === requestData.bet; }) !== -1) {
+                betValid = true;
+            }
+        }
+
+        if (betValid === false) {
+            console.log('bet invalid for this bet: ' + JSON.stringify(requestData));
+            console.log('sending NULL response');
+            const response = {
+                roundId: 'ERROR IN BET - SENDING NULL RESPONSE',
+                wager: JSON.parse('{ "win": 0, "data": { "action": "main", "stake": 0.0, "bet": 0.0, "coin": 0.00, "baseGameRespinsSession": [{ "reels": [[5, 3], [4, 6, 8], [9, 7, 5, 9], [8, 2, 0, 8], [1, 3, 3], [6, 2]], "reelsExpanded": null, "waysWins": [], "reverseWaysWins": [], "beeWildPositions": null, "instantPrizeCoins": null, "expandedInstantPrizeData": null, "replaceFeature": null, "isRespinTriggered": false, "columnsToExpand": [], "newReelLengths": [2, 3, 4, 4, 3, 2], "scatters": { "collected": 0, "positions": [] }, "win": 0, "accumulatedRespinsSessionWin": 0, "accumulatedRoundWin": 0, "freeSpinIndex": 0, "debug": null }], "bonusGameRespinsSessions": [] }, "state": {} }'),
+                balance: sessionData.balance
+            };
+
+            res.send(JSON.stringify(response));
+            return;
+        }
 
         //Fixed response or not?
 
