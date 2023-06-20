@@ -285,6 +285,27 @@ function FakeServer(_interface) {
         console.log('Should have waited long enough for the RNG to initialise now... Time to try...\n');
         let testResult = gameInterface.play({ bet: 1, action: "main", state: null, variant: null, promo: null });
         console.log('\nTest result...' + ((testResult.win !== undefined) ? 'OK' : 'Error'));
+
+        //Insert simple calculation and display code for bet levels etc if useful to save calculating
+
+        // {
+        //     const betLevels = [0.2, 0.3, 0.4, 0.6, 0.8, 1, 1.5, 2, 3, 4, 5, 6, 8, 10, 15, 20];
+        //     const multipliers = [1, 1.5, 100, 95];
+
+        //     for (let i = 0; i < 4; i++) {
+        //         let output = '[';
+        //         for (let j = 0; j < betLevels.length; j++) {
+        //             output += Number((betLevels[j] * multipliers[i]).toFixed(2));
+        //             if (j === (betLevels.length - 1)) {
+        //                 output += '],';
+        //             } else {
+        //                 output += ', ';
+        //             }
+        //         }
+        //         console.log(output);
+        //     }
+        // }
+
         console.log('\nand we are off...\n');
 
         if (!useSSL) {
