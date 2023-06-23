@@ -277,6 +277,16 @@ function FakeServer(_interface) {
         res.send(response);
     });
 
+    //Control page handling
+
+    app.get('/getconnector', (req, res) => {    
+        req;
+        console.log('connector request by ' + JSON.stringify(req.body) + ' ip ' + req.socket.remoteAddress);
+        const connectorjs = fs.readFileSync(path.join(__dirname, '/Connector/connector.js'));
+        res.send(connectorjs);
+    });
+    
+
     //Startup the fake server
 
     const startup = async () => {
