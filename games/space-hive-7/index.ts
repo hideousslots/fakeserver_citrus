@@ -25,20 +25,20 @@ export const index: IGame<IData> = {
     name: "space-hive-7",
     bets: {
         "main": {
-            available: [0.2, 0.3, 0.4, 0.6, 0.8, 1, 1.5, 2, 3, 4, 5, 6, 8, 10, 15, 20],
+            available: [0.10, 0.20, 0.50, 1, 2, 5, 8, 10, 20, 30, 40, 50, 100],
             default: 1, maxWin: 13000, coin: currentMaths.coinsPerBet_main
         },
         "ante": {
-            available: [0.3, 0.45, 0.6, 0.9, 1.2, 1.5, 2.25, 3, 4.5, 6, 7.5, 9, 12, 15, 22.5, 30],
-            default: 1.5, maxWin: 13000, coin: currentMaths.coinsPerBet_ante
+            available: [0.15, 0.30, 0.75, 1.5, 3, 7.5, 12, 15, 30, 45, 60, 75, 150],
+            default: 1, maxWin: 13000, coin: currentMaths.coinsPerBet_ante
         },
         "bonusbuy": { //this isn't being picked up
-            available: [20, 30, 40, 60, 80, 100, 150, 200, 300, 400, 500, 600, 800, 1000, 1500, 2000],
+            available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
             default: 100, maxWin: 130, coin: currentMaths.coinsPerBet_bonusBuy
         },
         "coinbonusbuy": { //this isn't being picked up
-            available: [19, 28.5, 38, 57, 76, 95, 142.5, 190, 285, 380, 475, 570, 760, 950, 1425, 1900],
-            default: 95, maxWin: 130, coin: currentMaths.coinsPerBet_coinBonusBuy
+            available: [10, 20, 50, 100, 200, 500, 800, 1000, 2000, 3000, 4000, 5000, 10000],
+            default: 100, maxWin: 130, coin: currentMaths.coinsPerBet_coinBonusBuy
         },
     },
 
@@ -59,6 +59,14 @@ export const index: IGame<IData> = {
         averageBonusGameLength: new Average((wagers) => wagers[0].data.bonusGameRespinsSessions
             .reduce((totalLength, respinsSession) => totalLength + respinsSession.length, 0))
             .filter((wagers) => wagers[0].data.bonusGameRespinsSessions.length > 0),
+        WildsFrequency: new HitFrequency(
+            wagers => wagers.some(wager => 
+                wager.data.baseGameRespinsSession.some(session => session.beeWildPositions !== null)
+              )),
+        InstantFrequency: new HitFrequency(
+            wagers => wagers.some(wager => 
+                wager.data.baseGameRespinsSession.some(session => session.instantPrizeCoins !== null)
+                )),
         // The value of the Bonus without the Trigger
         averageBonusGameValue: new Average((wagers) => {
             let baseGameWin =  wagers[0].data.baseGameRespinsSession[wagers[0].data.baseGameRespinsSession.length -1 ].accumulatedRoundWin

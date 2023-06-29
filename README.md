@@ -42,5 +42,9 @@ docker load < fakeserverimage.tar
 publish and run a new container
 
 docker run --publish 3003:3003 fakeserverimage
+or
+docker run --publish 3004:3003 fakeserverimage2 if running a second server
+
+
 
 
