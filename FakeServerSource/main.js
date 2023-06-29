@@ -56,9 +56,7 @@ function FakeServer(_interface) {
     });
 
     app.get('/game/info', (req, res) => {
-        console.log('snc GAME INFO');
-        const buildTracker = fs.readFileSync(path.join(__dirname, 'buildtracker.json'));
-        res.send('{"state":{},"bets":' + JSON.stringify(gameInterface.bets) + ',"settings":{},"versionbuildtracker":' + buildTracker + '}');
+        res.send('{"state":{},"bets":' + JSON.stringify(gameInterface.bets) + ',"settings":{}}');
     });
 
     app.post('/game/complete', (req, res) => {
@@ -222,7 +220,8 @@ function FakeServer(_interface) {
         //Create a full response of the current sessions, cheats, stats, etc
 
         let response = '<HTML><HEAD><TITLE>FAKE SERVER INTERFACE</TITLE></HEAD><BODY>';
-        response += '<div align = "center">Fake server build date: ' + buildTracker.time + '</div>';
+        response += '<div align = "center">Fake server build date:<br>' + buildTracker.time + '</div>';
+        response += '<div align = "center">Fake server build info:<br>' + buildTracker.versionInfo + '</div>';
 
         //Test data (temporary space)
 
