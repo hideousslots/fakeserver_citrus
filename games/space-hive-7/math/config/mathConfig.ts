@@ -2,7 +2,7 @@ import {BaseGameProfile} from "./BaseGameProfile";
 import {FeatureType} from "./FeatureType";
 import {BonusGameProfile} from "./BonusGameProfile";
 
-const {BaseGameUltraLow, BaseGameMedium, BaseGameHigh, BaseGameLow} = BaseGameProfile;
+const {BaseGameMedium, BaseGameHigh, BaseGameLow} = BaseGameProfile;
 const {UltraLow, BonusLow, BonusNewLow, ReplaceHeavy, InstantHeavy, BonusHigh} = BonusGameProfile;
 const {None} = FeatureType;
 const {GuaranteedWin} = FeatureType;
@@ -77,15 +77,14 @@ const standardConfig = {
     baseGameProfilesDistribution: {
         // values: [BaseGameLow, BaseGameMedium, BaseGameHigh],
         // weights: [6000, 3850, 150],
-        values: [BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
-        weights: [600, 4000, 1000, 4],
+        values: [BaseGameLow, BaseGameMedium, BaseGameHigh],
+        weights: [4000, 996, 4],
     },
 
     baseGameProfileFallbacks: {
-        BaseGameUltraLow: {threshold: 12500, fallback: BaseGameLow},
         BaseGameLow: {threshold: 12500, fallback: BaseGameLow},
         BaseGameMedium: {threshold: 25, fallback: BaseGameLow},
-        BaseGameHigh: {threshold: 50, fallback: BaseGameLow},
+        BaseGameHigh: {threshold: 25, fallback: BaseGameLow},
     },
 
     bonusGameProfilesDistribution: { //96.35%
@@ -152,28 +151,6 @@ const standardConfig = {
     },
 
     baseGameReelSetsDistributions: {
-        BaseGameUltraLow: {
-            MinWays: {
-                values: [6], //Base 
-                weights: [1],
-            },
-            LowWays: {
-                values: [6], //Base
-                weights: [1],
-            },
-            MedWays: {
-                values: [6],
-                weights: [1],
-            },
-            HighWays: {
-                values: [6],
-                weights: [1],
-            },
-            MaxWays: {
-                values: [6],
-                weights: [1],
-            },
-        },
         BaseGameLow: {
             MinWays: {
                 values: [1, 6], //Base 
@@ -400,76 +377,35 @@ const standardConfig = {
     },
 
     baseGameFeaturesDistributions: {
-        BaseGameUltraLow: {
-            MinWays: {
-                values: [
-                    {featureType: None},
-                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
-                ],
-                weights: [16,1,1,1,1,1,1,1,1,1,1,1,1],
-            },
-            LowWays: {
-                values: [
-                    {featureType: None},
-                ],
-                weights: [1],
-            },
-            MedWays:  {
-                values: [
-                    {featureType: None},
-                ],
-                weights: [1],
-            },
-            HighWays: {
-                values: [
-                    {featureType: None},
-                ],
-                weights: [1],
-            },
-            MaxWays: {
-                values: [
-                    {featureType: None},
-                ],
-                weights: [1],
-            },
-        },
         BaseGameLow: {
             MinWays: {
                 values: [
                     {featureType: None},
-                    {featureType: BeeWilds, payload: 2},
-                    {featureType: BeeWilds, payload: 3},
-                    {featureType: BeeWilds, payload: 4},
-                    {featureType: InstantPrize, payload: 0},
-                    {featureType: InstantPrize, payload: 1},
-                    {featureType: InstantPrize, payload: 2},
-                    {featureType: InstantPrize, payload: 5},
+                    {featureType: BeeWilds, payload: 2}, // 1 in 125
+                    {featureType: BeeWilds, payload: 3}, // 1 in 250
+                    {featureType: BeeWilds, payload: 4}, // 1 in 1666
+                    {featureType: BeeWilds, payload: 5}, // 1 in 5000
+                    {featureType: InstantPrize, payload: 0}, // 1 in 125
+                    {featureType: InstantPrize, payload: 1}, // 1 in 320
+                    {featureType: InstantPrize, payload: 2}, // 1 in 533
+                    {featureType: InstantPrize, payload: 3}, // 1 in 800
+                    {featureType: InstantPrize, payload: 4}, // 1 in 1600
                 ],
-                weights: [965000, 14000, 5000, 1000, 5500, 3500, 3500, 500],
+                weights: [983500, 5000, 1500, 750, 250, 3500, 2500, 1500, 1000, 500],
+                //
             },
             LowWays: {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
                     {featureType: BeeWilds, payload: 3},
-                    {featureType: BeeWilds, payload: 4},
                     {featureType: InstantPrize, payload: 0},
                     {featureType: InstantPrize, payload: 1},
                     {featureType: InstantPrize, payload: 2},
+                    {featureType: InstantPrize, payload: 3},
                     {featureType: InstantPrize, payload: 4},
                 ],
-                weights: [970000, 14500, 5000, 500, 4000, 3000, 3000, 2000],
+                weights: [970000, 10000, 5000, 4000, 3000, 3000, 2500, 2500],
             },
             MedWays:  {
                 values: [
@@ -480,7 +416,7 @@ const standardConfig = {
                     {featureType: InstantPrize, payload: 1},
                     {featureType: InstantPrize, payload: 2},
                 ],
-                weights: [970000, 4500, 1500, 7000, 5000, 5000],
+                weights: [970000, 15000, 5000, 4000, 3000, 3000],
             },
             HighWays: {
                 values: [
@@ -489,9 +425,8 @@ const standardConfig = {
                     {featureType: InstantPrize, payload: 0},
                     {featureType: InstantPrize, payload: 1},
                     {featureType: InstantPrize, payload: 2},
-                    {featureType: InstantPrize, payload: 4},
                 ],
-                weights: [970000, 9000, 6500, 4250, 4250, 1250],
+                weights: [970000, 15000, 6500, 4250, 4250],
             },
             MaxWays: {
                 values: [
@@ -2420,7 +2355,7 @@ const standardConfig = {
             [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
             [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
         ], [ //10 = Ante - Replaces Reel Set 5 - NEEDS REWORKED
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 10, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
+            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
             [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 10, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
             [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 10, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
             [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 10, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 10, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
@@ -2431,19 +2366,10 @@ const standardConfig = {
 };
 
 const anteConfig = structuredClone(standardConfig);
-
-anteConfig.baseGameProfilesDistribution = {
-    // values: [BaseGameLow, BaseGameMedium, BaseGameHigh],
-    // weights: [6000, 3850, 150],
-    values: [BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
-    weights: [600, 4000, 1000, 4],
-}
-
-
 anteConfig.baseGameReelSetsDistributions.BaseGameLow = {
     MinWays: {
         values: [1, 6], //Base 
-        weights: [507500, 750000],
+        weights: [550000, 750000],
     },
     LowWays: {
         values: [9, 10, 6], //Base
