@@ -17,6 +17,7 @@ function FakeServer(_interface) {
     let gameInterface = _interface;
 
     const buildTracker = JSON.parse(fs.readFileSync(path.join(__dirname, '/buildtracker.json')));
+
     //Set up maintained data for the fake server
 
     const sessionData = new CurrentSession();
@@ -56,7 +57,8 @@ function FakeServer(_interface) {
 
     app.get('/game/info', (req, res) => {
         console.log('snc GAME INFO');
-        res.send('{"state":{},"bets":' + JSON.stringify(gameInterface.bets) + ',"settings":{}}');
+        const buildTracker = fs.readFileSync(path.join(__dirname, 'buildtracker.json'));
+        res.send('{"state":{},"bets":' + JSON.stringify(gameInterface.bets) + ',"settings":{},"versionbuildtracker":' + buildTracker + '}');
     });
 
     app.post('/game/complete', (req, res) => {
@@ -279,13 +281,12 @@ function FakeServer(_interface) {
 
     //Control page handling
 
-    app.get('/getconnector', (req, res) => {    
+    app.get('/getconnector', (req, res) => {
         req;
         console.log('connector request by ' + JSON.stringify(req.body) + ' ip ' + req.socket.remoteAddress);
         const connectorjs = fs.readFileSync(path.join(__dirname, '/Connector/connector.js'));
         res.send(connectorjs);
     });
-    
 
     //Startup the fake server
 
