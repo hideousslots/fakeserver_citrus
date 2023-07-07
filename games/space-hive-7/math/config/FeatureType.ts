@@ -5,4 +5,5 @@ export enum FeatureType {
     BookReplacement = "BookReplacement",
     InstantPrize = "InstantPrize",
     ExpandedInstantPrize = "ExpandedInstantPrize",
+    FakeBee = "FakeBee",
 }

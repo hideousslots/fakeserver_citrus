@@ -142,7 +142,7 @@ function getBookWinMultiplierFromPaytable<TSymbol extends string | number | symb
     oakIndex: number,
     payTable: Record<TSymbol, number[]>,
     reelsCount: number): number {
-const payTableEntryIndex = oakIndex - 1;
+const payTableEntryIndex = oakIndex - 2; // corrected incorrect indexing
 return payTableEntryIndex < 0 || payTable[symbol][payTableEntryIndex] === undefined
     ? 1
     : payTable[symbol][payTableEntryIndex];

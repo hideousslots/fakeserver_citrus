@@ -27,6 +27,7 @@ export interface ScatterInfo {
 }
 
 export interface SpinResult {
+    wildFeature: boolean,
     reels: SpaceHiveSymbol[][],
     reelsExpanded: SpaceHiveSymbol[][],
     waysWins: WaysWin<SpaceHiveSymbol>[],
@@ -35,6 +36,7 @@ export interface SpinResult {
     beeWildPositions?: Position[]
     instantPrizeCoins?: InstantPrizeCoin[];
     expandedInstantPrizeData?: ExpandedInstantPrizeCoin[];
+    fakebee: boolean;
     isRespinTriggered: boolean;
     columnsToExpand: number[];
     newReelLengths: number[];
@@ -62,6 +64,7 @@ export function spin(integerRng: IntegerRng,
     const currentMaths =  mathConfig()
     const waysAmount = reelLengths.reduce((previousWaysAmount, currentReelLength) => previousWaysAmount * currentReelLength, 1);
     const waysAmountLevel = getWaysAmountLevel(waysAmount);
+    let fakeBee = false;
 
     //debug info
     let debug = null;
@@ -99,7 +102,7 @@ export function spin(integerRng: IntegerRng,
     const featureReels = indexReels.map(reel => reel.slice());
     let featureType;
     let payload;
-    if(specialModeType === SpecialModeType.CoinBonusBuyFirstSpin) {
+    if((specialModeType === SpecialModeType.BonusBuySpin) || (specialModeType === SpecialModeType.CoinBonusBuyFirstSpin)) {
         featureType = FeatureType.None;
         payload = 0;
     } else if (specialModeType === SpecialModeType.CoinBonusBuySubsequentSpin) {
@@ -115,6 +118,7 @@ export function spin(integerRng: IntegerRng,
     }
 
     let featureReelsExpanded = null;
+    let wilds = false;
     let beeWildPositions = null;
     let instantPrizeCoins = null;
     let expandedInstantPrizeData = null;
@@ -127,7 +131,7 @@ export function spin(integerRng: IntegerRng,
             break;
         }
         case FeatureType.BeeWilds: {
-            
+            wilds = true;
             beeWildPositions = pickBeeWildPositions(integerRng, indexReels, payload);
             beeWildPositions.forEach(
                 position => featureReels[position.column][position.row] = SpaceHiveSymbol.Wild);
@@ -201,6 +205,9 @@ export function spin(integerRng: IntegerRng,
             break;
         }
         
+        case FeatureType.FakeBee: {
+            fakeBee = true;
+        }
     }    
 
     const waysWins = calculateWaysWins(
@@ -239,6 +246,7 @@ export function spin(integerRng: IntegerRng,
         + (replaceWins === null ? 0 : replaceWins.win);
     
     return {
+        wildFeature: wilds,
         reels: featureReels,
         reelsExpanded: featureReelsExpanded,
         waysWins: waysWins,
@@ -247,6 +255,7 @@ export function spin(integerRng: IntegerRng,
         instantPrizeCoins: instantPrizeCoins,
         expandedInstantPrizeData: expandedInstantPrizeData,
         replaceFeature: replaceWins,
+        fakebee: fakeBee,
         isRespinTriggered: columnsToExpand.length > 0,
         columnsToExpand: columnsToExpand,
         newReelLengths: newReelLengths,

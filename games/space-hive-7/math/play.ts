@@ -10,6 +10,7 @@ import {runBonusBuySpinSession} from "./runBonusBuySpinSession";
 import {runCoinBonusBuySpinSession} from "./runCoinBonusBuySpinSession";
 import { SpinResult } from "./spin";
 import { SpecialModeType } from "./config/SpecialModeType";
+import fs from 'fs';
 
 export default function play(stake: number, action: string) {
 
@@ -134,9 +135,14 @@ export default function play(stake: number, action: string) {
         }
 
         const sessionLength: number = bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1].length;
+
+        const finalways = bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1][sessionLength - 1].newReelLengths.reduce((accumulator, currentValue) => accumulator * currentValue);
+
+        fs.appendFileSync('waysInfo.log',  finalways + ',' + accumulatedRoundWin + '\n'); //final ways info
         bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1][sessionLength -1].newReelLengths = currentMaths.baseGameInitialReelLengths;                                
 
-       // fs.appendFileSync('testData.json', JSON.stringify({baseGameRespinsSession, bonusGameRespinsSessions}));
+        fs.appendFileSync('results.log', accumulatedRoundWin + '\n');
+        
     }
 
     return {
