@@ -11,6 +11,7 @@ const {InstantPrize} = FeatureType;
 const {ExpandedInstantPrize} = FeatureType;
 const {FakeBee} = FeatureType;
 const {BookReplacement} = FeatureType;
+const {Scatter} = FeatureType;
 
 let isAnte = false;
 
@@ -97,14 +98,11 @@ const standardConfig = {
         //  weights: [1],
     },
 
-    bonusBuyGameProfilesDistribution: { //96.19%
-        // values: [BonusNewLow, ReplaceHeavy, InstantHeavy, BonusHigh],
-        // weights: [3000, 3300, 3300, 400],
-
-        //bonusnewlow 60 replace 40
-        // replace 184.4
-        values: [BonusNewLow, InstantHeavy, ReplaceHeavy, BonusHigh],
-        weights: [6125, 1900, 1900, 75],
+    bonusBuyGameProfilesDistribution: { //RTP
+        // values: [InstantHeavy],
+        // weights: [3000],
+        values: [BonusLow, BonusNewLow, InstantHeavy, ReplaceHeavy, BonusHigh],
+        weights: [500, 6125, 1900, 1900, 75],
     },
 
     bonusBuyCoinGameProfileDistribution: {
@@ -422,14 +420,17 @@ const standardConfig = {
                     {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
                     {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
                     {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
+                    {featureType: Scatter, payload: 2}, //tease only
+                    {featureType: Scatter, payload: 3}, //straight land bonus
                 ],
-                weights: [16,1,1,1,1,1,1,1,1,1,1,1,1],
+                weights: [160,10,10,10,10,10,10,10,10,10,10,10,10,40,1],
             },
             LowWays: {
                 values: [
                     {featureType: None},
+                    {featureType: Scatter, payload: 2},
                 ],
-                weights: [1],
+                weights: [3, 1],
             },
             MedWays:  {
                 values: [
@@ -461,8 +462,10 @@ const standardConfig = {
                     {featureType: InstantPrize, payload: 1},
                     {featureType: InstantPrize, payload: 2},
                     {featureType: InstantPrize, payload: 5},
+                    {featureType: Scatter, payload: 1},
+                    {featureType: Scatter, payload: 2},
                 ],
-                weights: [965000, 14000, 5000, 1000, 5500, 3500, 3500, 500],
+                weights: [935000, 14000, 5000, 1000, 5500, 3500, 3500, 500, 15000, 15000],
             },
             LowWays: {
                 values: [
@@ -474,8 +477,11 @@ const standardConfig = {
                     {featureType: InstantPrize, payload: 1},
                     {featureType: InstantPrize, payload: 2},
                     {featureType: InstantPrize, payload: 4},
+                    {featureType: Scatter, payload: 1},
+                    {featureType: Scatter, payload: 2},
+                    {featureType: Scatter, payload: 3},
                 ],
-                weights: [970000, 14500, 5000, 500, 4000, 3000, 3000, 2000],
+                weights: [900000, 14500, 5000, 500, 4000, 3000, 3000, 2000, 35000, 35000, 4500],
             },
             MedWays:  {
                 values: [
@@ -485,8 +491,11 @@ const standardConfig = {
                     {featureType: InstantPrize, payload: 0},
                     {featureType: InstantPrize, payload: 1},
                     {featureType: InstantPrize, payload: 2},
+                    {featureType: Scatter, payload: 1},
+                    {featureType: Scatter, payload: 2},
+                    {featureType: Scatter, payload: 3},
                 ],
-                weights: [970000, 4500, 1500, 7000, 5000, 5000],
+                weights: [880000, 4500, 1500, 7000, 5000, 5000, 45000, 45000, 6000],
             },
             HighWays: {
                 values: [
@@ -496,8 +505,10 @@ const standardConfig = {
                     {featureType: InstantPrize, payload: 1},
                     {featureType: InstantPrize, payload: 2},
                     {featureType: InstantPrize, payload: 4},
+                    {featureType: Scatter, payload: 1},
+                    {featureType: Scatter, payload: 2},
                 ],
-                weights: [970000, 9000, 6500, 4250, 4250, 1250],
+                weights: [840000, 9000, 6500, 4250, 4250, 1250, 85000, 85000],
             },
             MaxWays: {
                 values: [
@@ -817,8 +828,9 @@ const standardConfig = {
                 values: [
                     {featureType: None},
                     {featureType: BeeWilds, payload: 2},
+                    {featureType: FakeBee },
                 ],
-                weights: [90, 15],
+                weights: [90, 15, 4],
             },
             HighWays: {
                 values: [
@@ -830,8 +842,9 @@ const standardConfig = {
                     {featureType: BookReplacement, payload: 19},
                     {featureType: BookReplacement, payload: 22},
                     {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: FakeBee},
                 ],
-                weights: [320, 20, 3, 3, 3, 3, 3, 65],
+                weights: [320, 20, 3, 3, 3, 3, 3, 65, 10],
             },
             MaxWays: {
                 values: [
@@ -842,8 +855,9 @@ const standardConfig = {
                     {featureType: BookReplacement, payload: 19},
                     {featureType: BookReplacement, payload: 22},
                     {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: FakeBee},
                 ],
-                weights: [320, 3, 3, 3, 3, 3, 65],
+                weights: [320, 3, 3, 3, 3, 3, 65, 15],
             },
         },
         BonusLow: {
@@ -861,36 +875,101 @@ const standardConfig = {
                     {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
                     {featureType: BeeWilds, payload: 2},
                     {featureType: BeeWilds, payload: 3},
+                    
                 ],
-                weights: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 20, 1],
+                weights: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 20, 2],
             },
             LowWays: {
                 values: [
                     {featureType: None},
                     {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 23},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 11},
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 14},
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 17},
+                    {featureType: FakeBee },
                 ],
-                weights: [7, 1],
+                weights: [8000, 200, 200, 75, 75, 30, 30, 30, 30, 30, 200, 10, 200, 10, 200, 10, 100],
             },
             MedWays: {
                 values: [
                     {featureType: None},
                     {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 23},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 11},
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 14},
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 17},
+                    {featureType: FakeBee },
                 ],
-                weights: [7, 1],
+                weights: [8000, 200, 200, 70, 70, 30, 30, 30, 30, 30, 200, 20, 200, 20, 200, 20, 100],
             },
             HighWays: {
                 values: [
                     {featureType: None},
                     {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 23},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 11},
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 14},
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 17},
+                    {featureType: BookReplacement, payload: 19},
+                    {featureType: BookReplacement, payload: 22},
+                    {featureType: FakeBee },
                 ],
-                weights: [7, 1],
+                weights: [9000, 200, 200, 50, 50, 30, 30, 30, 30, 30, 200, 20, 200, 20, 200, 20, 100, 100, 150],
             },
             MaxWays: {
                 values: [
                     {featureType: None},
                     {featureType: ExpandedInstantPrize, payload: 0},
+                    {featureType: ExpandedInstantPrize, payload: 1},
+                    {featureType: ExpandedInstantPrize, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 23},
+                    {featureType: BookReplacement, payload: 0},
+                    {featureType: BookReplacement, payload: 2},
+                    {featureType: BookReplacement, payload: 4},
+                    {featureType: BookReplacement, payload: 6},
+                    {featureType: BookReplacement, payload: 8},
+                    {featureType: BookReplacement, payload: 10},
+                    {featureType: BookReplacement, payload: 11},
+                    {featureType: BookReplacement, payload: 13},
+                    {featureType: BookReplacement, payload: 14},
+                    {featureType: BookReplacement, payload: 16},
+                    {featureType: BookReplacement, payload: 17},
+                    {featureType: BookReplacement, payload: 19},
+                    {featureType: BookReplacement, payload: 22},
+                    {featureType: FakeBee },
                 ],
-                weights: [7, 1],
+                weights: [9000, 200, 200, 50, 50, 30, 30, 30, 30, 30, 70, 10, 70, 10, 70, 10, 70, 70, 150],
             },
         },
         BonusNewLow: {
@@ -962,7 +1041,7 @@ const standardConfig = {
                         17400, 
                         17200, 
                         15200, 
-                        15200,
+                        25200,
                         42000, 7500, 6000],
             },
             MedWays: {
@@ -996,7 +1075,7 @@ const standardConfig = {
                     9400, 
                     5200, 
                     5200,
-                    5200,
+                    15200,
                     42000, 5000, 3000],
             },
             HighWays: {
@@ -1013,6 +1092,7 @@ const standardConfig = {
                     {featureType: BookReplacement, payload: 16},
                     {featureType: BookReplacement, payload: 19},                    
                     {featureType: BookReplacement, payload: 22},
+                    {featureType: FakeBee},
                     {featureType: ExpandedInstantPrize, payload: 0},
                     {featureType: ExpandedInstantPrize, payload: 1},
                     {featureType: ExpandedInstantPrize, payload: 2},
@@ -1029,6 +1109,7 @@ const standardConfig = {
                     11500, 
                     11500, 
                     11500, 
+                    7500,
                     48000, 7500, 4500],
             },
             MaxWays: {
@@ -1589,6 +1670,8 @@ const standardConfig = {
                     {featureType: ExpandedInstantPrize, payload: 14},
                     {featureType: ExpandedInstantPrize, payload: 15},
                     {featureType: ExpandedInstantPrize, payload: 21},
+                    {featureType: ExpandedInstantPrize, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 23},
                     {featureType: FakeBee},
                 ],
                 weights: [
@@ -1609,8 +1692,10 @@ const standardConfig = {
                     5000,
                     5000,
                     5000,
-                    75000,
+                    10000,
                     15000,
+                    15000,
+                    10000,  
                    ],
             },
             MedWays:  {
@@ -1636,6 +1721,8 @@ const standardConfig = {
                     {featureType: ExpandedInstantPrize, payload: 14},
                     {featureType: ExpandedInstantPrize, payload: 15},
                     {featureType: ExpandedInstantPrize, payload: 21},
+                    {featureType: ExpandedInstantPrize, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 23},
                     {featureType: FakeBee},
                 ],
                 weights: [
@@ -1656,7 +1743,9 @@ const standardConfig = {
                     5000,
                     5000,
                     5000,
-                    75000,
+                    10000,
+                    20000,
+                    20000,
                     10000,
                     ],
             },
@@ -1682,6 +1771,8 @@ const standardConfig = {
                     {featureType: ExpandedInstantPrize, payload: 14},
                     {featureType: ExpandedInstantPrize, payload: 15},
                     {featureType: ExpandedInstantPrize, payload: 21},
+                    {featureType: ExpandedInstantPrize, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 23},
                     {featureType: FakeBee},
                 ],
                 weights: [
@@ -1702,8 +1793,10 @@ const standardConfig = {
                     5000,
                     5000,
                     5000,
-                    75000,
                     10000,
+                    20000,
+                    20000,
+                    20000,
                     ],
             },
             MaxWays:  {
@@ -1729,6 +1822,8 @@ const standardConfig = {
                     {featureType: ExpandedInstantPrize, payload: 14},
                     {featureType: ExpandedInstantPrize, payload: 15},
                     {featureType: ExpandedInstantPrize, payload: 21},
+                    {featureType: ExpandedInstantPrize, payload: 22},
+                    {featureType: ExpandedInstantPrize, payload: 23},
                     {featureType: FakeBee},
                   
                 ],
@@ -1750,8 +1845,10 @@ const standardConfig = {
                     5000,
                     5000,
                     5000,
-                    75000,
                     10000,
+                    25000,
+                    25000,
+                    25000,
                     ],
             },
         },
@@ -2120,139 +2217,151 @@ const standardConfig = {
             },
         ],
         bonusGameProfiles: [
-            {
+            { //0
               fixedBetMultipliers: [1, 1],
               randomBetMultiplierDistributionsIndices: [],
               threshold: 3,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //1
               fixedBetMultipliers: [1, 1, 1],
               randomBetMultiplierDistributionsIndices: [0],
               threshold: 5,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //2
               fixedBetMultipliers: [1, 1, 2],
               randomBetMultiplierDistributionsIndices: [0, 0],
               threshold: 5,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //3
               fixedBetMultipliers: [1, 1, 1],
               randomBetMultiplierDistributionsIndices: [0, 0],
               threshold: 11,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //4
               fixedBetMultipliers: [1, 1, 1],
               randomBetMultiplierDistributionsIndices: [1, 1, 1],
               threshold: 15,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //5
               fixedBetMultipliers: [5, 1, 2],
               randomBetMultiplierDistributionsIndices: [0, 0, 0, 0],
               threshold: 15,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //6
               fixedBetMultipliers: [5, 5, 1],
               randomBetMultiplierDistributionsIndices: [0, 0, 0, 0],
               threshold: 17,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //7
               fixedBetMultipliers: [5, 5, 5],
               randomBetMultiplierDistributionsIndices: [0, 0, 0, 0],
               threshold: 20,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //8
               fixedBetMultipliers: [10, 1, 1],
               randomBetMultiplierDistributionsIndices: [0, 0, 0, 0, 0],
               threshold: 17,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //9
               fixedBetMultipliers: [10, 2, 1],
               randomBetMultiplierDistributionsIndices: [1, 1, 1, 1, 1],
               threshold: 25,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //10
               fixedBetMultipliers: [10, 1, 5],
               randomBetMultiplierDistributionsIndices: [1, 1, 1, 1, 1, 1],
               threshold: 30,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //11
               fixedBetMultipliers: [25, 2, 1],
               randomBetMultiplierDistributionsIndices: [2, 2, 2, 2, 2, 2, 2],
               threshold: 35,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //12
               fixedBetMultipliers: [50, 1, 1],
               randomBetMultiplierDistributionsIndices: [1, 1, 1, 1, 1, 1, 1],
               threshold: 60,
               fallbackDistributionIndex: 0,
             },
-            {
+            { //13
                 fixedBetMultipliers: [50, 5, 5, 2],
                 randomBetMultiplierDistributionsIndices: [3, 3, 3, 3, 3, 3],
                 threshold: 90,
                 fallbackDistributionIndex: 0,
-              },
-              {
-                fixedBetMultipliers: [100, 1, 1],
-                randomBetMultiplierDistributionsIndices: [3, 3, 3, 3, 3, 3, 3],
-                threshold: 130,
-                fallbackDistributionIndex: 0,
-              },
-              {
-                fixedBetMultipliers: [250, 1, 5],
-                randomBetMultiplierDistributionsIndices: [3, 3, 3, 3, 3, 3, 3],
-                threshold: 280,
-                fallbackDistributionIndex: 0,
-              },
-              {
-                fixedBetMultipliers: [500, 100, 1],
-                randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
-                threshold: 750,
-                fallbackDistributionIndex: 0,
-              },
-              {
-                fixedBetMultipliers: [250, 500, 100, 100],
-                randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
-                threshold: 1000,
-                fallbackDistributionIndex: 0,
-              },
-              {
-                fixedBetMultipliers: [250, 500, 500],
-                randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
-                threshold: 1300,
-                fallbackDistributionIndex: 0,
-              },
-              {
-                fixedBetMultipliers: [500, 500, 500],
-                randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
-                threshold: 1600,
-                fallbackDistributionIndex: 0,
-              },
-              {
-                fixedBetMultipliers: [500, 500, 500, 500],
-                randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
-                threshold: 2100,
-                fallbackDistributionIndex: 0,
-              },
-              {
-                fixedBetMultipliers: [1, 1, 1, 1, 1, 1, 1],
-                randomBetMultiplierDistributionsIndices: [0, 0],
-                threshold: 3,
-                fallbackDistributionIndex: 0,
-              },
-            ],
+            },
+            { //14
+            fixedBetMultipliers: [100, 1, 1],
+            randomBetMultiplierDistributionsIndices: [3, 3, 3, 3, 3, 3, 3],
+            threshold: 130,
+            fallbackDistributionIndex: 0,
+            },
+            { //15
+            fixedBetMultipliers: [250, 1, 5],
+            randomBetMultiplierDistributionsIndices: [3, 3, 3, 3, 3, 3, 3],
+            threshold: 280,
+            fallbackDistributionIndex: 0,
+            },
+            { //16
+            fixedBetMultipliers: [500, 100, 1],
+            randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
+            threshold: 750,
+            fallbackDistributionIndex: 0,
+            },
+            { //17
+            fixedBetMultipliers: [250, 500, 100, 100],
+            randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
+            threshold: 1000,
+            fallbackDistributionIndex: 0,
+            },
+            { //18
+            fixedBetMultipliers: [250, 500, 500],
+            randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
+            threshold: 1300,
+            fallbackDistributionIndex: 0,
+            },
+            { //19
+            fixedBetMultipliers: [500, 500, 500],
+            randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
+            threshold: 1600,
+            fallbackDistributionIndex: 0,
+            },
+            { //20
+            fixedBetMultipliers: [500, 500, 500, 500],
+            randomBetMultiplierDistributionsIndices: [4, 4, 4, 4, 4, 4, 4],
+            threshold: 2100,
+            fallbackDistributionIndex: 0,
+            },
+            { //21
+            fixedBetMultipliers: [1, 1, 1, 1, 1, 1, 1],
+            randomBetMultiplierDistributionsIndices: [0, 0],
+            threshold: 3,
+            fallbackDistributionIndex: 0,
+            },
+            { //22
+            fixedBetMultipliers: [5, 1],
+            randomBetMultiplierDistributionsIndices: [],
+            threshold: 6,
+            fallbackDistributionIndex: 0,
+            },
+            { //23
+            fixedBetMultipliers: [5, 2],
+            randomBetMultiplierDistributionsIndices: [],
+            threshold: 7,
+            fallbackDistributionIndex: 0,
+            },
+        ],
 
         betMultipliersDistributions: [
             {
@@ -2327,26 +2436,26 @@ const standardConfig = {
             [1, 1, 1, 1, 7, 7, 0, 0, 7, 3, 3, 9, 4, 4, 2, 2, 3, 3, 9, 3, 3, 1, 1, 6, 6, 8, 8, 8, 9, 6, 6, 0, 0, 8, 8, 2, 2, 8, 5, 5, 0, 0, 0, 0, 1, 1, 9, 5, 5, 9, 9, 5, 2, 2, 9, 4, 4, 3, 9, 0],
             [1, 1, 1, 1, 7, 7, 0, 0, 7, 3, 3, 0, 4, 4, 2, 2, 3, 3, 5, 3, 3, 1, 1, 6, 6, 8, 8, 0, 4, 6, 6, 0, 0, 6, 8, 2, 2, 3, 5, 5, 0, 0, 0, 0, 1, 1, 2, 5, 5, 9, 9, 5, 2, 2, 0, 4, 4, 3, 4, 0],
         ], [//3
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 10, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
-            [6, 1, 1, 0, 5, 4, 0, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 7, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 10, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 4, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
-            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 8, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 10, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
+            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 0, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
+            [6, 1, 1, 0, 5, 4, 0, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 1, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+            [4, 2, 4, 2, 1, 4, 4, 2, 3, 7, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 0, 1, 1],
+            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 4, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
+            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 8, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 1, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 0, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 0, 1, 1],
         ], [//4
-            [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 10, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
+            [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 0, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 1, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
             [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 1, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
-            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 2, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 10],
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 10, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
-            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
+            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 2, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 0],
+            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 0, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
+            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 0, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 0, 1, 1],
         ], [//5
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
-            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 10, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
-            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 10, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 10, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
-            [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
+            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 0, 1, 1],
+            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 1, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
+            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 0, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
+            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 0, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 0, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
+            [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 0, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
         ], [//6
             [1, 7, 7, 3, 5, 5, 7, 5, 1, 3, 5, 5, 9, 5, 3, 1, 7, 5, 3, 5, 1, 5, 7, 9, 1, 3, 9, 3, 1, 1, 5, 5, 3, 1, 3, 3, 5, 7, 5, 5, 9, 7, 9, 5, 7, 3, 9, 7, 9, 1, 3, 5, 5, 1, 3, 1, 3, 7, 7, 5],
             [4, 8, 4, 4, 8, 8, 2, 8, 2, 4, 8, 4, 2, 4, 6, 8, 0, 2, 2, 8, 4, 4, 2, 8, 2, 8, 2, 0, 4, 4, 8, 6, 4, 8, 4, 2, 8, 2, 0, 6, 6, 2, 8, 0, 4, 8, 6, 8, 2, 4, 0, 2, 4, 8, 8, 2, 2, 4, 6, 2],
@@ -2368,21 +2477,22 @@ const standardConfig = {
             [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 6, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
             [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 9, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
             [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 9, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
-        ], [ //9 = Ante - Replaces Reel Set 4 - NEEDS REWORKED
-            [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 10, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
-            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 1, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
-            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 2, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 10, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 10],
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 10, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
-            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-        ], [ //10 = Ante - Replaces Reel Set 5 - NEEDS REWORKED
-            [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 10, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
-            [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 10, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
-            [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 10, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
-            [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 10, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 10, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
-            [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 10, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 10, 7, 0, 7, 5, 5, 9, 5, 10, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
-            [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 10, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
-    ],
+        ], 
+    //     [ //9 = Ante - Replaces Reel Set 4 - NEEDS REWORKED
+    //         [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 10, 6, 7, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
+    //         [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 1, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 8, 7, 0, 7, 5, 5, 9, 5, 1, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
+    //         [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 2, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 7, 7, 9, 6, 5, 5, 7, 10, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 10],
+    //         [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 10, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 1, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 0, 3, 9, 2, 0, 4, 4],
+    //         [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 2, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+    //         [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 1, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
+    //     ], [ //10 = Ante - Replaces Reel Set 5 - NEEDS REWORKED
+    //         [4, 2, 4, 2, 1, 4, 4, 2, 3, 3, 0, 1, 4, 2, 1, 9, 3, 1, 3, 6, 2, 2, 0, 0, 0, 2, 2, 0, 1, 0, 1, 2, 0, 7, 0, 4, 0, 3, 3, 3, 3, 10, 0, 3, 4, 0, 8, 2, 4, 4, 4, 1, 2, 5, 3, 1, 3, 10, 1, 1],
+    //         [6, 1, 1, 0, 5, 4, 3, 1, 4, 2, 2, 2, 3, 1, 4, 1, 2, 0, 4, 3, 0, 2, 0, 3, 2, 0, 1, 2, 10, 0, 1, 3, 4, 1, 9, 0, 3, 4, 3, 4, 10, 3, 1, 2, 3, 4, 0, 4, 4, 0, 1, 0, 0, 8, 1, 3, 2, 3, 7, 2],
+    //         [2, 7, 0, 0, 2, 4, 0, 2, 1, 0, 0, 1, 3, 3, 2, 3, 2, 4, 2, 0, 4, 1, 6, 1, 1, 3, 0, 5, 8, 3, 1, 4, 4, 2, 4, 4, 3, 4, 3, 0, 10, 2, 1, 0, 1, 3, 3, 2, 2, 0, 1, 1, 3, 10, 3, 9, 2, 0, 4, 4],
+    //         [6, 1, 4, 8, 5, 1, 2, 8, 3, 6, 1, 10, 9, 7, 7, 0, 6, 9, 5, 9, 9, 8, 2, 0, 8, 6, 0, 8, 2, 5, 7, 9, 8, 4, 7, 4, 6, 9, 8, 5, 10, 7, 9, 6, 5, 5, 7, 5, 6, 8, 7, 9, 5, 8, 3, 5, 6, 7, 3, 9],
+    //         [7, 9, 4, 8, 2, 5, 5, 9, 6, 6, 7, 10, 2, 7, 8, 5, 5, 8, 9, 8, 7, 8, 6, 9, 6, 1, 5, 3, 5, 6, 5, 4, 7, 6, 7, 9, 6, 6, 8, 9, 10, 7, 0, 7, 5, 5, 9, 5, 10, 8, 7, 8, 0, 9, 3, 5, 6, 7, 8, 9],
+    //         [9, 8, 6, 8, 7, 9, 2, 9, 8, 9, 7, 10, 6, 7, 6, 8, 6, 5, 5, 8, 9, 9, 5, 5, 1, 5, 8, 7, 7, 5, 7, 6, 8, 6, 7, 9, 6, 5, 8, 6, 10, 9, 0, 6, 5, 7, 8, 5, 6, 8, 7, 3, 5, 4, 9, 5, 6, 7, 8, 9],
+    // ],
     ],
 };
 
@@ -2396,26 +2506,118 @@ anteConfig.baseGameProfilesDistribution = {
 }
 
 
-anteConfig.baseGameReelSetsDistributions.BaseGameLow = {
+anteConfig.baseGameFeaturesDistributions.BaseGameUltraLow = {
     MinWays: {
-        values: [1, 6], //Base 
-        weights: [507500, 750000],
+        values: [
+            {featureType: None},
+            {featureType: GuaranteedWin, payload: {symbol: 0, oak: 4, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 1, oak: 4, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 2, oak: 4, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 3, oak: 4, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
+            {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
+            {featureType: Scatter, payload: 2}, //tease only
+            {featureType: Scatter, payload: 3}, //straight land bonus
+        ],
+        weights: [160,10,10,10,10,10,10,10,10,10,10,10,10,40, 7],
     },
     LowWays: {
-        values: [9, 10, 6], //Base
-        weights: [450000, 450000, 100000],
+        values: [
+            {featureType: None},
+            {featureType: Scatter, payload: 2},
+        ],
+        weights: [3, 2],
     },
-    MedWays: {
-        values: [1, 6],
-        weights: [150000, 8500000],
+    MedWays:  {
+        values: [
+            {featureType: None},
+        ],
+        weights: [1],
     },
     HighWays: {
-        values: [1, 6],
-        weights: [800000, 9200000],
+        values: [
+            {featureType: None},
+        ],
+        weights: [1],
     },
     MaxWays: {
-        values: [1, 6],
-        weights: [600000, 9400000],
+        values: [
+            {featureType: None},
+        ],
+        weights: [1],
+    },
+}
+
+anteConfig.baseGameFeaturesDistributions.BaseGameLow = {
+    MinWays: {
+        values: [
+            {featureType: None},
+            {featureType: BeeWilds, payload: 2},
+            {featureType: BeeWilds, payload: 3},
+            {featureType: BeeWilds, payload: 4},
+            {featureType: InstantPrize, payload: 0},
+            {featureType: InstantPrize, payload: 1},
+            {featureType: InstantPrize, payload: 2},
+            {featureType: InstantPrize, payload: 5},
+            {featureType: Scatter, payload: 1},
+            {featureType: Scatter, payload: 2},
+        ],
+        weights: [935000, 14000, 5000, 1000, 5500, 3500, 3500, 500, 35000, 35000],
+    },
+    LowWays: {
+        values: [
+            {featureType: None},
+            {featureType: BeeWilds, payload: 2},
+            {featureType: BeeWilds, payload: 3},
+            {featureType: BeeWilds, payload: 4},
+            {featureType: InstantPrize, payload: 0},
+            {featureType: InstantPrize, payload: 1},
+            {featureType: InstantPrize, payload: 2},
+            {featureType: InstantPrize, payload: 4},
+            {featureType: Scatter, payload: 1},
+            {featureType: Scatter, payload: 2},
+            {featureType: Scatter, payload: 3},
+        ],
+        weights: [900000, 14500, 5000, 500, 4000, 3000, 3000, 2000, 75000, 75000, 15000],
+    },
+    MedWays:  {
+        values: [
+            {featureType: None},
+            {featureType: BeeWilds, payload: 2},
+            {featureType: BeeWilds, payload: 3},
+            {featureType: InstantPrize, payload: 0},
+            {featureType: InstantPrize, payload: 1},
+            {featureType: InstantPrize, payload: 2},
+            {featureType: Scatter, payload: 1},
+            {featureType: Scatter, payload: 2},
+            {featureType: Scatter, payload: 3},
+        ],
+        weights: [880000, 4500, 1500, 7000, 5000, 5000, 60000, 60000, 6000],
+    },
+    HighWays: {
+        values: [
+            {featureType: None},
+            {featureType: BeeWilds, payload: 2},
+            {featureType: InstantPrize, payload: 0},
+            {featureType: InstantPrize, payload: 1},
+            {featureType: InstantPrize, payload: 2},
+            {featureType: InstantPrize, payload: 4},
+            {featureType: Scatter, payload: 1},
+            {featureType: Scatter, payload: 2},
+        ],
+        weights: [840000, 9000, 6500, 4250, 4250, 1250, 85000, 85000],
+    },
+    MaxWays: {
+        values: [
+            {featureType: None},
+        ],
+        weights: [1000000],
     },
 }
 

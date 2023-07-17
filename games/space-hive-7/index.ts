@@ -53,7 +53,8 @@ export const index: IGame<IData> = {
         confidenceInterval: new ConfidenceInterval(99.5),
         hitFrequency: new HitFrequency(
             wagers => wagers.some(wager => wager.win > 0)),
-        
+        twoScatters: new HitFrequency(
+            wagers => wagers.some(wager => wager.data.baseGameRespinsSession[wagers[0].data.baseGameRespinsSession.length -1 ].scatters.collected === 2)),
         bonusGameTriggeringFrequency: new HitFrequency(
             wagers => wagers.some(wager => wager.data.bonusGameRespinsSessions.length > 0)),
         averageBonusGameLength: new Average((wagers) => wagers[0].data.bonusGameRespinsSessions

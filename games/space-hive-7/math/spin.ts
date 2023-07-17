@@ -17,6 +17,7 @@ import {getWaysAmountLevel} from "./getWaysAmountLevel";
 import getSymbolsPositions from "../../../common/reels/getSymbolsPositions";
 import {Distribution} from "../../../common/distributions/Distribution";
 import {modifyReelsForReplace, expandFeatureReels, calculateBookWins} from "./bookWins";
+import {addScatterSymbols} from "./addScatterSymbols";
 import { SpecialModeType } from "./config/SpecialModeType";
 import { pushWin } from "./pushWin";
 
@@ -207,6 +208,12 @@ export function spin(integerRng: IntegerRng,
         
         case FeatureType.FakeBee: {
             fakeBee = true;
+            break;
+        }
+
+        case FeatureType.Scatter: {
+            addScatterSymbols(integerRng, featureReels, initialScatters, payload);
+            break;
         }
     }    
 

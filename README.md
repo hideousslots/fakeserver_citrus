@@ -47,6 +47,12 @@ docker load fakeserverimage -i fakeserverimage.tar
 linux
 docker load < fakeserverimage.tar
 
+eg
+
+docker load < ../home/filereceiver/fakeserverimage3.tar 
+
+
+
 publish and run a new container
 
 docker run --publish 3003:3003 fakeserverimage
@@ -55,6 +61,11 @@ docker run --publish 3004:3003 fakeserverimage2 if running a second server
 
 or
 docker run --publish 3005:3003 fakeserverimage3 if running a third server
+
+to list and close
+
+docker container ls
+docker stop <name>
 
 
 
