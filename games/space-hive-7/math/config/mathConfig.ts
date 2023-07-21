@@ -2,7 +2,7 @@ import {BaseGameProfile} from "./BaseGameProfile";
 import {FeatureType} from "./FeatureType";
 import {BonusGameProfile} from "./BonusGameProfile";
 
-const {BaseGameUltraLow, BaseGameMedium, BaseGameHigh, BaseGameLow} = BaseGameProfile;
+const {Losing, BaseGameUltraLow, BaseGameMedium, BaseGameHigh, BaseGameLow} = BaseGameProfile;
 const {BonusCoinSmall, BonusLow, BonusReplaceSmall, BonusNewLow, ReplaceHeavy, InstantHeavy, BonusHigh} = BonusGameProfile;
 const {None} = FeatureType;
 const {GuaranteedWin} = FeatureType;
@@ -77,13 +77,14 @@ const standardConfig = {
     },
 
     baseGameProfilesDistribution: {
-        // values: [BaseGameLow, BaseGameMedium, BaseGameHigh],
-        // weights: [6000, 3850, 150],
-        values: [BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
-        weights: [600, 4000, 1000, 4],
+        // values: [Losing],
+        // weights: [6000],
+        values: [Losing, BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
+        weights: [3000, 2900, 1500, 1500, 27],
     },
 
     baseGameProfileFallbacks: {
+        Losing: {threshold: 12500, fallback: Losing},
         BaseGameUltraLow: {threshold: 12500, fallback: BaseGameLow},
         BaseGameLow: {threshold: 12500, fallback: BaseGameLow},
         BaseGameMedium: {threshold: 25, fallback: BaseGameLow},
@@ -156,6 +157,29 @@ const standardConfig = {
     },
 
     baseGameReelSetsDistributions: {
+        Losing: {
+            MinWays: {
+                values: [6], //Base 
+                weights: [1],
+            },
+            LowWays: {
+                values: [6], //Base
+                weights: [1],
+            },
+            MedWays: {
+                values: [6],
+                weights: [1],
+            },
+            HighWays: {
+                values: [6],
+                weights: [1],
+            },
+            MaxWays: {
+                values: [6],
+                weights: [1],
+            }, 
+        },
+
         BaseGameUltraLow: {
             MinWays: {
                 values: [6], //Base 
@@ -404,6 +428,38 @@ const standardConfig = {
     },
 
     baseGameFeaturesDistributions: {
+        Losing: {
+            MinWays: {
+                values: [
+                    {featureType: None},
+                ],
+                weights: [1],
+            },
+            LowWays: {
+                values: [
+                    {featureType: None},
+                ],
+                weights: [1],
+            },
+            MedWays:  {
+                values: [
+                    {featureType: None},
+                ],
+                weights: [1],
+            },
+            HighWays: {
+                values: [
+                    {featureType: None},
+                ],
+                weights: [1],
+            },
+            MaxWays: {
+                values: [
+                    {featureType: None},
+                ],
+                weights: [1],
+            },
+        },
         BaseGameUltraLow: {
             MinWays: {
                 values: [
@@ -423,14 +479,14 @@ const standardConfig = {
                     {featureType: Scatter, payload: 2}, //tease only
                     {featureType: Scatter, payload: 3}, //straight land bonus
                 ],
-                weights: [480,30,30,30,30,30,30,30,30,30,30,30,30,120,2],
+                weights: [4800,300,300,300,300,300,300,300,300,300,300,300,300,1200,8],
             },
             LowWays: {
                 values: [
                     {featureType: None},
                     {featureType: Scatter, payload: 2},
                 ],
-                weights: [3, 1],
+                weights: [7, 1],
             },
             MedWays:  {
                 values: [
@@ -465,7 +521,7 @@ const standardConfig = {
                     {featureType: Scatter, payload: 1},
                     {featureType: Scatter, payload: 2},
                 ],
-                weights: [935000, 14000, 5000, 1000, 5500, 3500, 3500, 500, 9500, 9500],
+                weights: [235000, 14000, 5000, 1000, 5500, 3500, 3500, 500, 9500, 9500],
             },
             LowWays: {
                 values: [
@@ -481,7 +537,7 @@ const standardConfig = {
                     {featureType: Scatter, payload: 2},
                     {featureType: Scatter, payload: 3},
                 ],
-                weights: [900000, 14500, 5000, 500, 4000, 3000, 3000, 2000, 35000, 35000, 2500],
+                weights: [200000, 14500, 5000, 500, 4000, 3000, 3000, 2000, 35000, 35000, 50],
             },
             MedWays:  {
                 values: [
@@ -495,7 +551,7 @@ const standardConfig = {
                     {featureType: Scatter, payload: 2},
                     {featureType: Scatter, payload: 3},
                 ],
-                weights: [880000, 4500, 1500, 7000, 5000, 5000, 45000, 45000, 4500],
+                weights: [400000, 4500, 1500, 7000, 5000, 5000, 45000, 45000, 50],
             },
             HighWays: {
                 values: [
@@ -699,7 +755,7 @@ const standardConfig = {
                     {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
                 ],
                 weights: [41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666,
-                    41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666,],
+                    41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666],
             },
             LowWays: {
                 values: [
@@ -729,7 +785,7 @@ const standardConfig = {
                     {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
                 ],
                 weights: [41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666,
-                    41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666,],
+                    41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666],
             },
             MedWays: {
                 values: [
@@ -759,7 +815,7 @@ const standardConfig = {
                     {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
                 ],
                 weights: [41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666,
-                    41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666,],
+                    41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666, 41666],
             },
             HighWays: {
                 values: [
@@ -1100,7 +1156,7 @@ const standardConfig = {
                 weights: [
                         15, //none
                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, //Wins
-                        20, 1, 1, 1  //Wilds
+                        20, 1, 1, 1,  //Wilds
                     ],
             },
             LowWays: {
@@ -1233,7 +1289,7 @@ const standardConfig = {
                 weights: [
                         15, //none
                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, //Wins
-                        20, 1, 1, 1  //Wilds
+                        20, 1, 1, 1,  //Wilds
                     ],
             },
             LowWays: {
@@ -1437,7 +1493,7 @@ const standardConfig = {
                 weights: [
                         15, //none
                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, //Wins
-                        20, 1 //Wilds
+                        20, 1, //Wilds
 
                     ],
             },
@@ -1662,7 +1718,7 @@ const standardConfig = {
                     weights: [
                             15, //none
                             2, 2, 2, 2, 2, 2, 2, 2, 2, 2, //Wins
-                            20, 1 //Wilds
+                            20, 1, //Wilds
     
                         ],
             },
@@ -2441,12 +2497,12 @@ const standardConfig = {
             [0, 0, 0, 4, 4, 4, 2, 2, 2, 7, 7, 7, 5, 5, 5, 0, 0, 0, 4, 4, 7, 8, 8, 8, 2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 6, 6, 6, 0, 3, 3, 3, 6, 9, 9, 3, 3, 3, 3, 3, 5, 5, 2, 2, 9],
             [3, 0, 2, 7, 0, 2, 0, 6, 7, 4, 2, 7, 5, 2, 3, 1, 9, 2, 1, 0, 1, 3, 0, 8, 2, 4, 0, 3, 3, 8, 1, 1, 5, 2, 4, 5, 9, 3, 1, 0, 1, 8, 6, 5, 3, 6, 4, 2, 1, 0, 0, 5, 0, 4, 1, 7, 0, 0, 6, 3],
         ], [
-            [0, 0, 2, 1, 4, 3, 1, 3, 8, 1, 2, 1, 6, 5, 1, 2, 7, 0, 6, 9, 9, 7, 4, 2, 2, 4, 1, 0, 6, 2, 5, 8, 7, 0, 5, 6, 3, 4, 9, 5, 3, 0, 0, 2, 3, 3, 0, 4, 7, 8, 5, 3, 1, 6, 4, 6, 0, 4, 1, 5, ],
-            [2, 6, 0, 7, 4, 8, 5, 2, 1, 8, 0, 2, 4, 3, 1, 3, 0, 1, 4, 5, 9, 0, 3, 0, 2, 6, 7, 4, 3, 1, 0, 4, 6, 4, 7, 0, 0, 2, 1, 0, 2, 1, 5, 5, 1, 6, 9, 6, 1, 4, 1, 5, 0, 3, 2, 9, 0, 3, 5, 0, ],
-            [7, 5, 9, 5, 8, 0, 3, 0, 7, 4, 8, 1, 9, 0, 3, 2, 0, 7, 0, 0, 4, 2, 0, 6, 5, 5, 3, 4, 2, 7, 3, 1, 6, 1, 0, 9, 3, 5, 6, 6, 4, 2, 8, 2, 0, 9, 2, 2, 2, 4, 1, 1, 1, 3, 1, 3, 3, 9, 1, 1, ],
-            [3, 0, 4, 3, 3, 1, 4, 0, 0, 3, 9, 1, 4, 2, 0, 2, 6, 2, 1, 1, 6, 1, 4, 5, 9, 1, 0, 4, 8, 1, 0, 7, 9, 0, 5, 6, 9, 2, 6, 7, 1, 4, 0, 3, 0, 3, 8, 9, 0, 2, 4, 5, 4, 6, 7, 0, 5, 5, 2, 3, ],
-            [9, 6, 4, 1, 8, 5, 2, 7, 2, 0, 3, 1, 2, 8, 0, 3, 7, 6, 3, 6, 0, 7, 5, 3, 1, 5, 0, 0, 2, 3, 0, 2, 4, 9, 1, 2, 4, 8, 3, 7, 0, 1, 0, 0, 5, 2, 0, 1, 5, 1, 3, 4, 2, 4, 6, 1, 9, 3, 0, 1, ],
-            [7, 1, 1, 3, 0, 0, 3, 2, 3, 4, 0, 1, 0, 4, 0, 2, 4, 6, 2, 1, 0, 8, 1, 9, 1, 0, 8, 1, 2, 0, 5, 9, 7, 5, 1, 5, 2, 5, 3, 4, 6, 8, 5, 1, 1, 3, 2, 2, 2, 3, 9, 7, 3, 6, 0, 4, 7, 3, 0, 6, ],
+            [0, 0, 2, 1, 4, 3, 1, 3, 8, 1, 2, 1, 6, 5, 1, 2, 7, 0, 6, 9, 9, 7, 4, 2, 2, 4, 1, 0, 6, 2, 5, 8, 7, 0, 5, 6, 3, 4, 9, 5, 3, 0, 0, 2, 3, 3, 0, 4, 7, 8, 5, 3, 1, 6, 4, 6, 0, 4, 1, 5 ],
+            [2, 6, 0, 7, 4, 8, 5, 2, 1, 8, 0, 2, 4, 3, 1, 3, 0, 1, 4, 5, 9, 0, 3, 0, 2, 6, 7, 4, 3, 1, 0, 4, 6, 4, 7, 0, 0, 2, 1, 0, 2, 1, 5, 5, 1, 6, 9, 6, 1, 4, 1, 5, 0, 3, 2, 9, 0, 3, 5, 0 ],
+            [7, 5, 9, 5, 8, 0, 3, 0, 7, 4, 8, 1, 9, 0, 3, 2, 0, 7, 0, 0, 4, 2, 0, 6, 5, 5, 3, 4, 2, 7, 3, 1, 6, 1, 0, 9, 3, 5, 6, 6, 4, 2, 8, 2, 0, 9, 2, 2, 2, 4, 1, 1, 1, 3, 1, 3, 3, 9, 1, 1 ],
+            [3, 0, 4, 3, 3, 1, 4, 0, 0, 3, 9, 1, 4, 2, 0, 2, 6, 2, 1, 1, 6, 1, 4, 5, 9, 1, 0, 4, 8, 1, 0, 7, 9, 0, 5, 6, 9, 2, 6, 7, 1, 4, 0, 3, 0, 3, 8, 9, 0, 2, 4, 5, 4, 6, 7, 0, 5, 5, 2, 3 ],
+            [9, 6, 4, 1, 8, 5, 2, 7, 2, 0, 3, 1, 2, 8, 0, 3, 7, 6, 3, 6, 0, 7, 5, 3, 1, 5, 0, 0, 2, 3, 0, 2, 4, 9, 1, 2, 4, 8, 3, 7, 0, 1, 0, 0, 5, 2, 0, 1, 5, 1, 3, 4, 2, 4, 6, 1, 9, 3, 0, 1 ],
+            [7, 1, 1, 3, 0, 0, 3, 2, 3, 4, 0, 1, 0, 4, 0, 2, 4, 6, 2, 1, 0, 8, 1, 9, 1, 0, 8, 1, 2, 0, 5, 9, 7, 5, 1, 5, 2, 5, 3, 4, 6, 8, 5, 1, 1, 3, 2, 2, 2, 3, 9, 7, 3, 6, 0, 4, 7, 3, 0, 6 ],
         ], [//2
             [6, 6, 4, 4, 7, 7, 3, 3, 5, 5, 2, 2, 1, 1, 6, 6, 3, 3, 0, 0, 0, 0, 9, 9, 2, 2, 1, 1, 1, 1, 6, 6, 7, 7, 1, 1, 5, 5, 3, 3, 2, 2, 8, 8, 4, 4, 0, 0, 8, 4, 4, 5, 5, 0, 0, 0, 9, 0, 2, 3],
             [9, 9, 8, 8, 7, 7, 5, 5, 4, 4, 4, 4, 0, 0, 4, 4, 3, 3, 2, 2, 1, 5, 5, 1, 1, 1, 1, 2, 2, 1, 1, 7, 0, 0, 0, 0, 0, 0, 5, 5, 5, 9, 8, 6, 6, 2, 2, 3, 3, 6, 6, 8, 0, 3, 3, 4, 6, 9, 5, 1],
@@ -2502,20 +2558,6 @@ const standardConfig = {
 
 const anteConfig = structuredClone(standardConfig);
 
-
-anteConfig.baseGameProfilesDistribution = {
-    // values: [BaseGameLow, BaseGameMedium, BaseGameHigh],
-    // weights: [6000, 3850, 150],
-    values: [BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
-    weights: [600, 4000, 1000, 4],
-}
-
-
-anteConfig.bonusGameProfilesDistribution = { //96.35%
-    values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
-    weights: [500, 4300, 1300, 1300, 1300, 1300, 40],
-},
-
 anteConfig.baseGameFeaturesDistributions.BaseGameUltraLow = {
     MinWays: {
         values: [
@@ -2532,17 +2574,17 @@ anteConfig.baseGameFeaturesDistributions.BaseGameUltraLow = {
             {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
             {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
             {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
-            {featureType: Scatter, payload: 2}, 
+            {featureType: Scatter, payload: 2}, //tease only
             {featureType: Scatter, payload: 3}, //straight land bonus
         ],
-        weights: [160,10,10,10,10,10,10,10,10,10,10,10,10, 30, 5],
+        weights: [960,60,60,60,60,60,60,60,60,60,60,60,60,240, 33],
     },
     LowWays: {
         values: [
             {featureType: None},
-            {featureType: Scatter, payload: 1},
+            {featureType: Scatter, payload: 2},
         ],
-        weights: [3, 1],
+        weights: [15, 10],
     },
     MedWays:  {
         values: [
@@ -2566,72 +2608,11 @@ anteConfig.baseGameFeaturesDistributions.BaseGameUltraLow = {
 
 
 
-anteConfig.baseGameFeaturesDistributions.BaseGameLow = {
-    MinWays: {
-        values: [
-            {featureType: None},
-            {featureType: BeeWilds, payload: 2},
-            {featureType: BeeWilds, payload: 3},
-            {featureType: BeeWilds, payload: 4},
-            {featureType: InstantPrize, payload: 0},
-            {featureType: InstantPrize, payload: 1},
-            {featureType: InstantPrize, payload: 2},
-            {featureType: InstantPrize, payload: 5},
-            {featureType: Scatter, payload: 1},
-            {featureType: Scatter, payload: 2},
-        ],
-        weights: [935000, 14000, 5000, 1000, 5500, 3500, 3500, 500, 35000, 35000],
-    },
-    LowWays: {
-        values: [
-            {featureType: None},
-            {featureType: BeeWilds, payload: 2},
-            {featureType: BeeWilds, payload: 3},
-            {featureType: BeeWilds, payload: 4},
-            {featureType: InstantPrize, payload: 0},
-            {featureType: InstantPrize, payload: 1},
-            {featureType: InstantPrize, payload: 2},
-            {featureType: InstantPrize, payload: 4},
-            {featureType: Scatter, payload: 1},
-            {featureType: Scatter, payload: 2},
-            {featureType: Scatter, payload: 3},
-        ],
-        weights: [900000, 14500, 5000, 500, 4000, 3000, 3000, 2000, 25000, 25000, 22500], //lots of control in this final value
-    },
-    MedWays:  {
-        values: [
-            {featureType: None},
-            {featureType: BeeWilds, payload: 2},
-            {featureType: BeeWilds, payload: 3},
-            {featureType: InstantPrize, payload: 0},
-            {featureType: InstantPrize, payload: 1},
-            {featureType: InstantPrize, payload: 2},
-            {featureType: Scatter, payload: 1},
-            {featureType: Scatter, payload: 2},
-            {featureType: Scatter, payload: 3},
-        ],
-        weights: [880000, 4500, 1500, 7000, 5000, 5000, 35000, 35000, 9000],
-    },
-    HighWays: {
-        values: [
-            {featureType: None},
-            {featureType: BeeWilds, payload: 2},
-            {featureType: InstantPrize, payload: 0},
-            {featureType: InstantPrize, payload: 1},
-            {featureType: InstantPrize, payload: 2},
-            {featureType: InstantPrize, payload: 4},
-            {featureType: Scatter, payload: 1},
-            {featureType: Scatter, payload: 2},
-        ],
-        weights: [840000, 9000, 6500, 4250, 4250, 1250, 15000, 15000],
-    },
-    MaxWays: {
-        values: [
-            {featureType: None},
-        ],
-        weights: [1000000],
-    },
-}
+anteConfig.bonusGameProfilesDistribution = { //96.35%
+    values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
+    weights: [500, 4300, 1300, 1300, 1300, 1300, 40],
+};
+
 
 export function anteMode(ante: boolean): void {
     isAnte = ante;

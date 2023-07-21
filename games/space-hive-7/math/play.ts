@@ -10,7 +10,7 @@ import {runBonusBuySpinSession} from "./runBonusBuySpinSession";
 import {runCoinBonusBuySpinSession} from "./runCoinBonusBuySpinSession";
 import { SpinResult } from "./spin";
 import { SpecialModeType } from "./config/SpecialModeType";
-import fs from 'fs';
+//import fs from 'fs';
 
 export default function play(stake: number, action: string) {
 
@@ -119,7 +119,7 @@ export default function play(stake: number, action: string) {
         .reduce((scattersAmount, result) => scattersAmount + result.scatters.positions.length, 0);
 
     if (collectedScattersAmount >= currentMaths.scattersTriggeringBonusAmount) {
-       
+        
         const initialBonusGameProfile:string  = pickValueFromDistribution(integerRng, bonusProfile);
         const bonusGameProfilesRegistry = new GameProfilesRegistry(currentMaths.bonusGameProfileFallbacks, initialBonusGameProfile);
         let currentBonusGameReelLengths = currentMaths.bonusGameInitialReelLengths;
@@ -138,10 +138,10 @@ export default function play(stake: number, action: string) {
 
         const finalways = bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1][sessionLength - 1].newReelLengths.reduce((accumulator, currentValue) => accumulator * currentValue);
 
-        fs.appendFileSync('waysInfo.log',  finalways + ',' + accumulatedRoundWin + '\n'); //final ways info
-        bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1][sessionLength -1].newReelLengths = currentMaths.baseGameInitialReelLengths;                                
+        // fs.appendFileSync('waysInfo.log',  finalways + ',' + accumulatedRoundWin + '\n'); //final ways info
+        // bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1][sessionLength -1].newReelLengths = currentMaths.baseGameInitialReelLengths;                                
 
-        fs.appendFileSync('results.log', accumulatedRoundWin + '\n');
+        // fs.appendFileSync('results.log', accumulatedRoundWin + '\n');
         
     }
 
