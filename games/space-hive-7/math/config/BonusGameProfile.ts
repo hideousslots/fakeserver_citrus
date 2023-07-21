@@ -1,8 +1,8 @@
 export enum BonusGameProfile {
-    UltraLow = "UltraLow",
+    BonusCoinSmall = "BonusCoinSmall",
     BonusLow = "BonusLow",
     BonusNewLow = "BonusNewLow",
-    BonusMed = "BonusMed",
+    BonusReplaceSmall = "BonusReplaceSmall",
     ReplaceHeavy = "ReplaceHeavy",
     InstantHeavy = "InstantHeavy",
     BonusHigh = "BonusHigh",

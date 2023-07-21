@@ -46,7 +46,7 @@ export function runCoinBonusBuySpinSession(integerRng: IntegerRng,
 
         accumulatedRespinsSessionWin = precisionMoneyMapper(accumulatedRespinsSessionWin + spinResult.win);
         accumulatedRoundWin = precisionMoneyMapper(accumulatedRoundWin + spinResult.win);
-        accumulatedScattersCollected = accumulatedScattersCollected + spinResult.scatters.collected;
+        accumulatedScattersCollected = spinResult.scatters.collected;
         if(spinIndex < (spinsRequired - 1)) {
             spinResult.isRespinTriggered = true;
         }
