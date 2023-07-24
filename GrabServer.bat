@@ -1,0 +1,1 @@
+xcopy ..\gameServer\games\ .\games\ /s /v /e /q
