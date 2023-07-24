@@ -19,7 +19,7 @@ export function runCoinBonusBuySpinSession(integerRng: IntegerRng,
                                   reelLengthsForSpins: number[][],
                                   specialModeType: SpecialModeType): SpinResult[] {
 
-    const currentMaths =  mathConfig()
+    const currentMaths =  mathConfig();
     const spinResults = [];
 
     let accumulatedRespinsSessionWin = 0;
@@ -32,7 +32,7 @@ export function runCoinBonusBuySpinSession(integerRng: IntegerRng,
     const spinsRequired = reelLengthsForSpins.length;
 
     for(let spinIndex: number = 0; spinIndex < spinsRequired; spinIndex++) {
-        let reelLengths = reelLengthsForSpins[spinIndex];
+        const reelLengths = reelLengthsForSpins[spinIndex];
         const spinResult = spin(integerRng, bet, coin, precisionMoneyMapper, reelLengths, reelSetsDistributions, featuresDistributions,
             currentGameProfile, specialModeType, accumulatedRespinsSessionWin, accumulatedRoundWin, accumulatedScattersCollected);
 
@@ -47,10 +47,20 @@ export function runCoinBonusBuySpinSession(integerRng: IntegerRng,
         accumulatedRespinsSessionWin = precisionMoneyMapper(accumulatedRespinsSessionWin + spinResult.win);
         accumulatedRoundWin = precisionMoneyMapper(accumulatedRoundWin + spinResult.win);
         accumulatedScattersCollected = spinResult.scatters.collected;
-        if(spinIndex < (spinsRequired - 1)) {
-            spinResult.isRespinTriggered = true;
+        
+        //If we require more spins, only add them if we have not reached wincap
+
+        if(!spinResult.maxWinCapReached) {
+            if(spinIndex < (spinsRequired - 1)) {
+                spinResult.isRespinTriggered = true;
+            }
         }
         spinResults.push(spinResult);
+
+        //Abort loop if wincap reached
+        if(spinResult.maxWinCapReached) {
+            break;
+        }        
     }
 
     return spinResults;

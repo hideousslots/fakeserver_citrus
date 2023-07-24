@@ -22,6 +22,8 @@ const standardConfig = {
     coinsPerBet_bonusBuy: 1000,
     coinsPerBet_coinBonusBuy: 950,
 
+    maxWinMultiplier: 5000,
+
     baseGameInitialReelLengths: [2, 3, 4, 4, 3, 2],
     bonusGameInitialReelLengths: [2, 3, 4, 4, 3, 2],
     maxExpandedReelLengths: [6, 6, 6, 6, 6, 6],

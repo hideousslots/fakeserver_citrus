@@ -11,7 +11,7 @@ import {FeatureType} from "./config/FeatureType";
 import {Position} from "../../../common/reels/Position";
 import {GameFeature, pickGameFeature, pickGameFeatureFromDistribution} from "./pickGameFeature";
 import {InstantPrizeCoin, pickInstantPrizeCoins} from "./pickInstantPrizeCoins";
-import {ExpandedInstantPrizeCoin,  pickExpandedInstantPrizeCoins} from './pickExpandedInstantPrizeCoins';
+import {ExpandedInstantPrizeCoin,  pickExpandedInstantPrizeCoins} from "./pickExpandedInstantPrizeCoins";
 import {pickBeeWildPositions} from "./pickBeeWildPositions";
 import {getWaysAmountLevel} from "./getWaysAmountLevel";
 import getSymbolsPositions from "../../../common/reels/getSymbolsPositions";
@@ -46,6 +46,7 @@ export interface SpinResult {
     accumulatedRespinsSessionWin: number;
     accumulatedRoundWin: number;
     freeSpinIndex: number;
+    maxWinCapReached: boolean;
     debug: any;
 }
 
@@ -62,7 +63,7 @@ export function spin(integerRng: IntegerRng,
                      initialAccumulatedRoundWin: number,
                      initialScatters: number): SpinResult {
 
-    const currentMaths =  mathConfig()
+    const currentMaths =  mathConfig();
     const waysAmount = reelLengths.reduce((previousWaysAmount, currentReelLength) => previousWaysAmount * currentReelLength, 1);
     const waysAmountLevel = getWaysAmountLevel(waysAmount);
     let fakeBee = false;
@@ -151,7 +152,7 @@ export function spin(integerRng: IntegerRng,
                  coinDataBefore: [],
                  coinDataAfter: [],
                  reelsBefore: [],
-                 reelsAfter: []
+                 reelsAfter: [],
             };
 
             const expandedInstantPrizeCoins = pickExpandedInstantPrizeCoins(integerRng, bet, precisionMoneyMapper, "bonus", payload, indexReels);
@@ -252,7 +253,11 @@ export function spin(integerRng: IntegerRng,
             : expandedInstantPrizeData.coinDataAfter.reduce((previousTotalWin, coinPrize) => previousTotalWin + coinPrize.win, 0))
         + (replaceWins === null ? 0 : replaceWins.win);
     
-    return {
+    //This is the best point at which to cap any winnings over and above the win cap.
+
+    //1) Build up the full spin result
+
+    const thisResult: SpinResult = {
         wildFeature: wilds,
         reels: featureReels,
         reelsExpanded: featureReelsExpanded,
@@ -271,8 +276,40 @@ export function spin(integerRng: IntegerRng,
         accumulatedRespinsSessionWin: precisionMoneyMapper(initialAccumulatedRespinsSessionWin + win),
         accumulatedRoundWin: precisionMoneyMapper(initialAccumulatedRoundWin + win),
         freeSpinIndex: 0,
+        maxWinCapReached: false,
         debug: debug,
     };
+
+    //If the max winning breach the wincap, we need to flag that, lock the wins, and prevent respin retriggering
+    //NB Need to determine if max win is a multiplier of the bet or a value
+    
+    const maxCapValue: number = bet * currentMaths.maxWinMultiplier;
+
+    if(thisResult.accumulatedRoundWin >= maxCapValue) {
+        //Reached cap, flag it and limit win
+
+        thisResult.maxWinCapReached = true;
+
+        //Find how much of this win was required to reach cap and use this as the achieved win
+
+        const requiredWin: number = maxCapValue - initialAccumulatedRoundWin;
+
+        //Recalculate spin win values
+
+        thisResult.win = precisionMoneyMapper(requiredWin);
+        thisResult.accumulatedRespinsSessionWin = precisionMoneyMapper(initialAccumulatedRespinsSessionWin + requiredWin);
+        thisResult.accumulatedRoundWin = precisionMoneyMapper(maxCapValue);
+    
+        //Ensure no further respins
+
+        thisResult.isRespinTriggered = false;
+
+        //reel lengths will be reset in calling code
+    }
+
+
+
+    return thisResult;
 }
 
 // Instant Prize is calculated correctly, but we don't have the before and after data sent to client
