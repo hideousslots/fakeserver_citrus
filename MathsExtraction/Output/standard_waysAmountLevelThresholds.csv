@@ -1,0 +1,7 @@
+waysAmountLevelThresholds
+amountLevel, threshold,
+MinWays,576,
+LowWays,4400,
+MedWays,7201,
+HighWays,32401,
+MaxWays,9007199254740991,

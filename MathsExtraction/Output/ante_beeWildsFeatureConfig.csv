@@ -1,0 +1,7 @@
+beeWildsFeatureConfig
+item,weights,values,
+initialWildColumnsDistribution,
+,1,1,2,
+,1,3,4,
+remainingWildsColumns,
+,,1,2,3,4,

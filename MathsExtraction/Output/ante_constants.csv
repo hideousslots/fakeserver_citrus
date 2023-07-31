@@ -1,0 +1,10 @@
+coinsPerBet_main,10
+coinsPerBet_ante,15
+coinsPerBet_bonusBuy,1000
+coinsPerBet_coinBonusBuy,1000
+maxWinMultiplier,5000
+scattersTriggeringBonusAmount,3
+bonusGameFreeSpinsAmount,6
+baseGameInitialReelLengths,2,3,4,4,3,2,
+bonusGameInitialReelLengths,2,3,4,4,3,2,
+maxExpandedReelLengths,6,6,6,6,6,6,

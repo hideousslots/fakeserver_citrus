@@ -1,0 +1,7 @@
+baseGameProfilesDistribution
+weight, values,
+3000,Losing,
+2900,BaseGameUltraLow,
+1500,BaseGameLow,
+1500,BaseGameMedium,
+27,BaseGameHigh,

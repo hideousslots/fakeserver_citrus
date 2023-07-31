@@ -1,0 +1,9 @@
+bonusGameProfilesDistribution
+weight, values,
+500,BonusLow,
+4300,BonusNewLow,
+1300,BonusReplaceSmall,
+1300,BonusCoinSmall,
+1300,InstantHeavy,
+1300,ReplaceHeavy,
+40,BonusHigh,

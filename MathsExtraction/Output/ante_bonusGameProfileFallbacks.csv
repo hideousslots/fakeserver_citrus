@@ -1,0 +1,9 @@
+bonusGameProfileFallbacks
+type, threshold, fallback,
+BonusCoinSmall,75,BonusLow,
+BonusLow,12500,BonusLow,
+BonusNewLow,20,BonusLow,
+BonusReplaceSmall,75,BonusLow,
+ReplaceHeavy,75,BonusLow,
+InstantHeavy,75,BonusLow,
+BonusHigh,150,BonusLow,

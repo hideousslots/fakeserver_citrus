@@ -1,0 +1,7 @@
+baseGameProfileFallbacks
+type, threshold, fallback,
+Losing,12500,Losing,
+BaseGameUltraLow,12500,BaseGameLow,
+BaseGameLow,12500,BaseGameLow,
+BaseGameMedium,25,BaseGameLow,
+BaseGameHigh,50,BaseGameLow,
