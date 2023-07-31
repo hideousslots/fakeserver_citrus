@@ -47,8 +47,6 @@ export default function play(stake: number, action: string) {
        
         const specialReelLengths: number[][] = [   
             pickValueFromDistribution(integerRng, currentMaths.bonusBuyCoinInitialReelLengthsDistribution),
-            pickValueFromDistribution(integerRng, currentMaths.bonusBuyCoinInitialReelLengthsDistribution),
-            pickValueFromDistribution(integerRng, currentMaths.bonusBuyCoinInitialReelLengthsDistribution),
         ];
 
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = specialReelLengths[0];

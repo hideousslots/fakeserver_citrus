@@ -15,12 +15,12 @@ const {Scatter} = FeatureType;
 
 let isAnte = false;
 
-const standardConfig = {
+export const standardConfig = {
     
     coinsPerBet_main: 10,
     coinsPerBet_ante: 15,
     coinsPerBet_bonusBuy: 1000,
-    coinsPerBet_coinBonusBuy: 950,
+    coinsPerBet_coinBonusBuy: 1000,
 
     maxWinMultiplier: 5000,
 
@@ -110,7 +110,6 @@ const standardConfig = {
 
     bonusBuyCoinGameProfileDistribution: {
         values: [
-        {featureType: None},
         {featureType: ExpandedInstantPrize, payload: 0},
         {featureType: ExpandedInstantPrize, payload: 1},
         {featureType: ExpandedInstantPrize, payload: 2},
@@ -134,10 +133,12 @@ const standardConfig = {
         {featureType: ExpandedInstantPrize, payload: 20},
         ],
 
-        weights: [  4000, 4000, 2000, 2000, 2000, 2000, 500, 500, 150, 150, 150,
-                    300, 300, 10, 10, 10, 10, 1, 1, 1, 1,
-                    1],
-
+        // weights: [  3500, 1250, 1100, 1000, 1000, 500, 300, 300, 300, 200,
+        //             200, 150, 65, 35, 30, 15, 3, 3, 3, 3,
+        //             3],
+        weights: [  9000, 2500, 1200, 1100, 900, 500, 100, 100, 250, 1000,
+            1500, 2000, 500, 115, 115, 100, 50, 50, 15, 13,
+            3],
     },
 
     bonusGameProfileFallbacks: {
@@ -481,14 +482,14 @@ const standardConfig = {
                     {featureType: Scatter, payload: 2}, //tease only
                     {featureType: Scatter, payload: 3}, //straight land bonus
                 ],
-                weights: [4800,300,300,300,300,300,300,300,300,300,300,300,300,1200,8],
+                weights: [4800,300,300,300,300,300,300,300,300,300,300,300,300, 300,8],
             },
             LowWays: {
                 values: [
                     {featureType: None},
                     {featureType: Scatter, payload: 2},
                 ],
-                weights: [7, 1],
+                weights: [21, 1],
             },
             MedWays:  {
                 values: [
@@ -2558,7 +2559,7 @@ const standardConfig = {
     ],
 };
 
-const anteConfig = structuredClone(standardConfig);
+export const anteConfig = structuredClone(standardConfig);
 
 anteConfig.baseGameFeaturesDistributions.BaseGameUltraLow = {
     MinWays: {
@@ -2579,7 +2580,7 @@ anteConfig.baseGameFeaturesDistributions.BaseGameUltraLow = {
             {featureType: Scatter, payload: 2}, //tease only
             {featureType: Scatter, payload: 3}, //straight land bonus
         ],
-        weights: [960,60,60,60,60,60,60,60,60,60,60,60,60,240, 33],
+        weights: [960,60,60,60,60,60,60,60,60,60,60,60,60, 3, 28],
     },
     LowWays: {
         values: [
@@ -2606,7 +2607,7 @@ anteConfig.baseGameFeaturesDistributions.BaseGameUltraLow = {
         ],
         weights: [1],
     },
-}
+};
 
 
 

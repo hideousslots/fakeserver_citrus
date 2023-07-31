@@ -37,8 +37,8 @@ export const index: IGame<IData> = {
             default: 100, maxWin: 130, coin: currentMaths.coinsPerBet_bonusBuy
         },
         "coinbonusbuy": { //this isn't being picked up
-            available: [19, 28.5, 38, 57, 76, 95, 142.5, 190, 285, 380, 475, 570, 760, 950, 1425, 1900],
-            default: 95, maxWin: 130, coin: currentMaths.coinsPerBet_coinBonusBuy
+            available: [20, 30, 40, 60, 80, 100, 150, 200, 300, 400, 500, 600, 800, 1000, 1500, 2000],
+            default: 100, maxWin: 130, coin: currentMaths.coinsPerBet_coinBonusBuy
         },
     },
 
