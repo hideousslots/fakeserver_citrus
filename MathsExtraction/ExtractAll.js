@@ -373,9 +373,6 @@ const toRead_FeaturesDistribution = [
     'bonusGameFeaturesDistributions',
 ];
 
-//beeWildsFeatureConfig
-//instantPrizeCoinsConfig
-
 let configs = [{ config: standardConfig, prefix: 'standard_' }, { config: anteConfig, prefix: 'ante_' }];
 
 configs.forEach((thisConfig) => {
