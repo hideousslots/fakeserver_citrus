@@ -241,7 +241,7 @@ function InstantPrizeCoinsConfigToCSV(filename, title, table) {
     });
 
     const profileIDs=['baseGameProfiles', 'bonusGameProfiles'];
-    CSVFile.rows.push(['profile', 'item', 'values'])
+    CSVFile.rows.push(['profile', 'item', 'values']);
     profileIDs.forEach((profile) => {
         CSVFile.rows.push([]);
         CSVFile.rows.push([profile]);
