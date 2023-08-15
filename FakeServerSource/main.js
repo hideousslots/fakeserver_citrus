@@ -8,6 +8,14 @@ const path = require('path');
 const https = require('https');
 const fs = require("fs");
 
+const variantOptions = [
+    'rtp94',
+    'rtp95'
+];
+
+let currentVariantIndex = 0;
+let currentVariant = variantOptions[currentVariantIndex];
+
 function FakeServer(_interface) {
 
     //Public functions and data go into public object
@@ -119,7 +127,7 @@ function FakeServer(_interface) {
             gameResponse = fixedResponse;
 
         } else {
-            gameResponse = gameInterface.play({ bet: requestData.bet, action: requestData.action, state: null, variant: null, promo: null });
+            gameResponse = gameInterface.play({ bet: requestData.bet, action: requestData.action, state: null, variant: currentVariant, promo: null });
             gameResponse.state = {};
         }
 
@@ -217,11 +225,22 @@ function FakeServer(_interface) {
             return;
         }
 
+        
+        if (req.query.nextvariant !== undefined) {
+            currentVariantIndex = (currentVariantIndex+1) % variantOptions.length;
+            currentVariant=variantOptions[currentVariantIndex];
+            res.send('<html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>refreshing</body></html>');
+            return;
+        }
+
         //Create a full response of the current sessions, cheats, stats, etc
 
         let response = '<HTML><HEAD><TITLE>FAKE SERVER INTERFACE</TITLE></HEAD><BODY>';
         response += '<div align = "center">Fake server build date:<br>' + buildTracker.time + '</div>';
         response += '<div align = "center">Fake server build info:<br>' + buildTracker.versionInfo + '</div>';
+
+        response += '<div align = "center"><h1>Current variant:<br>' + currentVariant + '</h1></div>';
+        response += '<div align="center"><A href="?nextvariant">ADJUST VARIANT</A></div>';
 
         //Test data (temporary space)
 
@@ -293,7 +312,7 @@ function FakeServer(_interface) {
         console.log('Fake server ready\nGame: ' + gameInterface.name + '\n... waiting for RNG initialisation\n');
         await delay(1000);
         console.log('Should have waited long enough for the RNG to initialise now... Time to try...\n');
-        let testResult = gameInterface.play({ bet: 1, action: "main", state: null, variant: null, promo: null });
+        let testResult = gameInterface.play({ bet: 1, action: "main", state: null, variant: currentVariant, promo: null });
         console.log('\nTest result...' + ((testResult.win !== undefined) ? 'OK' : 'Error'));
 
         //Insert simple calculation and display code for bet levels etc if useful to save calculating

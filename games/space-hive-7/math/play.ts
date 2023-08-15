@@ -10,7 +10,7 @@ import {runBonusBuySpinSession} from "./runBonusBuySpinSession";
 import {runCoinBonusBuySpinSession} from "./runCoinBonusBuySpinSession";
 import { SpinResult } from "./spin";
 import { SpecialModeType } from "./config/SpecialModeType";
-//import fs from 'fs';
+import fs from 'fs';
 
 export default function play(stake: number, action: string) {
 
@@ -18,9 +18,8 @@ export default function play(stake: number, action: string) {
     anteMode(false);
     let currentMaths =  mathConfig();
     const integerRng = new FloatSourcedIntegerRng(() => rng());
-
-    const initialBaseGameProfile = pickValueFromDistribution(integerRng, currentMaths.baseGameProfilesDistribution);
-    const baseGameProfilesRegistry = new GameProfilesRegistry(currentMaths.baseGameProfileFallbacks, initialBaseGameProfile as string);
+    
+    
 
     //Handle normal and bonus buy modes separately
 
@@ -37,6 +36,8 @@ export default function play(stake: number, action: string) {
         //Coin bonus buy mode (use dead reels and force scatter)
         //NB Uses special full path
         //Question - should we be checking here that the coin and/or stake and/or bet are valid?
+        const initialBaseGameProfile = pickValueFromDistribution(integerRng, currentMaths.baseGameProfilesDistribution);
+        const baseGameProfilesRegistry = new GameProfilesRegistry(currentMaths.baseGameProfileFallbacks, initialBaseGameProfile as string);
 
         coin = precisionMoneyMapper(bet/currentMaths.coinsPerBet_coinBonusBuy);
         bet = precisionMoneyMapper(coin * currentMaths.coinsPerBet_main);
@@ -69,6 +70,8 @@ export default function play(stake: number, action: string) {
     if(action === ActionType.Main) {
         //Normal play
         //Question - should we be checking here that the coin and/or stake and/or bet are valid?
+        const initialBaseGameProfile = pickValueFromDistribution(integerRng, currentMaths.baseGameProfilesDistribution);
+        const baseGameProfilesRegistry = new GameProfilesRegistry(currentMaths.baseGameProfileFallbacks, initialBaseGameProfile as string);
 
         coin = precisionMoneyMapper(bet/currentMaths.coinsPerBet_main);
     
@@ -83,6 +86,9 @@ export default function play(stake: number, action: string) {
         anteMode(true);
         currentMaths = mathConfig();
 
+        const initialBaseGameProfile = pickValueFromDistribution(integerRng, currentMaths.baseGameProfilesDistribution);
+        const baseGameProfilesRegistry = new GameProfilesRegistry(currentMaths.baseGameProfileFallbacks, initialBaseGameProfile as string);
+
         //Question - should we be checking here that the coin and/or stake and/or bet are valid?
 
         //NB Coin *and* bet recalculated from stake here!
@@ -94,6 +100,8 @@ export default function play(stake: number, action: string) {
             currentMaths.baseGameReelSetsDistributions, currentMaths.baseGameFeaturesDistributions, baseGameProfilesRegistry, 0);
         baseGameRespinsSession[baseGameRespinsSession.length - 1].newReelLengths = currentMaths.baseGameInitialReelLengths;                               
     } else if(action === ActionType.BonusBuy) {
+        const initialBaseGameProfile = pickValueFromDistribution(integerRng, currentMaths.baseGameProfilesDistribution);
+        const baseGameProfilesRegistry = new GameProfilesRegistry(currentMaths.baseGameProfileFallbacks, initialBaseGameProfile as string);
         //Bonus buy mode (use dead reels and force scatter)
         
         //Question - should we be checking here that the coin and/or stake and/or bet are valid?
@@ -139,9 +147,9 @@ export default function play(stake: number, action: string) {
         // fs.appendFileSync('waysInfo.log',  finalways + ',' + accumulatedRoundWin + '\n'); //final ways info
         // bonusGameRespinsSessions[bonusGameRespinsSessions.length - 1][sessionLength -1].newReelLengths = currentMaths.baseGameInitialReelLengths;                                
 
-        // fs.appendFileSync('results.log', accumulatedRoundWin + '\n');
-        
     }
+
+    //fs.appendFileSync('log/results.log', accumulatedRoundWin + '\n');
 
     return {
         win: precisionMoneyMapper(accumulatedRoundWin),

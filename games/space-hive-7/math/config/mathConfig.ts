@@ -1,5 +1,6 @@
 import {BaseGameProfile} from "./BaseGameProfile";
 import {FeatureType} from "./FeatureType";
+import {RTP} from "./RTP";
 import {BonusGameProfile} from "./BonusGameProfile";
 
 const {Losing, BaseGameUltraLow, BaseGameMedium, BaseGameHigh, BaseGameLow} = BaseGameProfile;
@@ -14,6 +15,7 @@ const {BookReplacement} = FeatureType;
 const {Scatter} = FeatureType;
 
 let isAnte = false;
+let activeRTP = RTP.rtp94;
 
 export const standardConfig = {
     
@@ -78,12 +80,7 @@ export const standardConfig = {
         9: [5, 8, 20],
     },
 
-    baseGameProfilesDistribution: {
-        // values: [Losing],
-        // weights: [6000],
-        values: [Losing, BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
-        weights: [3000, 2900, 1500, 1500, 27],
-    },
+    baseGameProfilesDistribution: null,
 
     baseGameProfileFallbacks: {
         Losing: {threshold: 12500, fallback: Losing},
@@ -93,19 +90,11 @@ export const standardConfig = {
         BaseGameHigh: {threshold: 50, fallback: BaseGameLow},
     },
 
-    bonusGameProfilesDistribution: { //96.35%
-        values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
-        weights: [500, 2100, 3000, 3000, 700, 700, 80],
-        //weights: [2700, 3500, 3500, 300], - original
-        //  values: [BonusLow],
-        //  weights: [1],
-    },
+    bonusGameProfilesDistribution: null,
 
-    bonusBuyGameProfilesDistribution: { //RTP
-        // values: [InstantHeavy],
-        // weights: [3000],
+    bonusBuyGameProfilesDistribution: { 
         values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
-        weights: [500, 4300, 1300, 1300, 1300, 1300, 40],
+        weights: [1425, 4350, 1300, 1300, 1300, 1300, 180],
     },
 
     bonusBuyCoinGameProfileDistribution: {
@@ -137,19 +126,6 @@ export const standardConfig = {
         {featureType: ExpandedInstantPrize, payload: 24},
         {featureType: ExpandedInstantPrize, payload: 25},
         ],
-
-        // weights: [  9000, 2500, 1200, 1100, 900, 
-        //             500, 100, 100, 250, 1000,
-        //             1500, 2000, 500, 115, 115, 
-        //             100, 50, 50, 15, 13, 
-        //             3, 0, 0, 0, 1300, 
-        //             1300, 
-        //     ],
-
-        // 1 is 50-100
-        //2 is above
-        //3 is stretching too far
-        //4 is under
 
         weights: [  25000, 5000, 5000, 1000, 1000, 
             1000, 1000, 1000, 1000, 500,
@@ -484,26 +460,7 @@ export const standardConfig = {
             },
         },
         BaseGameUltraLow: {
-            MinWays: {
-                values: [
-                    {featureType: None},
-                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
-                    {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
-                    {featureType: Scatter, payload: 2}, //tease only
-                    {featureType: Scatter, payload: 3}, //straight land bonus
-                ],
-                weights: [4800,300,300,300,300,300,300,300,300,300,300,300,300, 300,8],
-            },
+            MinWays: null,
             LowWays: {
                 values: [
                     {featureType: None},
@@ -2638,68 +2595,122 @@ export const standardConfig = {
     ],
 };
 
-export const anteConfig = structuredClone(standardConfig);
-
-anteConfig.baseGameFeaturesDistributions.BaseGameUltraLow = {
-    MinWays: {
-        values: [
-            {featureType: None},
-            {featureType: GuaranteedWin, payload: {symbol: 0, oak: 4, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 1, oak: 4, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 2, oak: 4, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 3, oak: 4, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
-            {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
-            {featureType: Scatter, payload: 2}, //tease only
-            {featureType: Scatter, payload: 3}, //straight land bonus
-        ],
-        weights: [960,60,60,60,60,60,60,60,60,60,60,60,60, 3, 28],
-    },
-    LowWays: {
-        values: [
-            {featureType: None},
-            {featureType: Scatter, payload: 2},
-        ],
-        weights: [15, 10],
-    },
-    MedWays:  {
-        values: [
-            {featureType: None},
-        ],
-        weights: [1],
-    },
-    HighWays: {
-        values: [
-            {featureType: None},
-        ],
-        weights: [1],
-    },
-    MaxWays: {
-        values: [
-            {featureType: None},
-        ],
-        weights: [1],
-    },
-};
-
-
-
-anteConfig.bonusGameProfilesDistribution = { //96.35%
-    values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
-    weights: [500, 4300, 1300, 1300, 1300, 1300, 40],
-};
-
-
 export function anteMode(ante: boolean): void {
     isAnte = ante;
 }
 
+export function rtpMode(action: "main" | "ante" | "bonusbuy", rtp: RTP): void {
+    if (action === "main" || action === "bonusbuy") {
+        standardConfig.baseGameFeaturesDistributions.BaseGameUltraLow.MinWays = {
+            values: [
+                {featureType: None},
+                {featureType: GuaranteedWin, payload: {symbol: 0, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 1, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 2, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 3, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
+                {featureType: Scatter, payload: 2}, 
+                {featureType: Scatter, payload: 3}, 
+            ],
+            weights: [4800,300,300,300,300,300,300,300,300,300,300,300,300,300, 60],
+        }
+
+        standardConfig.bonusGameProfilesDistribution = { 
+            values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
+            weights: [1625, 4750, 1300, 1300, 1300, 1300, 140],
+        }
+
+        switch(rtp) {
+            case RTP.rtp94:        
+                standardConfig.baseGameProfilesDistribution = { 
+                    values: [Losing, BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
+                    weights: [4682, 4700, 1500, 1500, 27], 
+                }
+                standardConfig.bonusBuyGameProfilesDistribution = { 
+                    values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
+                    weights: [1425, 4350, 1300, 1300, 1300, 1300, 180],
+                }
+                break               
+            case RTP.rtp95:
+                standardConfig.baseGameProfilesDistribution = { 
+                    values: [Losing, BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
+                    weights: [4650, 4700, 1500, 1500, 29], 
+                }
+                standardConfig.bonusBuyGameProfilesDistribution = { 
+                    values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
+                    weights: [1250, 4300, 1300, 1300, 1300, 1300, 180],
+                }
+                break;
+        }
+
+    } else if  (action === "ante")  {
+        standardConfig.baseGameFeaturesDistributions.BaseGameUltraLow.MinWays = {
+            values: [
+                {featureType: None},
+                {featureType: GuaranteedWin, payload: {symbol: 0, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 0, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 1, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 1, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 2, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 2, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 3, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 3, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 4, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 4, oak: 5, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 5, oak: 4, waysAmount: 1}},
+                {featureType: GuaranteedWin, payload: {symbol: 5, oak: 5, waysAmount: 1}},
+                {featureType: Scatter, payload: 2}, 
+                {featureType: Scatter, payload: 3}, 
+            ],
+            weights: [9600,600,600,600,600,600,600,600,600,600,600,600,600, 30, 266],
+        }
+        standardConfig.bonusGameProfilesDistribution = { 
+            values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
+            weights: [500, 4200, 1300, 1300, 1300, 1300, 140],
+        }
+        switch(rtp) {
+            case RTP.rtp94:
+                standardConfig.baseGameProfilesDistribution = { 
+                    values: [Losing, BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
+                    weights: [3075, 2900, 1500, 1500, 27],
+                }
+                break;
+            case RTP.rtp95:
+                standardConfig.baseGameProfilesDistribution = { 
+                    values: [Losing, BaseGameUltraLow, BaseGameLow, BaseGameMedium, BaseGameHigh],
+                    weights: [2950, 2900, 1500, 1500, 27], 
+                }
+                break;
+        }
+    }
+    // else if (action === "bonusbuy") {
+    //     switch(rtp) {
+    //         case RTP.rtp94:
+    //             standardConfig.bonusBuyGameProfilesDistribution = { 
+    //                 values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
+    //                 weights: [1425, 4350, 1300, 1300, 1300, 1300, 180],
+    //             }
+    //             break;
+    //         case RTP.rtp95:
+    //             standardConfig.bonusBuyGameProfilesDistribution = { 
+    //                 values: [BonusLow, BonusNewLow, BonusReplaceSmall, BonusCoinSmall, InstantHeavy, ReplaceHeavy, BonusHigh],
+    //                 weights: [1250, 4300, 1300, 1300, 1300, 1300, 180],
+    //             }
+    //             break;
+    //     }
+    // }
+    else {
+        throw new Error("Invalid action");
+    }
+}
+
 export function mathConfig(): any {
-    return isAnte ? anteConfig : standardConfig;
+    return standardConfig;
 }

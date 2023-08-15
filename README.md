@@ -24,6 +24,9 @@ e.g
 It's now possible to get this fake server into a docker container
 You can build it with:
 
+for rtp variants: 
+docker build -t fajeserverimageX -f Dockerfile.rtpXX
+
 docker build -t fakeserverimage1 .
 or
 docker build -t fakeserverimage2 .

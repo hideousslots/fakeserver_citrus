@@ -128,11 +128,13 @@ export function spin(integerRng: IntegerRng,
   
     switch (featureType) {
         case FeatureType.GuaranteedWin: {
+            
             pushWin(integerRng, featureReels, payload.symbol, payload.oak, payload.waysAmount);
             debug = payload;
             break;
         }
         case FeatureType.BeeWilds: {
+            
             wilds = true;
             beeWildPositions = pickBeeWildPositions(integerRng, indexReels, payload);
             beeWildPositions.forEach(
@@ -208,11 +210,13 @@ export function spin(integerRng: IntegerRng,
         }
         
         case FeatureType.FakeBee: {
+            
             fakeBee = true;
             break;
         }
 
         case FeatureType.Scatter: {
+            
             addScatterSymbols(integerRng, featureReels, initialScatters, payload);
             break;
         }

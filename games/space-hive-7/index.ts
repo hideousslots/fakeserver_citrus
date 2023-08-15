@@ -2,7 +2,7 @@
 import {IGame, IPlayResponse} from "@slotify/gdk/lib/IGame";
 import Iterations from "@slotify/gdk/lib/stats/Iterations.js";
 import RTP from "@slotify/gdk/lib/stats/RTP.js";
-import {mathConfig} from "./math/config/mathConfig";
+import {mathConfig, rtpMode} from "./math/config/mathConfig";
 import HitFrequency from "@slotify/gdk/lib/stats/HitFrequency";
 import Variance from "@slotify/gdk/lib/stats/Variance";
 import ConfidenceInterval from "@slotify/gdk/lib/stats/ConfidenceInterval";
@@ -454,45 +454,23 @@ export const index: IGame<IData> = {
             }
           ),
 
-          _0x: new HitFrequency(wagers => wagers.some(wager => wager.win === 0)),
-          _50x: new HitFrequency(wagers => wagers.some(wager => wager.win > 50)),
-          _100x: new HitFrequency(wagers => wagers.some(wager => wager.win > 100)),
-          _150x: new HitFrequency(wagers => wagers.some(wager => wager.win > 150)),
-          _200x: new HitFrequency(wagers => wagers.some(wager => wager.win > 200)),
-          _250x: new HitFrequency(wagers => wagers.some(wager => wager.win > 250)),
-          _300x: new HitFrequency(wagers => wagers.some(wager => wager.win > 300)),
-          _350x: new HitFrequency(wagers => wagers.some(wager => wager.win > 350)),
-          _400x: new HitFrequency(wagers => wagers.some(wager => wager.win > 400)),
-          _450x: new HitFrequency(wagers => wagers.some(wager => wager.win > 450)),
-          _500x: new HitFrequency(wagers => wagers.some(wager => wager.win > 500)),
-          _550x: new HitFrequency(wagers => wagers.some(wager => wager.win > 550)),
-          _600x: new HitFrequency(wagers => wagers.some(wager => wager.win > 600)),
-          _650x: new HitFrequency(wagers => wagers.some(wager => wager.win > 650)),
-          _700x: new HitFrequency(wagers => wagers.some(wager => wager.win > 700)),
-          _750x: new HitFrequency(wagers => wagers.some(wager => wager.win > 750)),
-          _800x: new HitFrequency(wagers => wagers.some(wager => wager.win > 800)),
-          _850x: new HitFrequency(wagers => wagers.some(wager => wager.win > 850)),
-          _900x: new HitFrequency(wagers => wagers.some(wager => wager.win > 900)),
-          _950x: new HitFrequency(wagers => wagers.some(wager => wager.win > 950)),
-          _1000x: new HitFrequency(wagers => wagers.some(wager => wager.win > 1000)),
-        // zero_bonus: new WinBucket(wagers => wagers.some(wager => wager.win === 0)),
-        // _0x_20x: new WinBucket(wagers => wagers.some(wager => wager.win > 0 && wager.win < 20)),
-        // _20x_40x: new WinBucket(wagers => wagers.some(wager => wager.win >= 20 && wager.win < 40)),
-        // _40x_60x: new WinBucket(wagers => wagers.some(wager => wager.win >= 40 && wager.win < 60)),
-        // _60x_80x: new WinBucket(wagers => wagers.some(wager => wager.win >= 60 && wager.win < 80)),
-        // _80x_100x: new WinBucket(wagers => wagers.some(wager => wager.win >= 80 && wager.win < 100)),
-        // over_100x: new WinBucket(wagers => wagers.some(wager => wager.win >= 100)),
-        // over_200x: new WinBucket(wagers => wagers.some(wager => wager.win >= 200)),
-        // over_300x: new WinBucket(wagers => wagers.some(wager => wager.win >= 300)),
-        // over_400x: new WinBucket(wagers => wagers.some(wager => wager.win >= 400)),
-        // over_500x: new WinBucket(wagers => wagers.some(wager => wager.win >= 500)),
-        // over_1000x: new WinBucket(wagers => wagers.some(wager => wager.win >= 1000)),
-        // over_2000x: new WinBucket(wagers => wagers.some(wager => wager.win >= 2000)),
-        // over_4000x: new WinBucket(wagers => wagers.some(wager => wager.win >= 4000)),
-        // over_8000x: new WinBucket(wagers => wagers.some(wager => wager.win >= 8000)),
-        // over_11500x: new WinBucket(wagers => wagers.some(wager => wager.win >= 11500)),
-        
-        
+       
+        zero_bonus: new WinBucket(wagers => wagers.some(wager => wager.win === 0)),
+        _0_1x: new WinBucket(wagers => wagers.some(wager => wager.win > 0 && wager.win <= 1)),
+        _1_2x: new WinBucket(wagers => wagers.some(wager => wager.win > 1 && wager.win <= 2)),
+        _2_4x: new WinBucket(wagers => wagers.some(wager => wager.win > 2 && wager.win <= 4)),
+        _4_8x: new WinBucket(wagers => wagers.some(wager => wager.win > 4 && wager.win <= 8)),
+        _8_16x: new WinBucket(wagers => wagers.some(wager => wager.win > 8 && wager.win <= 16)),
+        _16_32x: new WinBucket(wagers => wagers.some(wager => wager.win > 16 && wager.win <= 32)),
+        _32_64x: new WinBucket(wagers => wagers.some(wager => wager.win > 32 && wager.win <= 64)),
+        _64_128x: new WinBucket(wagers => wagers.some(wager => wager.win > 64 && wager.win <= 128)),
+        _128_256x: new WinBucket(wagers => wagers.some(wager => wager.win > 128 && wager.win <= 256)),
+        _256_512x: new WinBucket(wagers => wagers.some(wager => wager.win > 256 && wager.win <= 512)),
+        _512_1024x: new WinBucket(wagers => wagers.some(wager => wager.win > 512 && wager.win <= 1024)),
+        _1024_2048x: new WinBucket(wagers => wagers.some(wager => wager.win > 1024 && wager.win <= 2048)),
+        _2048_4096x: new WinBucket(wagers => wagers.some(wager => wager.win > 2048 && wager.win <= 4096)),
+        _4096_4999x: new WinBucket(wagers => wagers.some(wager => wager.win > 4096 && wager.win <= 4999)),
+        max_win: new WinBucket(wagers => wagers.some(wager => wager.win === 5000)),
     },
     cheats: {
         "main": {
@@ -507,6 +485,7 @@ export const index: IGame<IData> = {
     },
 
     play({bet, action, state, variant, promo}): IPlayResponse<IData> {
+        rtpMode(action as "main" | "ante" | "bonusbuy", variant )
         return play(bet, action);
     },
 
