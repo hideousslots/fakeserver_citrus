@@ -54,6 +54,24 @@ eg
 
 docker load < ../home/filereceiver/fakeserverimage3.tar 
 
+----
+
+updating ssl certs on server
+
+certs for dstest live in ./fakeserversource/keys/dstestkey.pem and ...dstestcert.pem
+(this could be improved)
+once in the container, these should be in: /app/fakeserversource
+
+Renew certs as normal (snc - see MCP system)
+Upload new key and pem via scp
+copy into running container at above path
+docker cp dstestcert.pem focused_lichterman:/app/FakeServerSource/Keys/dstestcert.pem
+ docker cp dstestkey.pem focused_lichterman:/app/FakeServerSource/Keys/dstestkey.pem
+restart container
+
+
+
+
 
 
 publish and run a new container
