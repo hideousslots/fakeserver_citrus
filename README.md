@@ -65,11 +65,18 @@ once in the container, these should be in: /app/fakeserversource
 Renew certs as normal (snc - see MCP system)
 Upload new key and pem via scp
 copy into running container at above path
+
+root@dockermain:~# cp /home/filereceiver/*.pem .
+root@dockermain:~# mv cert2.pem dstestcert.pem   
+root@dockermain:~# mv privkey2.pem  dstestkey.pem 
+
 docker cp dstestcert.pem focused_lichterman:/app/FakeServerSource/Keys/dstestcert.pem
  docker cp dstestkey.pem focused_lichterman:/app/FakeServerSource/Keys/dstestkey.pem
-restart container
+docker restart focused_lichterman
 
 
+root@dockermain:~# cp /home/filereceiver/*.pem .
+root@dockermain:~# mv cert2.pem dstestcert.pem                                  root@dockermain:~# mv privkey2.pem  dstestkey.pem 
 
 
 
