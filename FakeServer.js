@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 //Import the correct game
 
-const gameInterface = __importDefault(require("./lib/games/space-hive-7/index.js")).index;
+const gameInterface = __importDefault(require("./lib/games/citrus-got-reel/index.js")).index;
 
 //Set up the fake server using the above interface
 
