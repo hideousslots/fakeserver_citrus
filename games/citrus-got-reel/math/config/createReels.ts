@@ -75,13 +75,12 @@ export function createReels(
     }
   
     const shouldMatch = Math.random() < hitRateOffset;
-
-    if (col === stopReel || !shouldMatch) {
-      const allSymbols = new Set(Array.from({ length: 10 }, (_, i) => i));
-      const availableSymbols = [...allSymbols].filter(
-        s => !influencingSymbols.some(is => is.symbol === s)
-      );
-      
+    const allSymbols = new Set(Array.from({ length: 10 }, (_, i) => i));
+    const availableSymbols = [...allSymbols].filter(
+      s => !influencingSymbols.some(is => is.symbol === s)
+    );
+  
+    if (col === stopReel || !shouldMatch) {    
       if (availableSymbols.length > 0) {
         selectedSymbol = availableSymbols[Math.floor(Math.random() * availableSymbols.length)];
       }
@@ -89,9 +88,15 @@ export function createReels(
 
     if (selectedSymbol === null) {
       if (influencingSymbols.length === 0) {
-        selectedSymbol = generateSymbol(distributionOffset).symbol;
+          selectedSymbol = generateSymbol(distributionOffset).symbol;
       } else if (shouldMatch) {
-        selectedSymbol = influencingSymbols[Math.floor(Math.random() * influencingSymbols.length)].symbol;
+          selectedSymbol = influencingSymbols[Math.floor(Math.random() * influencingSymbols.length)].symbol;
+      } else { // shouldMatch is negative
+          if (availableSymbols.length > 0) {
+              selectedSymbol = availableSymbols[Math.floor(Math.random() * availableSymbols.length)];
+          } else {
+              selectedSymbol = generateSymbol(distributionOffset).symbol; // default
+          }
       }
     }
   
