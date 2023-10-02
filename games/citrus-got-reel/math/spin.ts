@@ -126,7 +126,7 @@ function generateInitialReelGrid(
     // clone the generatedSymbols array
     const resultGrid: CitrusGotReelSymbol[][] = JSON.parse(JSON.stringify(generatedSymbols));
   
-    // Replace wild symbols in resultGrid with placeholders
+        // Replace wild symbols in resultGrid with placeholders
     for (let i = 0; i < resultGrid.length; i++) {
       for (let j = 0; j < resultGrid[i].length; j++) {
         if (resultGrid[i][j].symbol === CitrusGotReelSymbolValue.Wild ||
@@ -141,15 +141,14 @@ function generateInitialReelGrid(
     // Overlay initialWilds onto resultGrid
     for (let i = 0; i < initialWilds.length; i++) {
       for (let j = 0; j < initialWilds[i].length; j++) {
-        if (!initialWilds[i][j])
-            break;
-
-        if (initialWilds[i][j].symbol === CitrusGotReelSymbolValue.Wild ||
-            initialWilds[i][j].symbol === CitrusGotReelSymbolValue.DirectionalWild ||
-            initialWilds[i][j].symbol === CitrusGotReelSymbolValue.CollectorWild ||
-            initialWilds[i][j].symbol === CitrusGotReelSymbolValue.PayerWild) {
+    //   if (initialWilds[i][j]) {
+        if (initialWilds[i][j]?.symbol === CitrusGotReelSymbolValue.Wild ||
+            initialWilds[i][j]?.symbol === CitrusGotReelSymbolValue.DirectionalWild ||
+            initialWilds[i][j]?.symbol === CitrusGotReelSymbolValue.CollectorWild ||
+            initialWilds[i][j]?.symbol === CitrusGotReelSymbolValue.PayerWild) {
           resultGrid[i][j] = initialWilds[i][j];
-        }
+          }
+     //   }
       }
     }
 
@@ -174,7 +173,7 @@ function generateInitialReelGrid(
             resultGrid[i][j] = { symbol: randomSymbol } as CitrusGotReelSymbol;
         }
       }
+    }
 
     return resultGrid;
-  }
 }

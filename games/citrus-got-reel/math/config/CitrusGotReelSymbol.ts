@@ -165,7 +165,12 @@ export interface LineWinDetails {
               }
   
               const targetSymbol = newInput[i][j];
-              if (targetSymbol && (targetSymbol.symbol === CitrusGotReelSymbolValue.Wild || targetSymbol.symbol === CitrusGotReelSymbolValue.PayerWild)) {
+              if (
+                targetSymbol?.symbol === CitrusGotReelSymbolValue.Wild || 
+                targetSymbol?.symbol === CitrusGotReelSymbolValue.DirectionalWild || 
+                targetSymbol?.symbol === CitrusGotReelSymbolValue.CollectorWild || 
+                targetSymbol?.symbol === CitrusGotReelSymbolValue.PayerWild
+                ) {
                 targetSymbol.multiplier += currentMultiplier;
               }
             }
@@ -195,16 +200,16 @@ export interface LineWinDetails {
           for (let step = 0; step < steps; step++) {
             switch (direction) {
               case "up":
-                newRow -= 1;
-                break;
-              case "down":
-                newRow += 1;
-                break;
-              case "left":
                 newColumn -= 1;
                 break;
-              case "right":
+              case "down":
                 newColumn += 1;
+                break;
+              case "left":
+                newRow -= 1;
+                break;
+              case "right":
+                newRow += 1;
                 break;
             }
   
