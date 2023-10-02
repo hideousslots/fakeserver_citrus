@@ -1,5 +1,5 @@
 
-import { CitrusGotReelSymbol, CitrusGotReelSymbolValue, LineWinDetails } from "./CitrusGotReelSymbol";
+import { CitrusGotReelSymbol, CitrusGotReelSymbolValue, LineWinDetails, WildSymbols } from "./CitrusGotReelSymbol";
 import { mathConfig } from "./mathConfig";
 import { Position } from "../../../../common/reels/Position";
 
@@ -36,10 +36,7 @@ export class LineWinCalculator {
     }
 
     private isWildSymbol(symbol: CitrusGotReelSymbolValue): boolean {
-      if (symbol === CitrusGotReelSymbolValue.Wild ||
-          symbol === CitrusGotReelSymbolValue.CollectorWild ||
-          symbol === CitrusGotReelSymbolValue.DirectionalWild ||
-          symbol === CitrusGotReelSymbolValue.PayerWild) {
+      if (WildSymbols.includes(symbol)) {
           return true;
       }
       else {

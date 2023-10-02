@@ -1,5 +1,5 @@
 import {mathConfig} from "./config/mathConfig";
-import {CitrusGotReelSymbol, CitrusGotReelSymbolValue, addWilds, expandWilds, stickWilds, LineWinDetails, addScatters, countScatters, returnSticky} from "./config/CitrusGotReelSymbol";
+import {CitrusGotReelSymbol, CitrusGotReelSymbolValue, addWilds, expandWilds, stickWilds, LineWinDetails, addScatters, countScatters, returnSticky, WildSymbols, nonWildSymbols} from "./config/CitrusGotReelSymbol";
 import {IntegerRng} from "../../../common/rng/IntegerRng";
 import {Position} from "../../../common/reels/Position";
 import { LineWinCalculator } from "./config/calculateLineWins";
@@ -92,14 +92,14 @@ function generateSpin(
     let expandedWilds = expandWilds(addedWilds);
 
     if(scatterSymbols > 0) {
-    expandedWilds = addScatters(expandedWilds, scatterSymbols);
+    expandedWilds = addScatters(expandedWilds, scatterSymbols, integerRng);
     }
 
     const hitrateControl: number = pickValueFromDistribution(integerRng, hitrate);
     const symbolDistributionOffset: number  = pickValueFromDistribution(integerRng, distOffset);
     const stop: number = pickValueFromDistribution(integerRng, stopOffset);
-    const indexReels = createReels(6, 5, symbolDistributionOffset, 0.5, hitrateControl, currentMaths.lineDefines, stop, expandedWilds) as CitrusGotReelSymbol[][];
-    const initialGrid = generateInitialReelGrid(indexReels, addedWilds);
+    const indexReels = createReels(6, 5, integerRng, symbolDistributionOffset, 0.5, hitrateControl, currentMaths.lineDefines, stop, expandedWilds) as CitrusGotReelSymbol[][];
+    const initialGrid = generateInitialReelGrid(indexReels, addedWilds, integerRng);
 
     const scatters = scatterSymbols > 0 ? countScatters(indexReels) : {collected: 0, positions: []};
 
@@ -121,7 +121,8 @@ function generateSpin(
 //reconstruct an initial reel grid
 function generateInitialReelGrid(
     generatedSymbols: CitrusGotReelSymbol[][],
-    initialWilds: CitrusGotReelSymbol[][]
+    initialWilds: CitrusGotReelSymbol[][],
+    integerRng: IntegerRng,
   ): CitrusGotReelSymbol[][] {
     // clone the generatedSymbols array
     const resultGrid: CitrusGotReelSymbol[][] = JSON.parse(JSON.stringify(generatedSymbols));
@@ -129,10 +130,7 @@ function generateInitialReelGrid(
         // Replace wild symbols in resultGrid with placeholders
     for (let i = 0; i < resultGrid.length; i++) {
       for (let j = 0; j < resultGrid[i].length; j++) {
-        if (resultGrid[i][j].symbol === CitrusGotReelSymbolValue.Wild ||
-            resultGrid[i][j].symbol === CitrusGotReelSymbolValue.DirectionalWild ||
-            resultGrid[i][j].symbol === CitrusGotReelSymbolValue.CollectorWild ||
-            resultGrid[i][j].symbol === CitrusGotReelSymbolValue.PayerWild) {
+        if (WildSymbols.includes(resultGrid[i][j]?.symbol)) {
           resultGrid[i][j] = { symbol: CitrusGotReelSymbolValue.PlaceHolder };
         }
       }
@@ -141,35 +139,18 @@ function generateInitialReelGrid(
     // Overlay initialWilds onto resultGrid
     for (let i = 0; i < initialWilds.length; i++) {
       for (let j = 0; j < initialWilds[i].length; j++) {
-    //   if (initialWilds[i][j]) {
-        if (initialWilds[i][j]?.symbol === CitrusGotReelSymbolValue.Wild ||
-            initialWilds[i][j]?.symbol === CitrusGotReelSymbolValue.DirectionalWild ||
-            initialWilds[i][j]?.symbol === CitrusGotReelSymbolValue.CollectorWild ||
-            initialWilds[i][j]?.symbol === CitrusGotReelSymbolValue.PayerWild) {
+        if (WildSymbols.includes(initialWilds[i][j]?.symbol)) {
           resultGrid[i][j] = initialWilds[i][j];
           }
-     //   }
       }
     }
 
-    const nonWildSymbols: CitrusGotReelSymbolValue[] = [
-        CitrusGotReelSymbolValue.Ten,
-        CitrusGotReelSymbolValue.Jack,
-        CitrusGotReelSymbolValue.Queen,
-        CitrusGotReelSymbolValue.King,
-        CitrusGotReelSymbolValue.Ace,
-        CitrusGotReelSymbolValue.High1,
-        CitrusGotReelSymbolValue.High2,
-        CitrusGotReelSymbolValue.High3,
-        CitrusGotReelSymbolValue.High4,
-        CitrusGotReelSymbolValue.High5,
-        ];
-
+  
     // Replace any remaining Placeholders with random symbols
     for (let i = 0; i < resultGrid.length; i++) {
         for (let j = 0; j < resultGrid[i].length; j++) {
           if (resultGrid[i][j].symbol === CitrusGotReelSymbolValue.PlaceHolder) {
-            const randomSymbol = nonWildSymbols[Math.floor(Math.random() * nonWildSymbols.length)];
+            const randomSymbol = nonWildSymbols[integerRng.randomInteger(nonWildSymbols.length)];
             resultGrid[i][j] = { symbol: randomSymbol } as CitrusGotReelSymbol;
         }
       }

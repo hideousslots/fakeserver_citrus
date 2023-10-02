@@ -6,90 +6,105 @@ import { FeatureType } from "./FeatureType";
 import { ScatterInfo } from "../spin";
 
 export enum CitrusGotReelSymbolValue {
-    Ten,
-    Jack,
-    Queen,
-    King,
-    Ace,
-    High1,
-    High2,
-    High3,
-    High4,
-    High5,
-    Scatter,
-    Wild,
-    DirectionalWild,
-    CollectorWild,
-    PayerWild,
-    PlaceHolder,
+Ten,
+Jack,
+Queen,
+King,
+Ace,
+High1,
+High2,
+High3,
+High4,
+High5,
+Scatter,
+Wild,
+DirectionalWild,
+CollectorWild,
+PayerWild,
+PlaceHolder,
 }
 
 export type CitrusGotReelSymbol = 
-    | {
-        symbol: Exclude<CitrusGotReelSymbolValue, CitrusGotReelSymbolValue.Wild>;
-      }
-    | {
-        symbol: CitrusGotReelSymbolValue.Wild;
-        multiplier: number;
-        sticky: boolean;
-      }
-    | {
-        symbol: CitrusGotReelSymbolValue.DirectionalWild;
-        multiplier: number;
-        direction: "up" | "down" | "left" | "right";
-        steps: number;
-        sticky: boolean;
-      }
-    | {
-        symbol: CitrusGotReelSymbolValue.CollectorWild;
-        multiplier: number;
-        sticky: boolean;
-      }
-    | {
-        symbol: CitrusGotReelSymbolValue.PayerWild;
-        multiplier: number;
-        sticky: boolean;
-      }
-
-export interface LineWinDetails {
-    symbol: CitrusGotReelSymbolValue;
-    lineNumber: number;
-    matchCount: number;
-    positions: Position[];
-    winAmount: number;
-    multiplier: number;
+| {
+  symbol: Exclude<CitrusGotReelSymbolValue, CitrusGotReelSymbolValue.Wild>;
+}
+| {
+  symbol: CitrusGotReelSymbolValue.Wild;
+  multiplier: number;
+  sticky: boolean;
+}
+| {
+  symbol: CitrusGotReelSymbolValue.DirectionalWild;
+  multiplier: number;
+  direction: "up" | "down" | "left" | "right";
+  steps: number;
+  sticky: boolean;
+}
+| {
+  symbol: CitrusGotReelSymbolValue.CollectorWild;
+  multiplier: number;
+  sticky: boolean;
+}
+| {
+  symbol: CitrusGotReelSymbolValue.PayerWild;
+  multiplier: number;
+  sticky: boolean;
 }
 
-  function hasMultiplier(obj: any): obj is { multiplier: number } {
-    return obj && typeof obj.multiplier === "number";
+export interface LineWinDetails {
+  symbol: CitrusGotReelSymbolValue;
+  lineNumber: number;
+  matchCount: number;
+  positions: Position[];
+  winAmount: number;
+  multiplier: number;
+}
+
+export const nonWildSymbols: CitrusGotReelSymbolValue[] = [
+  CitrusGotReelSymbolValue.Ten,
+  CitrusGotReelSymbolValue.Jack,
+  CitrusGotReelSymbolValue.Queen,
+  CitrusGotReelSymbolValue.King,
+  CitrusGotReelSymbolValue.Ace,
+  CitrusGotReelSymbolValue.High1,
+  CitrusGotReelSymbolValue.High2,
+  CitrusGotReelSymbolValue.High3,
+  CitrusGotReelSymbolValue.High4,
+  CitrusGotReelSymbolValue.High5,
+  ];
+
+export const WildSymbols: CitrusGotReelSymbolValue[] = [
+  CitrusGotReelSymbolValue.Wild,
+  CitrusGotReelSymbolValue.DirectionalWild,
+  CitrusGotReelSymbolValue.CollectorWild,
+  CitrusGotReelSymbolValue.PayerWild,
+  ];  
+
+function deepCloneArray(arr: any[][]): any[][] {
+  return arr.map(row => row.map(cell => (cell !== undefined ? { ...cell } : undefined)));
+}
+
+
+export function addWilds(integerRng: IntegerRng, input: CitrusGotReelSymbol[][], context: "base" | "bonus"): CitrusGotReelSymbol[][] {
+
+  const currentMaths = mathConfig();
+
+  if (!pickValueFromDistribution(integerRng, currentMaths.wildFeatureActive[context])) {
+    return input;
   }
 
+  // Determine the number of wilds to place
+  const numWilds: number = pickValueFromDistribution(integerRng, currentMaths.initialWilds[context]);
   
-  function deepCloneArray(arr: any[][]): any[][] {
-    return arr.map(row => row.map(cell => (cell !== undefined ? { ...cell } : undefined)));
-  }
-  
-
-  export function addWilds(integerRng: IntegerRng, input: CitrusGotReelSymbol[][], context: "base" | "bonus"): CitrusGotReelSymbol[][] {
-
-    const currentMaths = mathConfig();
-  
-    if (!pickValueFromDistribution(integerRng, currentMaths.wildFeatureActive[context])) {
-      return input;
-    }
-  
-    // Determine the number of wilds to place
-    const numWilds: number = pickValueFromDistribution(integerRng, currentMaths.initialWilds[context]);
-  
-    /// Create an array of available positions for placing wilds
-    const availablePositions: Position[] = [];
-    for (let row = 0; row < input.length; row++) {
-      for (let column = 0; column < input[row].length; column++) {
-        if (typeof input[row][column] === "undefined") {
-          availablePositions.push({ row, column });
-        }
+  /// Create an array of available positions for placing wilds
+  const availablePositions: Position[] = [];
+  for (let row = 0; row < input.length; row++) {
+    for (let column = 0; column < input[row].length; column++) {
+      if (typeof input[row][column] === "undefined") {
+        availablePositions.push({ row, column });
       }
     }
+  }
   
     // Mapping between FeatureType and CitrusGotReelSymbolValue
     const featureToSymbolMap: Record<FeatureType, (multiplier: number) => CitrusGotReelSymbol> = {
@@ -101,7 +116,7 @@ export interface LineWinDetails {
       [FeatureType.DirectionalWild]: (multiplier) => ({
         symbol: CitrusGotReelSymbolValue.DirectionalWild,
         multiplier,
-        direction: currentMaths.directions[integerRng.randomInteger(currentMaths.directions.length - 1)] as (typeof currentMaths.directions)[number],
+        direction: currentMaths.directions[integerRng.randomInteger(currentMaths.directions.length)] as (typeof currentMaths.directions)[number],
         steps: pickValueFromDistribution(integerRng, currentMaths.stepsData),
         sticky: false,
       }),
@@ -127,7 +142,7 @@ export interface LineWinDetails {
 
     const multiplier = pickValueFromDistribution(integerRng, currentMaths.initialMultiplier[context]);
     const wildType = pickValueFromDistribution(integerRng, currentMaths.wildLookUp);
-    const randomIndex = integerRng.randomInteger(availablePositions.length - 1);
+    const randomIndex = integerRng.randomInteger(availablePositions.length);
     const { row, column } = availablePositions[randomIndex];
 
     // Remove this position from the list of available positions
@@ -165,12 +180,7 @@ export interface LineWinDetails {
               }
   
               const targetSymbol = newInput[i][j];
-              if (
-                targetSymbol?.symbol === CitrusGotReelSymbolValue.Wild || 
-                targetSymbol?.symbol === CitrusGotReelSymbolValue.DirectionalWild || 
-                targetSymbol?.symbol === CitrusGotReelSymbolValue.CollectorWild || 
-                targetSymbol?.symbol === CitrusGotReelSymbolValue.PayerWild
-                ) {
+              if (WildSymbols.includes(targetSymbol?.symbol)) {
                 targetSymbol.multiplier += currentMultiplier;
               }
             }
@@ -220,7 +230,7 @@ export interface LineWinDetails {
   
             const targetSymbol = newInput[newRow][newColumn];
   
-            if (hasMultiplier(targetSymbol)) {
+            if (WildSymbols.includes(targetSymbol?.symbol)) {
               // targetSymbol has a multiplier property
               targetSymbol.multiplier += multiplier;
             } else {
@@ -251,12 +261,7 @@ export interface LineWinDetails {
             }
 
             const targetSymbol = newInput[i][j];
-            if (targetSymbol && (
-              targetSymbol.symbol === CitrusGotReelSymbolValue.Wild || 
-              targetSymbol.symbol === CitrusGotReelSymbolValue.PayerWild ||
-              targetSymbol.symbol === CitrusGotReelSymbolValue.DirectionalWild ||
-              targetSymbol.symbol === CitrusGotReelSymbolValue.CollectorWild
-            )) {
+            if (WildSymbols.includes(targetSymbol?.symbol)) {
               totalMultiplier += targetSymbol.multiplier;
             }
           }
@@ -268,48 +273,19 @@ export interface LineWinDetails {
     }
   }
 
-  for (let row = 0; row < newInput.length; row++) {
-    for (let col = 0; col < newInput[row].length; col++) {
-      const currentSymbol = newInput[row][col];
-      
-      // Check if it's any type of wild
-      if (currentSymbol && [
-        CitrusGotReelSymbolValue.PayerWild,
-        CitrusGotReelSymbolValue.DirectionalWild,
-        CitrusGotReelSymbolValue.CollectorWild,
-      ].includes(currentSymbol.symbol)) {
-        
-        newInput[row][col] = {
-          symbol: currentSymbol.symbol,
-          multiplier: currentSymbol.multiplier,
-          sticky: false,  // Assuming we want to reset sticky to false; adjust as needed
-        };
-
-      }
-    }
-  }
-
     return newInput;
   }
 
   export function stickWilds(input: CitrusGotReelSymbol[][], integerRng): CitrusGotReelSymbol[][] {
     const currentMaths = mathConfig();
-  
-    const isWildSymbol = (symbol: CitrusGotReelSymbolValue): boolean => {
-      return [
-        CitrusGotReelSymbolValue.Wild,
-        CitrusGotReelSymbolValue.DirectionalWild,
-        CitrusGotReelSymbolValue.CollectorWild,
-        CitrusGotReelSymbolValue.PayerWild,
-      ].includes(symbol);
-    };
-  
+
     // Create a deep copy of the input to avoid mutating the original
     const result = deepCloneArray(input);
   
     for (let row = 0; row < result.length; row++) {
       for (let column = 0; column < result[row].length; column++) {
-        if (isWildSymbol(result[row][column].symbol)) {
+        
+        if (WildSymbols.includes(result[row][column].symbol)) {
           if (pickValueFromDistribution(integerRng, currentMaths.wildsStick)) {
             result[row][column].sticky = true;
           }
@@ -321,7 +297,7 @@ export interface LineWinDetails {
   }
   
 
-  export function addScatters(input: CitrusGotReelSymbol[][], numScatters: number): CitrusGotReelSymbol[][] {
+  export function addScatters(input: CitrusGotReelSymbol[][], numScatters: number, integerRng: IntegerRng): CitrusGotReelSymbol[][] {
     if (numScatters === 0) {
       return input;
     }
@@ -344,7 +320,7 @@ export interface LineWinDetails {
   
     // Randomly place the scatters
     for (let i = 0; i < numScatters; i++) {
-      const randomIndex = Math.floor(Math.random() * availablePositions.length);
+      const randomIndex = integerRng.randomInteger(availablePositions.length);
       const { row, column } = availablePositions[randomIndex];
   
       // Remove this position from the list of available positions
