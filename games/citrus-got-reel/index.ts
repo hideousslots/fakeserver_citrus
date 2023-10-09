@@ -9,7 +9,7 @@ import play from "./math/play";
 import {SpinResult} from "./math/spin";
 import {getPlayerConfig} from "./math/config/getPlayerConfig";
 import HitFrequency from "@slotify/gdk/lib/stats/HitFrequency";
-
+import WinAnalysis from './math/stats/WinAnalysis';
 
 const currentMaths =  mathConfig()
 
@@ -40,6 +40,7 @@ export const index: IGame<IData> = {
     },
 
     stats: {
+        //winAnalysis: new WinAnalysis({active:true,reportOnlyHitValues:true, reportRate:100000}),
         iterations: new Iterations(),
         rtp: new RTP(),
         variance: new Variance(),
