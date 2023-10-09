@@ -6,3 +6,4 @@ FakeServerSource/LocalSessions/*.log
 FakeServerSource/PlaybackData/localRepeats.json
 .npmrc
 
+.npmrc
