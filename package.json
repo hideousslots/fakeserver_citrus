@@ -11,6 +11,7 @@
     "start": "set PROVIDER=dreamspin&&set RNG=node_modules/@slotify/gdk/lib/rng/SlotifyRNG&&set GAMES_PATH=lib/games/*/index.js&&node node_modules/@slotify/gdk/lib/index.js",
     "start:dev": "set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\SlotifyRNG&&set GAMES_PATH=games/space-hive-7/index.ts && ts-node-dev node_modules/@slotify/gdk/lib/index.js",
     "start:fakeserver":"node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && ts-node-dev ./FakeServer.js",
+    "start:getstats":"node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GetStats.js",
     "start:fakeservermac":"node buildtracker.js&&tsc&&PROVIDER=dreamspin RNG=node_modules/@slotify/gdk/lib/rng/IsaacRNG GAMES_PATH=games/space-hive-7/index.ts ts-node-dev ./FakeServer.js",
     "start:mathsextraction":"node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && ts-node-dev ./MathsExtraction/ExtractAll.js"
   },
