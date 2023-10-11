@@ -25,7 +25,7 @@ export class WildAllocation implements GeneralAnalysisModule {
         this.wildValues = params.wildValues;
         this.wildInfo = params.wildInfo;
         this.wildValuesBinaryMask = 0;
-        this.wildInfo.forEach((info) => {
+        this.wildValues.forEach((info) => {
             this.wildValuesBinaryMask |= 1<< info;
         }); 
 
@@ -59,7 +59,6 @@ export class WildAllocation implements GeneralAnalysisModule {
                 }
             }
         });
-
 	}
 
 	public Report(): string[] {

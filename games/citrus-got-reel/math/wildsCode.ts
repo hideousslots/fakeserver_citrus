@@ -25,18 +25,23 @@ function deepCloneArray(arr: any[][]): any[][] {
 	);
 }
 
-function gridPositionToWildWeight(row: number, column: number, idealRow: number, idealColumn: number, distanceScale: number): number {
-	
-	//NB Treat weight in 1000s to allow more subtlety than just 1,2,3 etc
+function gridPositionToWildWeight(
+	row: number,
+	column: number,
+	idealRow: number,
+	idealColumn: number,
+	distanceScale: number
+): number {
+	//NB Treat weight in 10000s to allow more subtlety than just 1,2,3 etc
 	//Use average linear distance from ideal to weight the choice.
 	//Dist = (dist in rows + dist in columns /2)
 	//Simple bias towards the middle of the ideal target
 
 	const distRow = Math.abs(idealRow - row);
 	const distColumn = Math.abs(idealColumn - column);
- 	const distanceValue = (distRow + distColumn) * 1000 / 2;
+	const distanceValue = ((distRow + distColumn)) / 2;
 
-	return Math.max(1, 1000 - (distanceValue * distanceScale * 1000));
+	return Math.max(1, 10000 - distanceValue * distanceScale * 10000);
 }
 
 export function addWilds(
@@ -46,10 +51,10 @@ export function addWilds(
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
 
-  //SNC 20231007 - 
-  //This is the part which needs most tweaking
-  //Primarily, the positions of wilds should be weighted towards an ideal placement (probably based on the type of wins wanted)
-  //It may also be worth biasing by type in each location or based on other wilds nearby
+	//SNC 20231007 -
+	//This is the part which needs most tweaking
+	//Primarily, the positions of wilds should be weighted towards an ideal placement (probably based on the type of wins wanted)
+	//It may also be worth biasing by type in each location or based on other wilds nearby
 
 	if (
 		!pickValueFromDistribution(
@@ -76,14 +81,25 @@ export function addWilds(
 			if (typeof input[row][column] === "undefined") {
 				availablePositions.push({ row, column });
 				//Make weight based on the 'ideal position' - for now, the centre of the grid
-				availablePositionWeights.push(gridPositionToWildWeight(row,column,numRows / 2,numColumns / 2,0.25));
+				availablePositionWeights.push(
+					gridPositionToWildWeight(
+						row,
+						column,
+						(numRows-1) / 2,
+						(numColumns-1) / 2,
+						0.25 //This dictates the overall skewing by distance from ideal
+					)
+				);
 			}
 		}
 	}
 
 	//Combine positions and weights into search distribution
 
-	const distributionPositions: Distribution<Position> = {values: availablePositions, weights: availablePositionWeights};
+	const distributionPositions: Distribution<Position> = {
+		values: availablePositions,
+		weights: availablePositionWeights,
+	};
 
 	// Mapping between FeatureType and CitrusGotReelSymbolValue
 	const featureToSymbolMap: Record<
@@ -126,7 +142,7 @@ export function addWilds(
 			break;
 		}
 
-		//snc 
+		//snc
 
 		const multiplier = pickValueFromDistribution(
 			integerRng,
@@ -136,7 +152,10 @@ export function addWilds(
 			integerRng,
 			currentMaths.wildLookUp
 		);
-		const randomIndex = pickIndexFromDistribution(integerRng, distributionPositions);
+		const randomIndex = pickIndexFromDistribution(
+			integerRng,
+			distributionPositions
+		);
 		const { row, column } = distributionPositions.values[randomIndex];
 
 		// Remove this position from the list of available positions
@@ -252,7 +271,7 @@ export function expandWilds(
 		}
 	}
 
-    //SNC - 20231006 - TODO - Step through, build list of positions of wilds, then go through and collect as needed
+	//SNC - 20231006 - TODO - Step through, build list of positions of wilds, then go through and collect as needed
 	//NB Having confirmed, it is the idea the collectors will process top to bottom, left to right. This means that
 	//with 2 collectors on the board the rightmost-lowermost will have accumulated more each prior collector will have added
 	//its multiplier in before being itself added to the rightmost-lowermost
@@ -296,8 +315,7 @@ export function stickWilds(
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
 
-
-  	//SNC - 20231006 - TODO - Step through, count how many need a response from RNG, get all responses in batch, then apply as needed
+	//SNC - 20231006 - TODO - Step through, count how many need a response from RNG, get all responses in batch, then apply as needed
 
 	// Create a deep copy of the input to avoid mutating the original
 	const result = deepCloneArray(input);
