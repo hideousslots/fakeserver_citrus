@@ -22,8 +22,8 @@ console.log('Running getstats');
 __importDefault(require('./lib/GetStats/Citrus/GetStats.js')).RunStats(
     gameInterface,
     {
-        iterations: 1000000,
-        reportRate: 500000
+        iterations: 10000,
+        reportRate: 5000
     }
     );
 }

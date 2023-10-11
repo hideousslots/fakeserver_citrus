@@ -70,8 +70,8 @@ export class WildAllocation implements GeneralAnalysisModule {
         for(let cell = 0; cell < this.numCells; cell++) {
             let line: string = "Cell " + cell + " :> | ";
             for(let reel = 0; reel < this.numReels; reel++) {
-                const count = "      " + this.allocationByReelAndCell[reel][cell];
-                line+= " " + count.substring(count.length - 5) + " |";
+                const count = "        " + this.allocationByReelAndCell[reel][cell];
+                line+= " " + count.substring(count.length - 7) + " |";
             }
             report.push(line);
         }

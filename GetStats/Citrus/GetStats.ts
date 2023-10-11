@@ -8,12 +8,14 @@ import { GeneralAnalysis } from "../Common/GeneralAnalysis";
 import { GeneralAnalysisModule } from "../Common/GeneralAnalysisModule";
 import { WinAnalysis_Bucket, WinBuckets } from "../Common/WinBuckets";
 import { WildAllocation } from "./WildAllocation";
+import { RTP } from "./RTP";
 
 export const RunStats = function (_gameInteface:any, parameters: any) {
     const statsClass: Stats = new Stats(_gameInteface, parameters);
     
     statsClass.Run();
-}
+};
+
 export class Stats {
 
     protected analysis: GeneralAnalysis;
@@ -45,6 +47,7 @@ export class Stats {
             wildValues: [11,12,13,14],
             wildInfo: ["Wild", "DirectionalWild", "CollectorWild", "PayerWild"]
         }));
+        this.analysis.AddModule(new RTP({}));
     }
 
     //Run through multiple games and process the results
