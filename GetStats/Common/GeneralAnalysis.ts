@@ -32,6 +32,28 @@ export class GeneralAnalysis{
 
 	}
 
+	public Save(): string {
+		const data: any = {};
+		data['system']={wagersProcessed:this.wagersProcessed};
+		this._modules.forEach((module) => {
+			data[module.GetID()] = module.Save();
+		});
+
+		return JSON.stringify(data);
+	}
+
+	public Load(data: string) {
+		const decoded: any = JSON.parse(data);
+		
+		this.wagersProcessed = decoded['system'].wagersProcessed;
+		this._modules.forEach((module) => {
+			if(decoded[module.GetID()] !== undefined) {
+				module.Load(decoded[module.GetID()]);
+			}
+		});
+
+	}
+
 	public AddModule(module: GeneralAnalysisModule) {
 		this._modules.push(module);
 	}
@@ -60,7 +82,7 @@ export class GeneralAnalysis{
 		}
 	}
 
-	protected Report() {
+	public Report() {
 		const report: string[][] = [];
 
 		report.push([

@@ -9,17 +9,22 @@ import { GeneralAnalysisModule } from "../Common/GeneralAnalysisModule";
 
 //To be extended later to track types of wild and multipliers
 
+class TrackingData {
+    public allocationByReelAndCell: number[][];
+}
 export class WildAllocation implements GeneralAnalysisModule {
-	protected allocationByReelAndCell: number[][];
 	protected numReels: number;
 	protected numCells: number;
     protected wildValues: number[];
     protected wildValuesBinaryMask: number;
     protected wildInfo: any[];
+    protected trackingData:TrackingData;
 
 	constructor(params: any) {
 		//Handle parameters
 
+        this.trackingData = new TrackingData();
+		
 		this.numReels = params.numReels;
 		this.numCells = params.numCells;
         this.wildValues = params.wildValues;
@@ -31,14 +36,26 @@ export class WildAllocation implements GeneralAnalysisModule {
 
         //Create the tracking
 
-        this.allocationByReelAndCell = [];
+        this.trackingData.allocationByReelAndCell = [];
         for(let reel = 0; reel < this.numReels; reel++) {
-            this.allocationByReelAndCell[reel] = [];
+            this.trackingData.allocationByReelAndCell[reel] = [];
             for(let cell = 0; cell < this.numCells; cell++) {
-                this.allocationByReelAndCell[reel][cell] = 0;
+                this.trackingData.allocationByReelAndCell[reel][cell] = 0;
             }
         }
 
+	}
+
+    public GetID(): string {
+		return 'WildAllocation';
+	}
+
+	public Save(): string {
+		return JSON.stringify(this.trackingData);
+	}
+
+	public Load(data: string) {
+		this.trackingData = JSON.parse(data);
 	}
 
 	public ProcessWager(wager: IWager) {
@@ -54,7 +71,7 @@ export class WildAllocation implements GeneralAnalysisModule {
             for(let reel = 0; reel < this.numReels; reel++) {
                 for(let cell = 0; cell < this.numCells; cell++) {
                     if(this.wildValuesBinaryMask & (1<<reels[reel][cell].symbol)) {
-                        this.allocationByReelAndCell[reel][cell]++; 
+                        this.trackingData.allocationByReelAndCell[reel][cell]++; 
                     }
                 }
             }
@@ -69,7 +86,7 @@ export class WildAllocation implements GeneralAnalysisModule {
         for(let cell = 0; cell < this.numCells; cell++) {
             let line: string = "Cell " + cell + " :> | ";
             for(let reel = 0; reel < this.numReels; reel++) {
-                const count = "        " + this.allocationByReelAndCell[reel][cell];
+                const count = "        " + this.trackingData.allocationByReelAndCell[reel][cell];
                 line+= " " + count.substring(count.length - 7) + " |";
             }
             report.push(line);

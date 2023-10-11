@@ -12,29 +12,48 @@ export type WinAnalysis_Bucket = {
 	hitCount: number;
 };
 
+class TrackingData {
+	public minWin: number = 2 ^ 52;
+	public maxWin: number = 0;
+	public winBuckets: WinAnalysis_Bucket[];
+}
 export class WinBuckets implements GeneralAnalysisModule{
-	protected minWin: number = 2 ^ 52;
-	protected maxWin: number = 0;
-	protected winBuckets: WinAnalysis_Bucket[];
+	
 	protected onlyReportHitBuckets: boolean = false;
 	protected maxIndividualCheck = 10000;
+	protected trackingData: TrackingData;
 
 	constructor(params: any) {
-        //Handle parameters
+    
+		this.trackingData = new TrackingData();
+		
+		//Handle parameters
 
 		this.onlyReportHitBuckets = params.reportOnlyHitValues;
 
 		//Create the buckets
 
-		this.winBuckets = [];
+		this.trackingData.winBuckets = [];
 
 		for (let bucketVal = 0; bucketVal <= 10000; bucketVal += 1) {
 			const newBucket = {
 				value: "" + bucketVal / 100,
 				hitCount: 0,
 			};
-			this.winBuckets.push(newBucket);
+			this.trackingData.winBuckets.push(newBucket);
 		}
+	}
+
+	public GetID(): string {
+		return 'WinBucket';
+	}
+
+	public Save(): string {
+		return JSON.stringify(this.trackingData);
+	}
+
+	public Load(data: string) {
+		this.trackingData = JSON.parse(data);
 	}
 
 	public ProcessWager(wager: IWager) {
@@ -42,30 +61,30 @@ export class WinBuckets implements GeneralAnalysisModule{
 
 		const winBucketIndex = Math.floor(wager.win * 100);
 		const expectedValueString = "" + wager.win.toFixed(2);
-        if(wager.win < this.minWin) {
-            this.minWin = wager.win;
+        if(wager.win < this.trackingData.minWin) {
+            this.trackingData.minWin = wager.win;
         }
-        if(wager.win > this.maxWin) {
-            this.maxWin = wager.win;
+        if(wager.win > this.trackingData.maxWin) {
+            this.trackingData.maxWin = wager.win;
         }
 
 		if (winBucketIndex > this.maxIndividualCheck) {
 			//Create excess bucket
 
-			const matchedIndex = this.winBuckets.findIndex((bucket) => {
+			const matchedIndex = this.trackingData.winBuckets.findIndex((bucket) => {
 				return bucket.value === expectedValueString;
 			});
 			if (matchedIndex !== -1) {
-				this.winBuckets[matchedIndex].hitCount++;
+				this.trackingData.winBuckets[matchedIndex].hitCount++;
 			} else {
 				const newBucket = {
 					value: expectedValueString,
 					hitCount: 1,
 				};
-				this.winBuckets.push(newBucket);
+				this.trackingData.winBuckets.push(newBucket);
 			}
 		} else {
-			this.winBuckets[winBucketIndex].hitCount++;
+			this.trackingData.winBuckets[winBucketIndex].hitCount++;
 		}
 	}
 
@@ -76,7 +95,7 @@ export class WinBuckets implements GeneralAnalysisModule{
 
 		if (this.onlyReportHitBuckets) {
 			const bucketsToReport: WinAnalysis_Bucket[] = [];
-			this.winBuckets.forEach((bucket) => {
+			this.trackingData.winBuckets.forEach((bucket) => {
 				if (bucket.hitCount !== 0) {
 					bucketsToReport.push(bucket);
 				}
@@ -87,7 +106,7 @@ export class WinBuckets implements GeneralAnalysisModule{
 			result.push("Bucket JSON: >");
             result.push(JSON.stringify(bucketsToReport));        
 		} else {
-            result.push(JSON.stringify(this.winBuckets));
+            result.push(JSON.stringify(this.trackingData.winBuckets));
 		}
 
         return result;

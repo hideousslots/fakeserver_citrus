@@ -5,15 +5,66 @@
  */
 
 import { GeneralAnalysis } from "../Common/GeneralAnalysis";
-import { GeneralAnalysisModule } from "../Common/GeneralAnalysisModule";
-import { WinAnalysis_Bucket, WinBuckets } from "../Common/WinBuckets";
+import {  WinBuckets } from "../Common/WinBuckets";
 import { WildAllocation } from "./WildAllocation";
 import { RTP } from "./RTP";
+import * as fs from 'fs';
 
 export const RunStats = function (_gameInteface:any, parameters: any) {
-    const statsClass: Stats = new Stats(_gameInteface, parameters);
+
+    //Adjust parameters?
+
+    let resetStats: boolean = false;
+    let finalReport: boolean = false;
+    const adjustedParameters: any = parameters;
+
+    if(process.argv.length >2) {
+        for(let i = 2; i < process.argv.length; i++) {
+            const arg = process.argv[i];
+            if(arg === 'resetstats') {
+                resetStats = true;
+            }
+            if(arg === 'finalreport') {
+                finalReport = true;
+            }
+            if(arg.substring(0,11) === 'iterations=') {
+                adjustedParameters.iterations = Number(arg.substring(11));
+            }
+            if(arg.substring(0,11) === 'reportrate=') {
+                adjustedParameters.reportRate = Number(arg.substring(11));
+            }            
+        }
+    }
+
+    const statsClass: Stats = new Stats(_gameInteface, adjustedParameters);
     
+    //Attempt to retreive prior results
+
+    if(!resetStats) {
+        console.log('Restoring current tracking data');
+        try {
+            const data = fs.readFileSync('./statstrackingtransfer.json',{ encoding: 'utf8', flag: 'r' });
+            statsClass.Load(data);
+        } 
+        catch{
+            console.log('No prior tracking data for this loop');
+        }
+    } else {
+        console.log('No restore of current tracking');
+    }
+
     statsClass.Run();
+
+    //Save the data
+
+    statsClass.Save();
+
+    //Report
+
+    if(finalReport) {
+        console.log('FINAL REPORT');
+        statsClass.Report();
+    }
 };
 
 export class Stats {
@@ -62,6 +113,18 @@ export class Stats {
             this.analysis.processWagers([gameResponse]);
         }
         
+    }
+
+    public Save() {
+        fs.writeFileSync('.//statstrackingtransfer.json', this.analysis.Save(),{ encoding: 'utf8', flag: 'w' });
+    }
+
+    public Load(data: string) {
+        this.analysis.Load(data);
+    }
+
+    public Report() {
+        this.analysis.Report();
     }
 
 }

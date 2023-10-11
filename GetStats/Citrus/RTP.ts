@@ -7,27 +7,44 @@
 import { IWager } from "@slotify/gdk/lib/IGame";
 import { GeneralAnalysisModule } from "../Common/GeneralAnalysisModule";
 
+class TrackingData {
+	public spent: number;
+	public won: number;
+	public baseGameWon: number;
+	public bonusGameWon: number;
+}
 export class RTP implements GeneralAnalysisModule{
 	
-	protected spent: number;
-	protected won: number;
-	protected baseGameWon: number;
-	protected bonusGameWon: number;
+	protected trackingData:TrackingData;
+
 
 	constructor(params: any) {
-        this.spent = 0;
-		this.won = 0;
-		this.baseGameWon = 0;
-		this.bonusGameWon = 0;
+		this.trackingData = new TrackingData();
+        this.trackingData.spent = 0;
+		this.trackingData.won = 0;
+		this.trackingData.baseGameWon = 0;
+		this.trackingData.bonusGameWon = 0;
+	}
+
+	public GetID(): string {
+		return 'RTP';
+	}
+
+	public Save(): string {
+		return JSON.stringify(this.trackingData);
+	}
+
+	public Load(data: string) {
+		this.trackingData = JSON.parse(data);
 	}
 
 	public ProcessWager(wager: IWager) {
 
-		this.spent += wager.data.stake;
-		this.won += wager.win;
-		this.baseGameWon += wager.data.baseGameSpin.win;
+		this.trackingData.spent += wager.data.stake;
+		this.trackingData.won += wager.win;
+		this.trackingData.baseGameWon += wager.data.baseGameSpin.win;
 		wager.data.bonusGameSpins.forEach((spin) => {
-			this.bonusGameWon += spin.win;
+			this.trackingData.bonusGameWon += spin.win;
 		});
 		
 	}
@@ -37,13 +54,13 @@ export class RTP implements GeneralAnalysisModule{
 
         result.push("RTP report:");
 
-		result.push("Wagered: " + this.spent);
-		result.push("Whole game Won: " + this.won);
-		result.push("Whole game RTP: " + (Math.floor((this.won / this.spent) * 10000) / 100) + "%");
-		result.push("Base game Won : " + this.won);
-		result.push("Base game RTP : " + (Math.floor((this.baseGameWon / this.spent) * 10000) / 100) + "%");
-		result.push("Bonus game Won: " + this.won);
-		result.push("Bonus game RTP: " + (Math.floor((this.bonusGameWon / this.spent) * 10000) / 100) + "%");
+		result.push("Wagered: " + this.trackingData.spent);
+		result.push("Whole game Won: " + this.trackingData.won);
+		result.push("Whole game RTP: " + (Math.floor((this.trackingData.won / this.trackingData.spent) * 10000) / 100) + "%");
+		result.push("Base game Won : " + this.trackingData.won);
+		result.push("Base game RTP : " + (Math.floor((this.trackingData.baseGameWon / this.trackingData.spent) * 10000) / 100) + "%");
+		result.push("Bonus game Won: " + this.trackingData.won);
+		result.push("Bonus game RTP: " + (Math.floor((this.trackingData.bonusGameWon / this.trackingData.spent) * 10000) / 100) + "%");
         return result;
 	}
 }

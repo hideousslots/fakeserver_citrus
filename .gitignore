@@ -7,3 +7,5 @@ FakeServerSource/PlaybackData/localRepeats.json
 .npmrc
 
 .npmrc
+statstrackingtransfer.json
+statsOutput.txt
