@@ -18,6 +18,11 @@ import { pickValueFromDistribution } from "../../../common/distributions/pickVal
 import { Distribution } from "../../../common/distributions/Distribution";
 import { pickIndexFromDistribution } from "../../../common/distributions/pickIndexFromDistribution";
 import { FeatureType } from "./config/defines";
+import { DEBUG_DrawPickWeight } from "./debugsupport/Debug_DrawPickWeight";
+interface WildPositionInfo {
+	position: Position,
+	symbol: number
+}
 
 function deepCloneArray(arr: any[][]): any[][] {
 	return arr.map((row) =>
@@ -26,22 +31,22 @@ function deepCloneArray(arr: any[][]): any[][] {
 }
 
 function gridPositionToWildWeight(
+	numRows: number,
+	numColumns: number,
 	row: number,
 	column: number,
 	idealRow: number,
 	idealColumn: number,
-	distanceScale: number
+	verticalEffect: number,
+	horizontalEffect: number
 ): number {
 	//NB Treat weight in 10000s to allow more subtlety than just 1,2,3 etc
-	//Use average linear distance from ideal to weight the choice.
-	//Dist = (dist in rows + dist in columns /2)
-	//Simple bias towards the middle of the ideal target
+	//Bias to cell using the 
+	const distRow = Math.abs(idealRow - row) / numRows;
+	const distColumn = Math.abs(idealColumn - column) / numColumns;
+	const combinedEffect = (distRow * horizontalEffect) + (distColumn * verticalEffect);
 
-	const distRow = Math.abs(idealRow - row);
-	const distColumn = Math.abs(idealColumn - column);
-	const distanceValue = ((distRow + distColumn)) / 2;
-
-	return Math.max(1, 10000 - distanceValue * distanceScale * 10000);
+	return Math.max(1, Math.floor(10000 - combinedEffect * 10000));
 }
 
 export function addWilds(
@@ -66,40 +71,18 @@ export function addWilds(
 	}
 
 	// Determine the number of wilds to place
+
 	const numWilds: number = pickValueFromDistribution(
 		integerRng,
 		currentMaths.initialWilds[context]
 	);
 
-	/// Create an array of available positions for placing wilds
-	const availablePositions: Position[] = [];
-	const availablePositionWeights: number[] = [];
-	const numRows: number = input.length;
-	const numColumns: number = input[0].length;
-	for (let row = 0; row < numRows; row++) {
-		for (let column = 0; column < numColumns; column++) {
-			if (typeof input[row][column] === "undefined") {
-				availablePositions.push({ row, column });
-				//Make weight based on the 'ideal position' - for now, the centre of the grid
-				availablePositionWeights.push(
-					gridPositionToWildWeight(
-						row,
-						column,
-						(numRows-1) / 2,
-						(numColumns-1) / 2,
-						0.25 //This dictates the overall skewing by distance from ideal
-					)
-				);
-			}
-		}
+	//Although currently the wilds options above do not allow 0, handle the possibility in case the table
+	//changes
+
+	if (numWilds === 0) {
+		return input;
 	}
-
-	//Combine positions and weights into search distribution
-
-	const distributionPositions: Distribution<Position> = {
-		values: availablePositions,
-		weights: availablePositionWeights,
-	};
 
 	// Mapping between FeatureType and CitrusGotReelSymbolValue
 	const featureToSymbolMap: Record<
@@ -135,14 +118,89 @@ export function addWilds(
 		}),
 	};
 
-	// Place the wilds
+	//Find all possible positions for wilds, sort the weighting afterwards
+
+	const weightedDistributionPositions: Distribution<Position> = {
+		values: [],
+		weights: [],
+	};
+	const currentWildPositionAndTypes: WildPositionInfo[] = [];
+
+	const numRows: number = input.length;
+	const numColumns: number = input[0].length;
+	for (let row = 0; row < numRows; row++) {
+		for (let column = 0; column < numColumns; column++) {
+			if (typeof input[row][column] === "undefined") {
+				weightedDistributionPositions.values.push({ row, column });
+				weightedDistributionPositions.weights.push(1);
+			} else {
+				//If it's a wild, note its position and type
+
+				const symbol =input[row][column].symbol;
+				switch(symbol) {
+					case CitrusGotReelSymbolValue.Wild:
+						case CitrusGotReelSymbolValue.DirectionalWild:
+							case CitrusGotReelSymbolValue.CollectorWild:
+								case CitrusGotReelSymbolValue.PayerWild:
+
+					currentWildPositionAndTypes.push({position:{row, column}, symbol: symbol});
+				}
+			}
+		}
+	}
+
+	//Now, for each wild, weight the choice by the required factors
+
 	for (let i = 0; i < numWilds; i++) {
-		// No more available positions
-		if (availablePositions.length === 0) {
+		//If no more possible positions, abort
+
+		if (weightedDistributionPositions.values.length === 0) {
 			break;
 		}
 
-		//snc
+		//Calculate the proper weighting for all choices
+		//Bias to or from preferred usefulness position
+		//and bias to or from proximity to other wilds
+
+		for (
+			let possibleIndex = 0;
+			possibleIndex < weightedDistributionPositions.values.length;
+			possibleIndex++
+		) {
+			//Make weight based on the 'ideal position' - for now, the centre of the grid
+			const thisPosition =
+				weightedDistributionPositions.values[possibleIndex];
+			weightedDistributionPositions.weights[possibleIndex] =
+				gridPositionToWildWeight(
+					numRows,numColumns,
+					thisPosition.row,
+					thisPosition.column,
+					(numRows - 1) / 2,
+					(numColumns - 1) / 2,
+					0.8, //This dictates the overall skewing by distance from ideal,
+					0.8
+				);
+		}
+
+		//Debug - draw pick weight
+		DEBUG_DrawPickWeight(weightedDistributionPositions, numRows, numColumns);
+
+		//Choose the available position to use
+
+		const randomIndex = pickIndexFromDistribution(
+			integerRng,
+			weightedDistributionPositions
+		);
+
+		const { row, column } =
+			weightedDistributionPositions.values[randomIndex];
+
+		// Remove this position from the list of available positions
+
+		weightedDistributionPositions.values.splice(randomIndex, 1);
+		weightedDistributionPositions.weights.splice(randomIndex, 1);
+
+		//NB the multiplier and types need better control
 
 		const multiplier = pickValueFromDistribution(
 			integerRng,
@@ -152,15 +210,6 @@ export function addWilds(
 			integerRng,
 			currentMaths.wildLookUp
 		);
-		const randomIndex = pickIndexFromDistribution(
-			integerRng,
-			distributionPositions
-		);
-		const { row, column } = distributionPositions.values[randomIndex];
-
-		// Remove this position from the list of available positions
-		distributionPositions.values.splice(randomIndex, 1);
-		distributionPositions.weights.splice(randomIndex, 1);
 
 		// Use the mapping to generate the new symbol
 		const newSymbol = featureToSymbolMap[wildType as FeatureType](
@@ -168,6 +217,10 @@ export function addWilds(
 		);
 
 		input[row][column] = newSymbol;
+
+		//Add the position to the list of current wilds
+
+		currentWildPositionAndTypes.push({position:{ row, column }, symbol: newSymbol.symbol});
 	}
 
 	return input;
