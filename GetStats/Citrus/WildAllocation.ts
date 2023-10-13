@@ -68,7 +68,18 @@ export class WildAllocation implements GeneralAnalysisModule {
         });
 
         toProcess.forEach((reels) => {
+            //Validate grid
+
+            if(reels.length !== this.numReels) {
+                console.log('reels length invalid - should be ' + this.numReels + ' but is ' + reels.length);
+            }
+
             for(let reel = 0; reel < this.numReels; reel++) {
+
+                if(reels[reel].length !== this.numCells) {
+                    console.log('cell length invalid - should be ' + this.numCells + ' but is ' + reels[reel].length);
+                }
+    
                 for(let cell = 0; cell < this.numCells; cell++) {
                     if(this.wildValuesBinaryMask & (1<<reels[reel][cell].symbol)) {
                         this.trackingData.allocationByReelAndCell[reel][cell]++; 

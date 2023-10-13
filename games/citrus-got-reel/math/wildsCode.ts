@@ -19,9 +19,11 @@ import { Distribution } from "../../../common/distributions/Distribution";
 import { pickIndexFromDistribution } from "../../../common/distributions/pickIndexFromDistribution";
 import { FeatureType } from "./config/defines";
 import { DEBUG_DrawPickWeight } from "./debugsupport/Debug_DrawPickWeight";
-interface WildPositionInfo {
-	position: Position,
-	symbol: number
+
+interface WildInfluences {
+	positions: Position[];
+	rowInfluence: number;
+	columnInfluence: number;
 }
 
 function deepCloneArray(arr: any[][]): any[][] {
@@ -35,18 +37,26 @@ function gridPositionToWildWeight(
 	numColumns: number,
 	row: number,
 	column: number,
-	idealRow: number,
-	idealColumn: number,
-	verticalEffect: number,
-	horizontalEffect: number
+	influences: WildInfluences[]
 ): number {
 	//NB Treat weight in 10000s to allow more subtlety than just 1,2,3 etc
-	//Bias to cell using the 
-	const distRow = Math.abs(idealRow - row) / numRows;
-	const distColumn = Math.abs(idealColumn - column) / numColumns;
-	const combinedEffect = (distRow * horizontalEffect) + (distColumn * verticalEffect);
+	//Bias to cell using the
 
-	return Math.max(1, Math.floor(10000 - combinedEffect * 10000));
+	//Go through all influences
+
+	let totalEffect = 0;
+
+	influences.forEach((influenceSet) => {
+		influenceSet.positions.forEach((position) => {
+			const distRow = Math.abs(position.row - row) / numRows;
+			const distColumn = Math.abs(position.column - column) / numColumns;
+			totalEffect +=
+				distRow * influenceSet.rowInfluence +
+				distColumn * influenceSet.columnInfluence;
+		});
+	});
+
+	return Math.max(1, Math.floor(10000 - totalEffect * 10000));
 }
 
 export function addWilds(
@@ -124,26 +134,38 @@ export function addWilds(
 		values: [],
 		weights: [],
 	};
-	const currentWildPositionAndTypes: WildPositionInfo[] = [];
+	const currentWildPositio_Wild: Position[] = [];
+	const currentWildPositio_DirectionalWild: Position[] = [];
+	const currentWildPositio_CollectorWild: Position[] = [];
+	const currentWildPositio_PayerWild: Position[] = [];
 
-	const numRows: number = input.length;
-	const numColumns: number = input[0].length;
+	const numColumns: number = input.length;
+	const numRows: number = input[0].length;
 	for (let row = 0; row < numRows; row++) {
 		for (let column = 0; column < numColumns; column++) {
-			if (typeof input[row][column] === "undefined") {
+			if (typeof input[column][row] === "undefined") {
 				weightedDistributionPositions.values.push({ row, column });
 				weightedDistributionPositions.weights.push(1);
 			} else {
 				//If it's a wild, note its position and type
 
-				const symbol =input[row][column].symbol;
-				switch(symbol) {
+				const symbol = input[column][row].symbol;
+				switch (symbol) {
 					case CitrusGotReelSymbolValue.Wild:
-						case CitrusGotReelSymbolValue.DirectionalWild:
-							case CitrusGotReelSymbolValue.CollectorWild:
-								case CitrusGotReelSymbolValue.PayerWild:
-
-					currentWildPositionAndTypes.push({position:{row, column}, symbol: symbol});
+						currentWildPositio_Wild.push({ row, column });
+						break;
+					case CitrusGotReelSymbolValue.DirectionalWild:
+						currentWildPositio_DirectionalWild.push({
+							row,
+							column,
+						});
+						break;
+					case CitrusGotReelSymbolValue.CollectorWild:
+						currentWildPositio_CollectorWild.push({ row, column });
+						break;
+					case CitrusGotReelSymbolValue.PayerWild:
+						currentWildPositio_PayerWild.push({ row, column });
+						break;
 				}
 			}
 		}
@@ -172,18 +194,43 @@ export function addWilds(
 				weightedDistributionPositions.values[possibleIndex];
 			weightedDistributionPositions.weights[possibleIndex] =
 				gridPositionToWildWeight(
-					numRows,numColumns,
+					numRows,
+					numColumns,
 					thisPosition.row,
 					thisPosition.column,
-					(numRows - 1) / 2,
-					(numColumns - 1) / 2,
-					0.8, //This dictates the overall skewing by distance from ideal,
-					0.8
+					[
+						//Centre of board (for now)
+						{
+							positions: [
+								{
+									row: (numRows - 1) / 2,
+									column: (numColumns - 1) / 2,
+								},
+							],
+							rowInfluence: 0.5,
+							columnInfluence: 0.5,
+						},
+						// Other wild proximity
+						{
+							positions: [
+								...currentWildPositio_CollectorWild,
+								...currentWildPositio_DirectionalWild,
+								...currentWildPositio_PayerWild,
+								...currentWildPositio_Wild,
+							],
+							rowInfluence: 0.2,
+							columnInfluence: 0.2,
+						},
+					]
 				);
 		}
 
 		//Debug - draw pick weight
-		DEBUG_DrawPickWeight(weightedDistributionPositions, numRows, numColumns);
+		// DEBUG_DrawPickWeight(
+		// 	weightedDistributionPositions,
+		// 	numRows,
+		// 	numColumns
+		// );
 
 		//Choose the available position to use
 
@@ -216,11 +263,27 @@ export function addWilds(
 			multiplier as number
 		);
 
-		input[row][column] = newSymbol;
+		input[column][row] = newSymbol;
 
 		//Add the position to the list of current wilds
 
-		currentWildPositionAndTypes.push({position:{ row, column }, symbol: newSymbol.symbol});
+		switch (newSymbol.symbol) {
+			case CitrusGotReelSymbolValue.Wild:
+				currentWildPositio_Wild.push({ row, column });
+				break;
+			case CitrusGotReelSymbolValue.DirectionalWild:
+				currentWildPositio_DirectionalWild.push({
+					row,
+					column,
+				});
+				break;
+			case CitrusGotReelSymbolValue.CollectorWild:
+				currentWildPositio_CollectorWild.push({ row, column });
+				break;
+			case CitrusGotReelSymbolValue.PayerWild:
+				currentWildPositio_PayerWild.push({ row, column });
+				break;
+		}
 	}
 
 	return input;
