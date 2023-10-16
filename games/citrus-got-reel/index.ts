@@ -68,6 +68,9 @@ export const index: IGame<IData> = {
 		_0x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win === 0)
 		),
+		_0x_1x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 0)
+		),
 		_1x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 1)
 		),
@@ -79,6 +82,18 @@ export const index: IGame<IData> = {
 		),
 		_4x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 4)
+		),
+		_5x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 5)
+		),
+		_6x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 6)
+		),
+		_7x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 7)
+		),
+		_8x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 8)
 		),
 		_50x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 50)

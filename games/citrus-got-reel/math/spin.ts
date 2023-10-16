@@ -154,7 +154,7 @@ function generateSpin(
 		5,
 		integerRng,
 		symbolDistributionOffset,
-		0.5,
+		0,
 		hitrateControl,
 		currentMaths.lineDefines,
 		stop,
