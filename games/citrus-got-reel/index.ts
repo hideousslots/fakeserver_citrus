@@ -9,6 +9,7 @@ import play from "./math/play";
 import { SpinResult } from "./math/spin";
 import { getPlayerConfig } from "./math/config/getPlayerConfig";
 import HitFrequency from "@slotify/gdk/lib/stats/HitFrequency";
+import Average from "@slotify/gdk/lib/stats/Average";
 import WinAnalysis from "./math/stats/WinAnalysis";
 
 const currentMaths = mathConfig();
@@ -62,6 +63,12 @@ export const index: IGame<IData> = {
 		bonusGameTriggeringFrequency: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.data.bonusGameSpins.length > 0)
 		),
+		averageBonusGameValue: new Average((wagers) => {
+            return wagers[0].data.bonusGameSpins.reduce(
+                (acc, obj) => acc + obj.win,
+                0
+            );
+        }).filter((wagers) => wagers[0].data.bonusGameSpins && wagers[0].data.bonusGameSpins.length > 0),
 		hitFrequency: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 0)
 		),
@@ -94,6 +101,12 @@ export const index: IGame<IData> = {
 		),
 		_8x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 8)
+		),
+		_20x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 20)
+		),
+		_30x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 30)
 		),
 		_50x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 50)

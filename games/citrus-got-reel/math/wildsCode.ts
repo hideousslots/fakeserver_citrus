@@ -16,6 +16,7 @@ import { Position } from "../../../common/reels/Position";
 import { IntegerRng } from "../../../common/rng/IntegerRng";
 import { pickValueFromDistribution } from "../../../common/distributions/pickValueFromDistribution";
 import { Distribution } from "../../../common/distributions/Distribution";
+import { filterByIntersection } from "../../../common/distributions/intersectDistributions";
 import { pickIndexFromDistribution } from "../../../common/distributions/pickIndexFromDistribution";
 import { FeatureType } from "./config/defines";
 import { DEBUG_DrawPickWeight } from "./debugsupport/Debug_DrawPickWeight";
@@ -97,20 +98,20 @@ export function addWilds(
 	// Mapping between FeatureType and CitrusGotReelSymbolValue
 	const featureToSymbolMap: Record<
 		FeatureType,
-		(multiplier: number) => CitrusGotReelSymbol
+		(multiplier: number, direction?, steps?: number) => CitrusGotReelSymbol
 	> = {
 		[FeatureType.Wild]: (multiplier) => ({
 			symbol: CitrusGotReelSymbolValue.Wild,
 			multiplier,
 			sticky: false,
 		}),
-		[FeatureType.DirectionalWild]: (multiplier) => ({
+		[FeatureType.DirectionalWild]: (multiplier, direction, steps) => ({
 			symbol: CitrusGotReelSymbolValue.DirectionalWild,
 			multiplier,
-			direction: currentMaths.directions[
+			direction: direction || currentMaths.directions[
 				integerRng.randomInteger(currentMaths.directions.length)
 			] as (typeof currentMaths.directions)[number],
-			steps: pickValueFromDistribution(
+			steps: steps || pickValueFromDistribution(
 				integerRng,
 				currentMaths.stepsData
 			),
@@ -232,21 +233,6 @@ export function addWilds(
 		// 	numColumns
 		// );
 
-		//Choose the available position to use
-
-		const randomIndex = pickIndexFromDistribution(
-			integerRng,
-			weightedDistributionPositions
-		);
-
-		const { row, column } =
-			weightedDistributionPositions.values[randomIndex];
-
-		// Remove this position from the list of available positions
-
-		weightedDistributionPositions.values.splice(randomIndex, 1);
-		weightedDistributionPositions.weights.splice(randomIndex, 1);
-
 		//NB the multiplier and types need better control
 
 		const multiplier = pickValueFromDistribution(
@@ -258,30 +244,43 @@ export function addWilds(
 			currentMaths.wildLookUp
 		);
 
+		//Choose the available position to use
+		const wildData = positionByType(wildType, integerRng, weightedDistributionPositions);
+
+		// Remove this position from the list of available positions
+		// Changing to looking up the position before removing it,
+		// May have pulled position from intersection with another distribution
+		const indexToRemove = weightedDistributionPositions.values.findIndex(pos => pos.row === wildData.row && pos.column === wildData.column);
+
+		weightedDistributionPositions.values.splice(indexToRemove, 1);
+		weightedDistributionPositions.weights.splice(indexToRemove, 1);
+
 		// Use the mapping to generate the new symbol
 		const newSymbol = featureToSymbolMap[wildType as FeatureType](
-			multiplier as number
+			multiplier as number,
+			wildData.direction,  // passing direction
+			wildData.steps       // passing steps
 		);
 
-		input[column][row] = newSymbol;
+		input[wildData.column][wildData.row] = newSymbol;
 
 		//Add the position to the list of current wilds
 
 		switch (newSymbol.symbol) {
 			case CitrusGotReelSymbolValue.Wild:
-				currentWildPositio_Wild.push({ row, column });
+				currentWildPositio_Wild.push({ row: wildData.row, column: wildData.column });
 				break;
 			case CitrusGotReelSymbolValue.DirectionalWild:
 				currentWildPositio_DirectionalWild.push({
-					row,
-					column,
+					row: wildData.row,
+					column: wildData.column,
 				});
 				break;
 			case CitrusGotReelSymbolValue.CollectorWild:
-				currentWildPositio_CollectorWild.push({ row, column });
+				currentWildPositio_CollectorWild.push({ row: wildData.row, column: wildData.column });
 				break;
 			case CitrusGotReelSymbolValue.PayerWild:
-				currentWildPositio_PayerWild.push({ row, column });
+				currentWildPositio_PayerWild.push({row: wildData.row, column: wildData.column });
 				break;
 		}
 	}
@@ -462,4 +461,51 @@ export function returnSticky(
 			"sticky" in symbol && symbol.sticky ? symbol : undefined
 		)
 	);
+}
+
+function positionByType(wildType: any, integerRng: IntegerRng, weightedDistributionPositions: Distribution<Position>): {row: number, column: number, steps?: number, direction?: string} {
+	
+	const currentMaths = mathConfig();
+	let index: number;
+	let row = 0;
+	let column = 0;
+
+	switch (wildType) {
+		case "Wild":
+			//copy original implementation
+			index = pickIndexFromDistribution(
+				integerRng,
+				weightedDistributionPositions
+			); 
+			row = weightedDistributionPositions.values[index].row;
+			column = weightedDistributionPositions.values[index].column;
+			break;
+		case "DirectionalWild":
+			// reference distribution against predefinition
+			
+			const directionalWildPositions = filterByIntersection(currentMaths.directionalWildPositions, weightedDistributionPositions, false)
+			index = pickIndexFromDistribution(
+				integerRng,
+				directionalWildPositions
+			); 
+			row = directionalWildPositions.values[index].row;
+			column = directionalWildPositions.values[index].column;
+			let steps = 2
+			let direction = "right"
+			return {row, column, steps, direction};
+
+		case "CollectorWild":
+			// reference distribution against predefinition
+			index = 0;
+			row = weightedDistributionPositions.values[index].row;
+			column = weightedDistributionPositions.values[index].column;
+			break;
+		case "PayerWild":
+			// reference distribution against predefinition
+			index = 0;
+			row = weightedDistributionPositions.values[index].row;
+			column = weightedDistributionPositions.values[index].column;
+			break;
+	}
+	return {row, column};
 }

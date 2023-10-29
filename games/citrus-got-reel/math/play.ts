@@ -30,22 +30,22 @@ export default function play(stake: number, action: string) {
 
 	accumulatedRoundWin = baseGameSpin.win;
 
-	if (
-		baseGameSpin.scatters.collected ===
-		currentMaths.scattersTriggeringBonusAmount
-	) {
-		bonusGameSpins = bonusSpins(
-			integerRng,
-			bet,
-			coin,
-			precisionMoneyMapper
-		);
-		const bonusGameWinnings = bonusGameSpins.reduce(
-			(acc, obj) => acc + obj.win,
-			0
-		);
-		accumulatedRoundWin = baseGameSpin.win + bonusGameWinnings;
-	}
+	// if (
+	// 	baseGameSpin.scatters.collected ===
+	// 	currentMaths.scattersTriggeringBonusAmount
+	// ) {
+	// 	bonusGameSpins = bonusSpins(
+	// 		integerRng,
+	// 		bet,
+	// 		coin,
+	// 		precisionMoneyMapper
+	// 	);
+	// 	const bonusGameWinnings = bonusGameSpins.reduce(
+	// 		(acc, obj) => acc + obj.win,
+	// 		0
+	// 	);
+	// 	accumulatedRoundWin = baseGameSpin.win + bonusGameWinnings;
+	// }
 
 	return {
 		win: precisionMoneyMapper(accumulatedRoundWin),

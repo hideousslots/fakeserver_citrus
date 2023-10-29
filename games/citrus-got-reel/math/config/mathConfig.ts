@@ -37,8 +37,8 @@ const standardConfig = {
 		// [3, 2, 3, 2, 3, 2],
 		// [4, 3, 4, 3, 4, 3],
 		//Big Diagonals
-		// [1, 2, 3, 3, 2, 1],
-		// [3, 2, 1, 1, 2, 3],
+		[1, 2, 3, 3, 2, 1],
+		[3, 2, 1, 1, 2, 3],
 	],
 
 	scattersTriggeringBonusAmount: 3,
@@ -46,24 +46,24 @@ const standardConfig = {
 
 	payTable: {
 		//1, 2, 3, 4, 5, 6
-		0: [0, 0, 5, 8, 15, 20],
-		1: [0, 0, 5, 8, 15, 20],
-		2: [0, 0, 5, 8, 15, 20],
-		3: [0, 0, 8, 15, 20, 30],
-		4: [0, 0, 8, 15, 20, 30],
-		5: [0, 0, 10, 20, 30, 50],
-		6: [0, 0, 10, 20, 30, 50],
-		7: [0, 0, 10, 20, 30, 50],
-		8: [0, 0, 10, 20, 30, 50],
-		9: [0, 0, 15, 30, 80, 100],
+		0: [0, 0, 1, 3, 10, 25],
+		1: [0, 0, 1, 3, 10, 25],
+		2: [0, 0, 2, 4, 15, 40],
+		3: [0, 0, 2, 4, 15, 40],
+		4: [0, 0, 2, 4, 15, 40],
+		5: [0, 0, 6, 10, 30, 60],
+		6: [0, 0, 6, 10, 30, 60],
+		7: [0, 0, 8, 30, 50, 12],
+		8: [0, 0, 8, 30, 50, 12],
+		9: [0, 0, 30, 50, 100, 150],
 	},
 
 	// Hit Rate
 	// Distribution Offset (low to high symbols)
 	// Stop Offset (3 of a kind to 6 of a kind)
-	baseGameHitRate: { values: [0.1, 0.3, 0.7], weights: [30, 15, 5] },
+	baseGameHitRate: { values: [0.1, 0.3, 0.7], weights: [37, 15, 5] },
 	baseGameDistOffset: { values: [0.3, 0.5, 0.7], weights: [5, 15, 5] },
-	baseGameStopOffset: { values: [3, 4, 5, 6], weights: [150, 0, 0, 100] },
+	baseGameStopOffset: { values: [3, 4, 5, 6], weights: [150, 50, 50, 125] },
 	baseGameScattersToAdd: { values: [0, 1, 2, 3], weights: [271, 15, 7, 1] },
 
 	//
@@ -78,7 +78,7 @@ const standardConfig = {
 		},
 		bonus: {
 			values: [true, false],
-			weights: [13, 10],
+			weights: [12, 10],
 		},
 	},
 
@@ -96,11 +96,11 @@ const standardConfig = {
 	initialMultiplier: {
 		base: {
 			values: [1, 2, 3, 4, 5],
-			weights: [40, 10, 5, 3, 1],
+			weights: [40, 0, 0, 0, 0],
 		},
 		bonus: {
 			values: [1, 2, 3, 4, 5],
-			weights: [40, 10, 5, 3, 1],
+			weights: [30, 10, 5, 3, 1],
 		},
 	},
 
@@ -111,7 +111,7 @@ const standardConfig = {
 			FeatureType.CollectorWild,
 			FeatureType.PayerWild,
 		],
-		weights: [70, 0, 0, 0],
+		weights: [70, 40, 0, 0],
 	},
 
 	stepsData: {
@@ -119,11 +119,35 @@ const standardConfig = {
 		weights: [15, 5, 3, 1],
 	},
 
+	directionalWildPositions: {
+		values: [
+			{ row: 0, column: 0 }, { row: 0, column: 1 },
+			{ row: 0, column: 2 }, { row: 0, column: 3 },
+			{ row: 0, column: 4 }, { row: 0, column: 5 },
+
+			{ row: 1, column: 0 }, { row: 1, column: 5 },
+			{ row: 2, column: 0 }, { row: 2, column: 5 },
+			{ row: 3, column: 0 }, { row: 3, column: 5 },
+			
+			{ row: 4, column: 0 }, { row: 4, column: 1 }, 
+			{ row: 4, column: 2 }, { row: 4, column: 3 }, 
+			{ row: 4, column: 4 }, { row: 4, column: 5 },
+		  ],
+		weights: [
+			5000, 5000, 5000, 5000, 5000, 5000,
+			5000, 5000,
+			5000, 5000,
+			5000, 5000,
+			5000, 5000,
+			5000, 5000, 5000, 5000, 5000, 5000,
+		  ]
+	},
+
 	directions: ["up", "down", "left", "right"], // Possible directions
 
 	wildsStick: {
 		values: [true, false],
-		weights: [10, 15],
+		weights: [70, 0],
 	},
 };
 
