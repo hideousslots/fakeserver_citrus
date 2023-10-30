@@ -46,15 +46,15 @@ const standardConfig = {
 
 	payTable: {
 		//1, 2, 3, 4, 5, 6
-		0: [0, 0, 1, 3, 10, 25],
-		1: [0, 0, 1, 3, 10, 25],
-		2: [0, 0, 2, 4, 15, 40],
-		3: [0, 0, 2, 4, 15, 40],
-		4: [0, 0, 2, 4, 15, 40],
-		5: [0, 0, 6, 10, 30, 60],
-		6: [0, 0, 6, 10, 30, 60],
-		7: [0, 0, 8, 30, 50, 12],
-		8: [0, 0, 8, 30, 50, 12],
+		0: [0, 0, 1, 3, 10, 250],
+		1: [0, 0, 1, 3, 10, 250],
+		2: [0, 0, 2, 4, 15, 400],
+		3: [0, 0, 2, 4, 15, 400],
+		4: [0, 0, 2, 4, 15, 400],
+		5: [0, 0, 6, 10, 30, 600],
+		6: [0, 0, 6, 10, 30, 600],
+		7: [0, 0, 8, 30, 50, 120],
+		8: [0, 0, 8, 30, 50, 120],
 		9: [0, 0, 30, 50, 100, 150],
 	},
 
@@ -62,8 +62,8 @@ const standardConfig = {
 	// Distribution Offset (low to high symbols)
 	// Stop Offset (3 of a kind to 6 of a kind)
 	baseGameHitRate: { values: [0.1, 0.3, 0.7], weights: [37, 15, 5] },
-	baseGameDistOffset: { values: [0.3, 0.5, 0.7], weights: [5, 15, 5] },
-	baseGameStopOffset: { values: [3, 4, 5, 6], weights: [150, 50, 50, 125] },
+	baseGameDistOffset: { values: [0.3, 0.5, 0.7], weights: [8, 15, 5] },
+	baseGameStopOffset: { values: [3, 4, 5, 6], weights: [150, 50, 50, 50] },
 	baseGameScattersToAdd: { values: [0, 1, 2, 3], weights: [271, 15, 7, 1] },
 
 	//
@@ -74,7 +74,7 @@ const standardConfig = {
 	wildFeatureActive: {
 		base: {
 			values: [true, false],
-			weights: [1, 7],
+			weights: [1, 11],
 		},
 		bonus: {
 			values: [true, false],
@@ -96,7 +96,7 @@ const standardConfig = {
 	initialMultiplier: {
 		base: {
 			values: [1, 2, 3, 4, 5],
-			weights: [40, 0, 0, 0, 0],
+			weights: [84, 10, 3, 2, 1],
 		},
 		bonus: {
 			values: [1, 2, 3, 4, 5],
@@ -111,12 +111,17 @@ const standardConfig = {
 			FeatureType.CollectorWild,
 			FeatureType.PayerWild,
 		],
-		weights: [70, 40, 0, 0],
+		weights: [90, 10, 0, 0],
 	},
 
 	stepsData: {
-		values: [2, 3, 4, 5],
-		weights: [15, 5, 3, 1],
+		values: [1, 2, 3, 4, 5],
+		weights: [350, 500, 100, 50, 30],
+	},
+
+	stepsColumn6Data: {
+		values: [1, 2, 3, 4, 5],
+		weights: [10, 150, 150, 10, 5],
 	},
 
 	directionalWildPositions: {
@@ -134,12 +139,12 @@ const standardConfig = {
 			{ row: 4, column: 4 }, { row: 4, column: 5 },
 		  ],
 		weights: [
-			5000, 5000, 5000, 5000, 5000, 5000,
+			3000, 3000, 3000, 3000, 3000, 3000,
 			5000, 5000,
-			5000, 5000,
-			5000, 5000,
-			5000, 5000,
-			5000, 5000, 5000, 5000, 5000, 5000,
+			7500, 7500,
+			1000, 1000,
+			1000, 1000,
+			7500, 7500, 7500, 7500, 7500, 7500,
 		  ]
 	},
 
@@ -147,7 +152,7 @@ const standardConfig = {
 
 	wildsStick: {
 		values: [true, false],
-		weights: [70, 0],
+		weights: [100, 0],
 	},
 };
 

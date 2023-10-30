@@ -82,7 +82,7 @@ export function addWilds(
 	}
 
 	// Determine the number of wilds to place
-
+	// NOTE - What if there are insufficient positions left on the matrix?
 	const numWilds: number = pickValueFromDistribution(
 		integerRng,
 		currentMaths.initialWilds[context]
@@ -481,17 +481,44 @@ function positionByType(wildType: any, integerRng: IntegerRng, weightedDistribut
 			column = weightedDistributionPositions.values[index].column;
 			break;
 		case "DirectionalWild":
-			// reference distribution against predefinition
+			let steps; 
+			let direction;			// reference distribution against predefinition
 			
 			const directionalWildPositions = filterByIntersection(currentMaths.directionalWildPositions, weightedDistributionPositions, false)
+			//NOTE - What if this returned distribution is empty?
 			index = pickIndexFromDistribution(
 				integerRng,
 				directionalWildPositions
 			); 
 			row = directionalWildPositions.values[index].row;
 			column = directionalWildPositions.values[index].column;
-			let steps = 2
-			let direction = "right"
+			
+			//sloppy setup for steps and direction - I can't think how to setup Data
+
+			steps = pickValueFromDistribution(
+				integerRng,
+				currentMaths.stepsData
+			)
+			
+			if (column === 0) {
+				direction = "right";
+			}
+			else if (column === 5) {
+				direction = "left";
+				steps = pickValueFromDistribution(
+					integerRng,
+					currentMaths.stepsColumn6Data
+				)
+			}
+			else if (row === 0) {
+				direction = "down";
+			}
+			else if (row === 4) {
+				direction = "up";
+			}
+			else throw new Error;
+
+
 			return {row, column, steps, direction};
 
 		case "CollectorWild":

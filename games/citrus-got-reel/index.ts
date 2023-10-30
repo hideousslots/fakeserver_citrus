@@ -156,6 +156,18 @@ export const index: IGame<IData> = {
 		_1000x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 1000)
 		),
+		_2000x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 2000)
+		),
+		_3000x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 3000)
+		),
+		_4000x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 4000)
+		),
+		_5000x: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.win > 5000)
+		),
 		// zero_bonus: new WinBucket(wagers => wagers.some(wager => wager.win === 0)),
 		// _0x_20x: new WinBucket(wagers => wagers.some(wager => wager.win > 0 && wager.win < 20)),
 		// _20x_40x: new WinBucket(wagers => wagers.some(wager => wager.win >= 20 && wager.win < 40)),
