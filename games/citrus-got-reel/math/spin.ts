@@ -46,6 +46,10 @@ export function spin(
 		integerRng,
 		currentMaths.baseGameScattersToAdd
 	);
+	const profile = pickValueFromDistribution(
+		integerRng,
+		currentMaths.baseGameProfiles
+	)
 
 	return generateSpin(
 		bet,

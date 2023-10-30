@@ -204,12 +204,12 @@ export function addWilds(
 						{
 							positions: [
 								{
-									row: (numRows - 1) / 2,
-									column: (numColumns - 1) / 2,
+									row: (numRows - 1) / 2, 		// These positions set in profile
+									column: (numColumns - 1) / 2, 	// These positions set in profile
 								},
 							],
-							rowInfluence: 0.5,
-							columnInfluence: 0.5,
+							rowInfluence: 0.5, 						// These weights set in profile
+							columnInfluence: 0.5, 					// These weights set in profile
 						},
 						// Other wild proximity
 						{
@@ -219,8 +219,9 @@ export function addWilds(
 								...currentWildPositio_PayerWild,
 								...currentWildPositio_Wild,
 							],
-							rowInfluence: 0.2,
-							columnInfluence: 0.2,
+							rowInfluence: 0.1, 						// These weights set in profile
+							columnInfluence: 0.1,					// These weights set in profile
+							
 						},
 					]
 				);
