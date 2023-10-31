@@ -168,6 +168,22 @@ export const index: IGame<IData> = {
 		_5000x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 5000)
 		),
+		_3ofaKind: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 3)
+			)
+		),
+		_4ofaKind: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 4)
+			)
+		),
+		_5ofaKind: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 5)
+			)
+		),
+		_6ofaKind: new HitFrequency((wagers) =>
+			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 6)
+			)
+		),
 		// zero_bonus: new WinBucket(wagers => wagers.some(wager => wager.win === 0)),
 		// _0x_20x: new WinBucket(wagers => wagers.some(wager => wager.win > 0 && wager.win < 20)),
 		// _20x_40x: new WinBucket(wagers => wagers.some(wager => wager.win >= 20 && wager.win < 40)),

@@ -19,6 +19,7 @@ import { Position } from "../../../common/reels/Position";
 import { LineWinCalculator } from "./calculateLineWins";
 import { createReels } from "./createReels";
 import { pickValueFromDistribution } from "../../../common/distributions/pickValueFromDistribution";
+import { baseGameProfile, bonusGameProfile } from "./config/profiles";
 
 export interface ScatterInfo {
 	collected: number;
@@ -49,17 +50,15 @@ export function spin(
 	const profile = pickValueFromDistribution(
 		integerRng,
 		currentMaths.baseGameProfiles
-	)
+	);
 
 	return generateSpin(
 		bet,
 		integerRng,
-		currentMaths.baseGameHitRate,
-		currentMaths.baseGameDistOffset,
-		currentMaths.baseGameStopOffset,
 		scatterSymbols as number,
 		precisionMoneyMapper,
-		"base"
+		"base",
+		profile as baseGameProfile
 	);
 }
 
@@ -72,15 +71,18 @@ export function bonusSpins(
 	const currentMaths = mathConfig();
 	const bonusSpins = [];
 	//generate initial round
+	const profile = pickValueFromDistribution(
+		integerRng,
+		currentMaths.baseGameProfiles
+	);
+
 	let bonusSpinRound = generateSpin(
 		bet,
 		integerRng,
-		currentMaths.bonusGameHitRate,
-		currentMaths.bonusGameDistOffset,
-		currentMaths.bonusGameStopOffset,
 		0,
 		precisionMoneyMapper,
-		"bonus"
+		"bonus",
+		profile as bonusGameProfile
 	);
 	bonusSpinRound.reelsAfter = stickWilds(
 		bonusSpinRound.reelsAfter,
@@ -92,12 +94,10 @@ export function bonusSpins(
 		bonusSpinRound = generateSpin(
 			bet,
 			integerRng,
-			currentMaths.bonusGameHitRate,
-			currentMaths.bonusGameDistOffset,
-			currentMaths.bonusGameStopOffset,
 			0,
 			precisionMoneyMapper,
 			"bonus",
+			profile as bonusGameProfile,
 			returnSticky(bonusSpinRound.reelsAfter)
 		);
 		bonusSpinRound.reelsAfter = stickWilds(
@@ -113,12 +113,13 @@ export function bonusSpins(
 function generateSpin(
 	bet: number,
 	integerRng: IntegerRng,
-	hitrate: any,
-	distOffset: any,
-	stopOffset: any,
+	// hitrate: any,
+	// distOffset: any,
+	// stopOffset: any,
 	scatterSymbols: number = 0,
 	precisionMoneyMapper: (a: number) => number,
 	context: "base" | "bonus",
+	profile: baseGameProfile | bonusGameProfile,
 	reelGrid?: CitrusGotReelSymbol[][]
 ): SpinResult {
 	const currentMaths = mathConfig();
@@ -137,22 +138,17 @@ function generateSpin(
 		);
 	}
 
-	const addedWilds = addWilds(integerRng, initialReels, context);
+	const addedWilds = addWilds(integerRng, initialReels, context, profile);
 	let expandedWilds = expandWilds(addedWilds);
 
 	if (scatterSymbols > 0) {
 		expandedWilds = addScatters(expandedWilds, scatterSymbols, integerRng);
 	}
 
-	const hitrateControl: number = pickValueFromDistribution(
-		integerRng,
-		hitrate
-	);
-	const symbolDistributionOffset: number = pickValueFromDistribution(
-		integerRng,
-		distOffset
-	);
-	const stop: number = pickValueFromDistribution(integerRng, stopOffset);
+	const hitrateControl = currentMaths.profiles.base[profile].hitRate;
+	const symbolDistributionOffset = currentMaths.profiles.base[profile].distOffset;
+	const stop = currentMaths.profiles.base[profile].stopOffset;
+
 	const indexReels = createReels(
 		6,
 		5,

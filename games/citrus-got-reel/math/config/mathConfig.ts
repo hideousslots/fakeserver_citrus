@@ -1,6 +1,9 @@
 import { FeatureType } from "./defines";
+import { baseGameProfile, bonusGameProfile } from "./profiles";
 
 let isAnte = false;
+const {losing, teasing, baseGameLow, baseGameMed, baseGameHigh,} = baseGameProfile;
+const {bonusGameLow, bonusGameMed, bonusGameHigh} = bonusGameProfile;
 
 const standardConfig = {
 	coinsPerBet_main: 10,
@@ -57,62 +60,8 @@ const standardConfig = {
 		8: [0, 0, 8, 30, 50, 100],
 		9: [0, 0, 30, 50, 100, 150],
 	},
-
-	// Hit Rate
-	// Distribution Offset (low to high symbols)
-	// Stop Offset (3 of a kind to 6 of a kind)
-	baseGameHitRate: { values: [0.1, 0.3, 0.7], weights: [37, 15, 5] },
-	baseGameDistOffset: { values: [0.3, 0.5, 0.7], weights: [8, 15, 5] },
-	baseGameStopOffset: { values: [3, 4, 5, 6], weights: [150, 50, 50, 50] },
+	
 	baseGameScattersToAdd: { values: [0, 1, 2, 3], weights: [271, 15, 7, 1] },
-
-	//
-	bonusGameHitRate: { values: [0.3, 0.55, 0.7], weights: [5, 15, 5] },
-	bonusGameDistOffset: { values: [0.25, 0.5, 0.8], weights: [5, 15, 5] },
-	bonusGameStopOffset: { values: [3, 4, 5, 6], weights: [0, 0, 0, 100] },
-
-	wildFeatureActive: {
-		base: {
-			values: [true, false],
-			weights: [1, 11],
-		},
-		bonus: {
-			values: [true, false],
-			weights: [12, 10],
-		},
-	},
-
-	initialWilds: {
-		base: {
-			values: [1, 2, 3, 4, 5],
-			weights: [50, 70, 10, 7, 5],
-		},
-		bonus: {
-			values: [1, 2, 3],
-			weights: [5, 7, 1],
-		},
-	},
-
-	initialMultiplier: {
-		base: {
-			values: [1, 2, 3, 4, 5],
-			weights: [84, 10, 3, 2, 1],
-		},
-		bonus: {
-			values: [1, 2, 3, 4, 5],
-			weights: [30, 10, 5, 3, 1],
-		},
-	},
-
-	wildLookUp: {
-		values: [
-			FeatureType.Wild,
-			FeatureType.DirectionalWild,
-			FeatureType.CollectorWild,
-			FeatureType.PayerWild,
-		],
-		weights: [90, 10, 0, 0],
-	},
 
 	stepsData: {
 		values: [1, 2, 3, 4, 5],
@@ -136,16 +85,14 @@ const standardConfig = {
 			
 			{ row: 4, column: 0 }, { row: 4, column: 1 }, 
 			{ row: 4, column: 2 }, { row: 4, column: 3 }, 
-			{ row: 4, column: 4 }, { row: 4, column: 5 },
-		  ],
+			{ row: 4, column: 4 }, { row: 4, column: 5 }],
 		weights: [
 			3000, 3000, 3000, 3000, 3000, 3000,
 			5000, 5000,
 			7500, 7500,
 			1000, 1000,
 			1000, 1000,
-			7500, 7500, 7500, 7500, 7500, 7500,
-		  ]
+			7500, 7500, 7500, 7500, 7500, 7500]
 	},
 
 	directions: ["up", "down", "left", "right"], // Possible directions
@@ -156,27 +103,32 @@ const standardConfig = {
 	},
 
 	baseGameProfiles:{
-		values: ["losing", "teasing", "baseGameLow", "baseGameMed", "baseGameHigh"],
-		weights: [0, 0, 37, 15, 5],
+		values: [losing, teasing, baseGameLow, baseGameMed, baseGameHigh],
+		weights: [10, 0, 0, 0, 0],
+	},
+
+	bonusGameProfiles:{
+		values: [bonusGameLow, bonusGameMed, bonusGameHigh],
+		weights: [1, 1, 1],
 	},
 
 	profiles:{
 		base:{
 			losing:{
-				hitRate: 0,
+				hitRate: 0.1,
 				distOffset: 0.5,
 				stopOffset: 1,
 				wildFeatureActive: {
 						values: [true, false],
-						weights: [1, 11],
+						weights: [0, 12],
 				},
 				initialWilds: {
 					values: [1, 2, 3, 4, 5],
-					weights: [50, 70, 10, 7, 5],
+					weights: [50, 10, 0, 0, 0],
 				},
 				initialMultiplier: {
 					values: [1, 2, 3, 4, 5],
-					weights: [84, 10, 3, 2, 1],	
+					weights: [84, 0, 0, 0, 0],	
 				},
 				wildLookUp: {
 					values: [
@@ -185,39 +137,45 @@ const standardConfig = {
 						FeatureType.CollectorWild,
 						FeatureType.PayerWild,
 					],
-					weights: [90, 10, 0, 0],
+					weights: [90, 0, 0, 0],
 				},
 				stepsData: {
 					values: [1, 2, 3, 4, 5],
-					weights: [350, 500, 100, 50, 30],
+					weights: [350, 0, 0, 0, 0],
 				},
 			
 				stepsColumn6Data: {
 					values: [1, 2, 3, 4, 5],
-					weights: [10, 150, 150, 10, 5],
+					weights: [10, 0, 0, 0, 0],
 				},
-				directionalWildPositions: {
-					values: [
-						{ row: 0, column: 0 }, { row: 0, column: 1 },
-						{ row: 0, column: 2 }, { row: 0, column: 3 },
-						{ row: 0, column: 4 }, { row: 0, column: 5 },
-			
-						{ row: 1, column: 0 }, { row: 1, column: 5 },
-						{ row: 2, column: 0 }, { row: 2, column: 5 },
-						{ row: 3, column: 0 }, { row: 3, column: 5 },
-						
-						{ row: 4, column: 0 }, { row: 4, column: 1 }, 
-						{ row: 4, column: 2 }, { row: 4, column: 3 }, 
-						{ row: 4, column: 4 }, { row: 4, column: 5 },
-					],
-					weights: [
-						3000, 3000, 3000, 3000, 3000, 3000,
-						5000, 5000,
-						7500, 7500,
-						1000, 1000,
-						1000, 1000,
-						7500, 7500, 7500, 7500, 7500, 7500,
-					]
+				wildMaps: {
+					Wild: {
+						values: [
+							{ row: 0, column: 4 }, 
+							{ row: 1, column: 4 }, 
+							{ row: 3, column: 4 },
+							{ row: 2, column: 4 },
+							{ row: 4, column: 4 },
+
+							{ row: 0, column: 5 }, 
+							{ row: 1, column: 5 }, 
+							{ row: 3, column: 5 },
+							{ row: 2, column: 5 },
+							{ row: 4, column: 5 },
+
+							{ row: 0, column: 6 }, 
+							{ row: 1, column: 6 }, 
+							{ row: 3, column: 6 },
+							{ row: 2, column: 6 },
+							{ row: 4, column: 6 },
+
+						],
+						weights: [
+							3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000,
+						]
+					},	
 				},
 			},
 			teasing:{
@@ -254,33 +212,39 @@ const standardConfig = {
 					values: [1, 2, 3, 4, 5],
 					weights: [10, 150, 150, 10, 5],
 				},
-				directionalWildPositions: {
-					values: [
-						{ row: 0, column: 0 }, { row: 0, column: 1 },
-						{ row: 0, column: 2 }, { row: 0, column: 3 },
-						{ row: 0, column: 4 }, { row: 0, column: 5 },
-			
-						{ row: 1, column: 0 }, { row: 1, column: 5 },
-						{ row: 2, column: 0 }, { row: 2, column: 5 },
-						{ row: 3, column: 0 }, { row: 3, column: 5 },
-						
-						{ row: 4, column: 0 }, { row: 4, column: 1 }, 
-						{ row: 4, column: 2 }, { row: 4, column: 3 }, 
-						{ row: 4, column: 4 }, { row: 4, column: 5 },
-					],
-					weights: [
-						3000, 3000, 3000, 3000, 3000, 3000,
-						5000, 5000,
-						7500, 7500,
-						1000, 1000,
-						1000, 1000,
-						7500, 7500, 7500, 7500, 7500, 7500,
-					]
+				wildMaps: {
+					Wild: {
+						values: [
+							{ row: 0, column: 4 }, 
+							{ row: 1, column: 4 }, 
+							{ row: 3, column: 4 },
+							{ row: 2, column: 4 },
+							{ row: 4, column: 4 },
+
+							{ row: 0, column: 5 }, 
+							{ row: 1, column: 5 }, 
+							{ row: 3, column: 5 },
+							{ row: 2, column: 5 },
+							{ row: 4, column: 5 },
+
+							{ row: 0, column: 6 }, 
+							{ row: 1, column: 6 }, 
+							{ row: 3, column: 6 },
+							{ row: 2, column: 6 },
+							{ row: 4, column: 6 },
+
+						],
+						weights: [
+							3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000,
+						]
+					},	
 				},
 			},
 			baseGameLow:{
-				hitRate: 0.1,
-				distOffset: 0.3,
+				hitRate: 0.5,
+				distOffset: 0.25,
 				stopOffset: 3,
 				wildFeatureActive: {
 					values: [true, false],
@@ -288,11 +252,11 @@ const standardConfig = {
 				},
 				initialWilds: {
 					values: [1, 2, 3, 4, 5],
-					weights: [50, 70, 10, 7, 5],
+					weights: [5, 7, 0, 0, 0],
 				},
 				initialMultiplier: {
 					values: [1, 2, 3, 4, 5],
-					weights: [84, 10, 3, 2, 1],	
+					weights: [1, 0, 0, 0, 0],	
 				},
 				wildLookUp: {
 					values: [
@@ -312,28 +276,28 @@ const standardConfig = {
 					values: [1, 2, 3, 4, 5],
 					weights: [10, 150, 150, 10, 5],
 				},
-				directionalWildPositions: {
-					values: [
-						{ row: 0, column: 0 }, { row: 0, column: 1 },
-						{ row: 0, column: 2 }, { row: 0, column: 3 },
-						{ row: 0, column: 4 }, { row: 0, column: 5 },
-			
-						{ row: 1, column: 0 }, { row: 1, column: 5 },
-						{ row: 2, column: 0 }, { row: 2, column: 5 },
-						{ row: 3, column: 0 }, { row: 3, column: 5 },
-						
-						{ row: 4, column: 0 }, { row: 4, column: 1 }, 
-						{ row: 4, column: 2 }, { row: 4, column: 3 }, 
-						{ row: 4, column: 4 }, { row: 4, column: 5 },
-					],
-					weights: [
-						3000, 3000, 3000, 3000, 3000, 3000,
-						5000, 5000,
-						7500, 7500,
-						1000, 1000,
-						1000, 1000,
-						7500, 7500, 7500, 7500, 7500, 7500,
-					]
+				wildMaps: {
+					DirectionalWild: {
+						values: [
+							{ row: 0, column: 0 }, { row: 0, column: 1 },
+							{ row: 0, column: 2 }, { row: 0, column: 3 },
+							{ row: 0, column: 4 }, { row: 0, column: 5 },
+				
+							{ row: 1, column: 0 }, { row: 1, column: 5 },
+							{ row: 2, column: 0 }, { row: 2, column: 5 },
+							{ row: 3, column: 0 }, { row: 3, column: 5 },
+							
+							{ row: 4, column: 0 }, { row: 4, column: 1 }, 
+							{ row: 4, column: 2 }, { row: 4, column: 3 }, 
+							{ row: 4, column: 4 }, { row: 4, column: 5 }],
+						weights: [
+							3000, 3000, 3000, 3000, 3000, 3000,
+							5000, 5000,
+							7500, 7500,
+							1000, 1000,
+							1000, 1000,
+							7500, 7500, 7500, 7500, 7500, 7500]
+					},
 				},
 			},
 			baseGameMed:{
@@ -370,28 +334,34 @@ const standardConfig = {
 					values: [1, 2, 3, 4, 5],
 					weights: [10, 150, 150, 10, 5],
 				},
-				directionalWildPositions: {
-					values: [
-						{ row: 0, column: 0 }, { row: 0, column: 1 },
-						{ row: 0, column: 2 }, { row: 0, column: 3 },
-						{ row: 0, column: 4 }, { row: 0, column: 5 },
-			
-						{ row: 1, column: 0 }, { row: 1, column: 5 },
-						{ row: 2, column: 0 }, { row: 2, column: 5 },
-						{ row: 3, column: 0 }, { row: 3, column: 5 },
-						
-						{ row: 4, column: 0 }, { row: 4, column: 1 }, 
-						{ row: 4, column: 2 }, { row: 4, column: 3 }, 
-						{ row: 4, column: 4 }, { row: 4, column: 5 },
-					],
-					weights: [
-						3000, 3000, 3000, 3000, 3000, 3000,
-						5000, 5000,
-						7500, 7500,
-						1000, 1000,
-						1000, 1000,
-						7500, 7500, 7500, 7500, 7500, 7500,
-					]
+				wildMaps: {
+					wild: {
+						values: [
+							{ row: 0, column: 4 }, 
+							{ row: 1, column: 4 }, 
+							{ row: 3, column: 4 },
+							{ row: 2, column: 4 },
+							{ row: 4, column: 4 },
+
+							{ row: 0, column: 5 }, 
+							{ row: 1, column: 5 }, 
+							{ row: 3, column: 5 },
+							{ row: 2, column: 5 },
+							{ row: 4, column: 5 },
+
+							{ row: 0, column: 6 }, 
+							{ row: 1, column: 6 }, 
+							{ row: 3, column: 6 },
+							{ row: 2, column: 6 },
+							{ row: 4, column: 6 },
+
+						],
+						weights: [
+							3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000,
+						]
+					},	
 				},
 			},
 			baseGameHigh:{
@@ -428,28 +398,34 @@ const standardConfig = {
 					values: [1, 2, 3, 4, 5],
 					weights: [10, 150, 150, 10, 5],
 				},
-				directionalWildPositions: {
-					values: [
-						{ row: 0, column: 0 }, { row: 0, column: 1 },
-						{ row: 0, column: 2 }, { row: 0, column: 3 },
-						{ row: 0, column: 4 }, { row: 0, column: 5 },
-			
-						{ row: 1, column: 0 }, { row: 1, column: 5 },
-						{ row: 2, column: 0 }, { row: 2, column: 5 },
-						{ row: 3, column: 0 }, { row: 3, column: 5 },
-						
-						{ row: 4, column: 0 }, { row: 4, column: 1 }, 
-						{ row: 4, column: 2 }, { row: 4, column: 3 }, 
-						{ row: 4, column: 4 }, { row: 4, column: 5 },
-					],
-					weights: [
-						3000, 3000, 3000, 3000, 3000, 3000,
-						5000, 5000,
-						7500, 7500,
-						1000, 1000,
-						1000, 1000,
-						7500, 7500, 7500, 7500, 7500, 7500,
-					]
+				wildMaps: {
+					wild: {
+						values: [
+							{ row: 0, column: 4 }, 
+							{ row: 1, column: 4 }, 
+							{ row: 3, column: 4 },
+							{ row: 2, column: 4 },
+							{ row: 4, column: 4 },
+
+							{ row: 0, column: 5 }, 
+							{ row: 1, column: 5 }, 
+							{ row: 3, column: 5 },
+							{ row: 2, column: 5 },
+							{ row: 4, column: 5 },
+
+							{ row: 0, column: 6 }, 
+							{ row: 1, column: 6 }, 
+							{ row: 3, column: 6 },
+							{ row: 2, column: 6 },
+							{ row: 4, column: 6 },
+
+						],
+						weights: [
+							3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000,
+						]
+					},	
 				},
 			},
 		},

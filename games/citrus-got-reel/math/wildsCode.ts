@@ -20,6 +20,7 @@ import { filterByIntersection } from "../../../common/distributions/intersectDis
 import { pickIndexFromDistribution } from "../../../common/distributions/pickIndexFromDistribution";
 import { FeatureType } from "./config/defines";
 import { DEBUG_DrawPickWeight } from "./debugsupport/Debug_DrawPickWeight";
+import { baseGameProfile, bonusGameProfile } from "./config/profiles";
 
 interface WildInfluences {
 	positions: Position[];
@@ -63,7 +64,8 @@ function gridPositionToWildWeight(
 export function addWilds(
 	integerRng: IntegerRng,
 	input: CitrusGotReelSymbol[][],
-	context: "base" | "bonus"
+	context: "base" | "bonus",
+	profile: baseGameProfile | bonusGameProfile,
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
 
@@ -75,7 +77,7 @@ export function addWilds(
 	if (
 		!pickValueFromDistribution(
 			integerRng,
-			currentMaths.wildFeatureActive[context]
+			currentMaths.profiles.base[profile].wildFeatureActive
 		)
 	) {
 		return input;
@@ -85,7 +87,7 @@ export function addWilds(
 	// NOTE - What if there are insufficient positions left on the matrix?
 	const numWilds: number = pickValueFromDistribution(
 		integerRng,
-		currentMaths.initialWilds[context]
+		currentMaths.profiles.base[profile].initialWilds
 	);
 
 	//Although currently the wilds options above do not allow 0, handle the possibility in case the table
@@ -238,15 +240,37 @@ export function addWilds(
 
 		const multiplier = pickValueFromDistribution(
 			integerRng,
-			currentMaths.initialMultiplier[context]
+			currentMaths.profiles.base[profile].initialMultiplier
 		);
 		const wildType = pickValueFromDistribution(
 			integerRng,
-			currentMaths.wildLookUp
+			currentMaths.profiles.base[profile].wildLookUp
 		);
 
 		//Choose the available position to use
-		const wildData = positionByType(wildType, integerRng, weightedDistributionPositions);
+		let wildData: {row: number, column: number, steps?: number, direction?: string}
+		if(currentMaths.profiles.base[profile].wildMaps[wildType as string]) {
+			const definedWildPositions = filterByIntersection(currentMaths.directionalWildPositions, weightedDistributionPositions, false)
+			const index = pickIndexFromDistribution(
+				integerRng,
+				definedWildPositions
+			)
+			const { row, column } = definedWildPositions.values[index];
+			wildData = { row, column };
+		}
+		else {
+			const index = pickIndexFromDistribution(
+				integerRng,
+				weightedDistributionPositions
+			)
+			const { row, column } = weightedDistributionPositions.values[index];
+			wildData = { row, column };
+		}
+
+		if (wildType === "DirectionalWild") {
+			wildData.direction = "right";
+			wildData.steps = 2;
+		}
 
 		// Remove this position from the list of available positions
 		// Changing to looking up the position before removing it,
@@ -462,78 +486,4 @@ export function returnSticky(
 			"sticky" in symbol && symbol.sticky ? symbol : undefined
 		)
 	);
-}
-
-function positionByType(wildType: any, integerRng: IntegerRng, weightedDistributionPositions: Distribution<Position>): {row: number, column: number, steps?: number, direction?: string} {
-	
-	const currentMaths = mathConfig();
-	let index: number;
-	let row = 0;
-	let column = 0;
-
-	switch (wildType) {
-		case "Wild":
-			//copy original implementation
-			index = pickIndexFromDistribution(
-				integerRng,
-				weightedDistributionPositions
-			); 
-			row = weightedDistributionPositions.values[index].row;
-			column = weightedDistributionPositions.values[index].column;
-			break;
-		case "DirectionalWild":
-			let steps; 
-			let direction;			// reference distribution against predefinition
-			
-			const directionalWildPositions = filterByIntersection(currentMaths.directionalWildPositions, weightedDistributionPositions, false)
-			//NOTE - What if this returned distribution is empty?
-			index = pickIndexFromDistribution(
-				integerRng,
-				directionalWildPositions
-			); 
-			row = directionalWildPositions.values[index].row;
-			column = directionalWildPositions.values[index].column;
-			
-			//sloppy setup for steps and direction - I can't think how to setup Data
-
-			steps = pickValueFromDistribution(
-				integerRng,
-				currentMaths.stepsData
-			)
-			
-			if (column === 0) {
-				direction = "right";
-			}
-			else if (column === 5) {
-				direction = "left";
-				steps = pickValueFromDistribution(
-					integerRng,
-					currentMaths.stepsColumn6Data
-				)
-			}
-			else if (row === 0) {
-				direction = "down";
-			}
-			else if (row === 4) {
-				direction = "up";
-			}
-			else throw new Error;
-
-
-			return {row, column, steps, direction};
-
-		case "CollectorWild":
-			// reference distribution against predefinition
-			index = 0;
-			row = weightedDistributionPositions.values[index].row;
-			column = weightedDistributionPositions.values[index].column;
-			break;
-		case "PayerWild":
-			// reference distribution against predefinition
-			index = 0;
-			row = weightedDistributionPositions.values[index].row;
-			column = weightedDistributionPositions.values[index].column;
-			break;
-	}
-	return {row, column};
 }
