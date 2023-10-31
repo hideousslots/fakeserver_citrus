@@ -104,7 +104,7 @@ const standardConfig = {
 
 	baseGameProfiles:{
 		values: [losing, teasing, baseGameLow, baseGameMed, baseGameHigh],
-		weights: [10, 0, 0, 0, 0],
+		weights: [0, 0, 100, 0, 0],
 	},
 
 	bonusGameProfiles:{

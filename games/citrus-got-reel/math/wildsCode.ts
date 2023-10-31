@@ -268,8 +268,24 @@ export function addWilds(
 		}
 
 		if (wildType === "DirectionalWild") {
-			wildData.direction = "right";
-			wildData.steps = 2;
+			wildData.steps = pickValueFromDistribution(integerRng,currentMaths.stepsData)
+			if (wildData.column === 0) {
+				wildData.direction = "right";
+			}
+			else if (wildData.column === 5) {
+				wildData.direction = "left";
+				wildData.steps = pickValueFromDistribution(
+					integerRng,
+					currentMaths.stepsColumn6Data
+				)
+			}
+			else if (wildData.row === 0) {
+				wildData.direction = "down";
+			}
+			else if (wildData.row === 4) {
+				wildData.direction = "up";
+			}
+			else throw new Error;
 		}
 
 		// Remove this position from the list of available positions
