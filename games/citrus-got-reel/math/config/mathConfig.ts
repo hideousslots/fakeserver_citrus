@@ -120,7 +120,7 @@ const standardConfig = {
 				stopOffset: 1,
 				wildFeatureActive: {
 						values: [true, false],
-						weights: [0, 12],
+						weights: [12,0]//0, 12],
 				},
 				initialWilds: {
 					values: [1, 2, 3, 4, 5],
@@ -151,6 +151,12 @@ const standardConfig = {
 				wildMaps: {
 					Wild: {
 						values: [
+							{ row: 0, column: 3 }, 
+							{ row: 1, column: 3 }, 
+							{ row: 3, column: 3 },
+							{ row: 2, column: 3 },
+							{ row: 4, column: 3 },
+
 							{ row: 0, column: 4 }, 
 							{ row: 1, column: 4 }, 
 							{ row: 3, column: 4 },
@@ -163,12 +169,6 @@ const standardConfig = {
 							{ row: 2, column: 5 },
 							{ row: 4, column: 5 },
 
-							{ row: 0, column: 6 }, 
-							{ row: 1, column: 6 }, 
-							{ row: 3, column: 6 },
-							{ row: 2, column: 6 },
-							{ row: 4, column: 6 },
-
 						],
 						weights: [
 							3000, 3000, 3000, 3000, 3000,
@@ -177,6 +177,37 @@ const standardConfig = {
 						]
 					},	
 				},
+				wildInfluences: {
+					Wild: {
+						default:
+						{
+							positions: [
+								{
+									row: (5 - 1) / 2,
+									column: (6 - 1) / 2,
+								},
+							],
+							rowInfluence: 0.5,
+							columnInfluence: 0.5,						
+						},
+						Wild: {
+							rowInfluence: 0.1,
+							columnInfluence: 0.1,	
+						},
+						DirectionalWild: {
+							rowInfluence: 0.1,
+							columnInfluence: 0.1,	
+						},
+						CollectorWild: {
+							rowInfluence: 0.1,
+							columnInfluence: 0.1,	
+						},
+						PayerWild: {
+							rowInfluence: 0.1,
+							columnInfluence: 0.1,	
+						}
+					}
+				}
 			},
 			teasing:{
 				hitRate: 0,
@@ -215,6 +246,12 @@ const standardConfig = {
 				wildMaps: {
 					Wild: {
 						values: [
+							{ row: 0, column: 3 }, 
+							{ row: 1, column: 3 }, 
+							{ row: 3, column: 3 },
+							{ row: 2, column: 3 },
+							{ row: 4, column: 3 },
+
 							{ row: 0, column: 4 }, 
 							{ row: 1, column: 4 }, 
 							{ row: 3, column: 4 },
@@ -227,12 +264,6 @@ const standardConfig = {
 							{ row: 2, column: 5 },
 							{ row: 4, column: 5 },
 
-							{ row: 0, column: 6 }, 
-							{ row: 1, column: 6 }, 
-							{ row: 3, column: 6 },
-							{ row: 2, column: 6 },
-							{ row: 4, column: 6 },
-
 						],
 						weights: [
 							3000, 3000, 3000, 3000, 3000,
@@ -241,6 +272,10 @@ const standardConfig = {
 						]
 					},	
 				},
+				wildInfluences: {
+					
+				}
+
 			},
 			baseGameLow:{
 				hitRate: 0.5,
@@ -299,6 +334,10 @@ const standardConfig = {
 							7500, 7500, 7500, 7500, 7500, 7500]
 					},
 				},
+				wildInfluences: {
+					
+				}
+
 			},
 			baseGameMed:{
 				hitRate: 0.3,
@@ -337,6 +376,12 @@ const standardConfig = {
 				wildMaps: {
 					wild: {
 						values: [
+							{ row: 0, column: 3 }, 
+							{ row: 1, column: 3 }, 
+							{ row: 3, column: 3 },
+							{ row: 2, column: 3 },
+							{ row: 4, column: 3 },
+
 							{ row: 0, column: 4 }, 
 							{ row: 1, column: 4 }, 
 							{ row: 3, column: 4 },
@@ -349,12 +394,6 @@ const standardConfig = {
 							{ row: 2, column: 5 },
 							{ row: 4, column: 5 },
 
-							{ row: 0, column: 6 }, 
-							{ row: 1, column: 6 }, 
-							{ row: 3, column: 6 },
-							{ row: 2, column: 6 },
-							{ row: 4, column: 6 },
-
 						],
 						weights: [
 							3000, 3000, 3000, 3000, 3000,
@@ -363,6 +402,10 @@ const standardConfig = {
 						]
 					},	
 				},
+				wildInfluences: {
+					
+				}
+
 			},
 			baseGameHigh:{
 				hitRate: 0.7,
@@ -401,6 +444,12 @@ const standardConfig = {
 				wildMaps: {
 					wild: {
 						values: [
+							{ row: 0, column: 3 }, 
+							{ row: 1, column: 3 }, 
+							{ row: 3, column: 3 },
+							{ row: 2, column: 3 },
+							{ row: 4, column: 3 },
+
 							{ row: 0, column: 4 }, 
 							{ row: 1, column: 4 }, 
 							{ row: 3, column: 4 },
@@ -413,12 +462,6 @@ const standardConfig = {
 							{ row: 2, column: 5 },
 							{ row: 4, column: 5 },
 
-							{ row: 0, column: 6 }, 
-							{ row: 1, column: 6 }, 
-							{ row: 3, column: 6 },
-							{ row: 2, column: 6 },
-							{ row: 4, column: 6 },
-
 						],
 						weights: [
 							3000, 3000, 3000, 3000, 3000,
@@ -427,6 +470,10 @@ const standardConfig = {
 						]
 					},	
 				},
+				wildInfluences: {
+					
+				}
+
 			},
 		},
 		bonus: {

@@ -19,7 +19,7 @@ import { Distribution } from "../../../common/distributions/Distribution";
 import { filterByIntersection } from "../../../common/distributions/intersectDistributions";
 import { pickIndexFromDistribution } from "../../../common/distributions/pickIndexFromDistribution";
 import { FeatureType } from "./config/defines";
-import { DEBUG_DrawPickWeight } from "./debugsupport/Debug_DrawPickWeight";
+//import { DEBUG_DrawPickWeight } from "./debugsupport/Debug_DrawPickWeight";
 import { baseGameProfile, bonusGameProfile } from "./config/profiles";
 
 interface WildInfluences {
@@ -69,6 +69,7 @@ export function addWilds(
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
 
+	profile = baseGameProfile.losing;
 	//SNC 20231007 -
 	//This is the part which needs most tweaking
 	//Primarily, the positions of wilds should be weighted towards an ideal placement (probably based on the type of wins wanted)
@@ -137,10 +138,11 @@ export function addWilds(
 		values: [],
 		weights: [],
 	};
-	const currentWildPositio_Wild: Position[] = [];
-	const currentWildPositio_DirectionalWild: Position[] = [];
-	const currentWildPositio_CollectorWild: Position[] = [];
-	const currentWildPositio_PayerWild: Position[] = [];
+
+	const currentWildPositions_Wild: Position[] = [];
+	const currentWildPositions_DirectionalWild: Position[] = [];
+	const currentWildPositions_CollectorWild: Position[] = [];
+	const currentWildPositions_PayerWild: Position[] = [];
 
 	const numColumns: number = input.length;
 	const numRows: number = input[0].length;
@@ -155,19 +157,19 @@ export function addWilds(
 				const symbol = input[column][row].symbol;
 				switch (symbol) {
 					case CitrusGotReelSymbolValue.Wild:
-						currentWildPositio_Wild.push({ row, column });
+						currentWildPositions_Wild.push({ row, column });
 						break;
 					case CitrusGotReelSymbolValue.DirectionalWild:
-						currentWildPositio_DirectionalWild.push({
+						currentWildPositions_DirectionalWild.push({
 							row,
 							column,
 						});
 						break;
 					case CitrusGotReelSymbolValue.CollectorWild:
-						currentWildPositio_CollectorWild.push({ row, column });
+						currentWildPositions_CollectorWild.push({ row, column });
 						break;
 					case CitrusGotReelSymbolValue.PayerWild:
-						currentWildPositio_PayerWild.push({ row, column });
+						currentWildPositions_PayerWild.push({ row, column });
 						break;
 				}
 			}
@@ -183,9 +185,86 @@ export function addWilds(
 			break;
 		}
 
+		//NB the multiplier and types need better control
+
+		const multiplier = pickValueFromDistribution(
+			integerRng,
+			currentMaths.profiles.base[profile].initialMultiplier
+		);
+		const wildType = pickValueFromDistribution(
+			integerRng,
+			currentMaths.profiles.base[profile].wildLookUp
+		);
+		
 		//Calculate the proper weighting for all choices
 		//Bias to or from preferred usefulness position
 		//and bias to or from proximity to other wilds
+
+
+		//Determine what influences to use
+
+		let influences: WildInfluences[] = [];
+		const profileWildInfluences = currentMaths.profiles.base[profile].wildInfluences[wildType as string];
+		if(profileWildInfluences) {
+			//Form the influences from the profile
+
+			if(profileWildInfluences.default) {
+				influences.push(profileWildInfluences.default);
+			}
+
+			const wildInfluence =profileWildInfluences[FeatureType.Wild as string];
+			const directionalWildInfluence = profileWildInfluences[FeatureType.DirectionalWild as string];
+			const collectorWildInfluence = profileWildInfluences[FeatureType.CollectorWild as string];
+			const payerWildInfluence = profileWildInfluences[FeatureType.PayerWild as string];
+			
+			if(wildInfluence && (currentWildPositions_Wild.length > 0)) {
+				influences.push({positions: currentWildPositions_Wild, rowInfluence: wildInfluence.rowInfluence, columnInfluence: wildInfluence.columnInfluence});
+			}
+			if(directionalWildInfluence && (currentWildPositions_DirectionalWild.length > 0)) {
+				influences.push({positions: currentWildPositions_DirectionalWild, rowInfluence: directionalWildInfluence.rowInfluence, columnInfluence: directionalWildInfluence.columnInfluence});
+			}
+			if(collectorWildInfluence && (currentWildPositions_CollectorWild.length > 0)) {
+				influences.push({positions: currentWildPositions_CollectorWild, rowInfluence: collectorWildInfluence.rowInfluence, columnInfluence: collectorWildInfluence.columnInfluence});
+			}
+			if(payerWildInfluence && (currentWildPositions_PayerWild.length > 0)) {
+				influences.push({positions: currentWildPositions_PayerWild, rowInfluence: payerWildInfluence.rowInfluence, columnInfluence: payerWildInfluence.columnInfluence});
+			}
+		}
+		console.log('influences: ' + JSON.stringify(influences));
+
+		//If no influences applied, set defaults
+		//@Will, we should try to ensure this default isn't needed
+		if(influences.length === 0)
+		{
+			console.log('APPLYING DEFAULT WILD INFLUENCES ON PROFILE ' + profile + ' for wildtype ' + wildType as string);
+			//Set default influences
+
+			influences=[
+				//Centre of board (for now)
+				{
+					positions: [
+						{
+							row: (numRows - 1) / 2, 		// These positions set in profile
+							column: (numColumns - 1) / 2, 	// These positions set in profile
+						},
+					],
+					rowInfluence: 0.5, 						// These weights set in profile
+					columnInfluence: 0.5, 					// These weights set in profile
+				},
+				// Other wild proximity
+				{
+					positions: [
+						...currentWildPositions_CollectorWild,
+						...currentWildPositions_DirectionalWild,
+						...currentWildPositions_PayerWild,
+						...currentWildPositions_Wild,
+					],
+					rowInfluence: 0.1, 						// These weights set in profile
+					columnInfluence: 0.1,					// These weights set in profile
+					
+				}
+			];
+		}
 
 		for (
 			let possibleIndex = 0;
@@ -201,31 +280,7 @@ export function addWilds(
 					numColumns,
 					thisPosition.row,
 					thisPosition.column,
-					[
-						//Centre of board (for now)
-						{
-							positions: [
-								{
-									row: (numRows - 1) / 2, 		// These positions set in profile
-									column: (numColumns - 1) / 2, 	// These positions set in profile
-								},
-							],
-							rowInfluence: 0.5, 						// These weights set in profile
-							columnInfluence: 0.5, 					// These weights set in profile
-						},
-						// Other wild proximity
-						{
-							positions: [
-								...currentWildPositio_CollectorWild,
-								...currentWildPositio_DirectionalWild,
-								...currentWildPositio_PayerWild,
-								...currentWildPositio_Wild,
-							],
-							rowInfluence: 0.1, 						// These weights set in profile
-							columnInfluence: 0.1,					// These weights set in profile
-							
-						},
-					]
+					influences
 				);
 		}
 
@@ -236,25 +291,16 @@ export function addWilds(
 		// 	numColumns
 		// );
 
-		//NB the multiplier and types need better control
-
-		const multiplier = pickValueFromDistribution(
-			integerRng,
-			currentMaths.profiles.base[profile].initialMultiplier
-		);
-		const wildType = pickValueFromDistribution(
-			integerRng,
-			currentMaths.profiles.base[profile].wildLookUp
-		);
 
 		//Choose the available position to use
-		let wildData: {row: number, column: number, steps?: number, direction?: string}
-		if(currentMaths.profiles.base[profile].wildMaps[wildType as string]) {
-			const definedWildPositions = filterByIntersection(currentMaths.directionalWildPositions, weightedDistributionPositions, false)
+		let wildData: {row: number, column: number, steps?: number, direction?: string};
+		const profileWildMaps: any = currentMaths.profiles.base[profile].wildMaps[wildType as string];
+		if(profileWildMaps) {
+			const definedWildPositions = filterByIntersection(profileWildMaps, weightedDistributionPositions, false);
 			const index = pickIndexFromDistribution(
 				integerRng,
 				definedWildPositions
-			)
+			);
 			const { row, column } = definedWildPositions.values[index];
 			wildData = { row, column };
 		}
@@ -262,13 +308,13 @@ export function addWilds(
 			const index = pickIndexFromDistribution(
 				integerRng,
 				weightedDistributionPositions
-			)
+			);
 			const { row, column } = weightedDistributionPositions.values[index];
 			wildData = { row, column };
 		}
 
 		if (wildType === "DirectionalWild") {
-			wildData.steps = pickValueFromDistribution(integerRng,currentMaths.stepsData)
+			wildData.steps = pickValueFromDistribution(integerRng,currentMaths.stepsData);
 			if (wildData.column === 0) {
 				wildData.direction = "right";
 			}
@@ -277,7 +323,7 @@ export function addWilds(
 				wildData.steps = pickValueFromDistribution(
 					integerRng,
 					currentMaths.stepsColumn6Data
-				)
+				);
 			}
 			else if (wildData.row === 0) {
 				wildData.direction = "down";
@@ -309,19 +355,19 @@ export function addWilds(
 
 		switch (newSymbol.symbol) {
 			case CitrusGotReelSymbolValue.Wild:
-				currentWildPositio_Wild.push({ row: wildData.row, column: wildData.column });
+				currentWildPositions_Wild.push({ row: wildData.row, column: wildData.column });
 				break;
 			case CitrusGotReelSymbolValue.DirectionalWild:
-				currentWildPositio_DirectionalWild.push({
+				currentWildPositions_DirectionalWild.push({
 					row: wildData.row,
 					column: wildData.column,
 				});
 				break;
 			case CitrusGotReelSymbolValue.CollectorWild:
-				currentWildPositio_CollectorWild.push({ row: wildData.row, column: wildData.column });
+				currentWildPositions_CollectorWild.push({ row: wildData.row, column: wildData.column });
 				break;
 			case CitrusGotReelSymbolValue.PayerWild:
-				currentWildPositio_PayerWild.push({row: wildData.row, column: wildData.column });
+				currentWildPositions_PayerWild.push({row: wildData.row, column: wildData.column });
 				break;
 		}
 	}
