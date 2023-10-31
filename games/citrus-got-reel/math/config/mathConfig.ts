@@ -120,7 +120,7 @@ const standardConfig = {
 				stopOffset: 1,
 				wildFeatureActive: {
 						values: [true, false],
-						weights: [12,0]//0, 12],
+						weights: [0, 12],
 				},
 				initialWilds: {
 					values: [1, 2, 3, 4, 5],

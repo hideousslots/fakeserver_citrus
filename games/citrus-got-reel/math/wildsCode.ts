@@ -69,7 +69,7 @@ export function addWilds(
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
 
-	profile = baseGameProfile.losing;
+	//profile = baseGameProfile.losing;
 	//SNC 20231007 -
 	//This is the part which needs most tweaking
 	//Primarily, the positions of wilds should be weighted towards an ideal placement (probably based on the type of wins wanted)
