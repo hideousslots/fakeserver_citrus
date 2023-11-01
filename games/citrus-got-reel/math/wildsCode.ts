@@ -230,13 +230,13 @@ export function addWilds(
 				influences.push({positions: currentWildPositions_PayerWild, rowInfluence: payerWildInfluence.rowInfluence, columnInfluence: payerWildInfluence.columnInfluence});
 			}
 		}
-		console.log('influences: ' + JSON.stringify(influences));
+		// console.log('influences: ' + JSON.stringify(influences));
 
 		//If no influences applied, set defaults
 		//@Will, we should try to ensure this default isn't needed
 		if(influences.length === 0)
 		{
-			console.log('APPLYING DEFAULT WILD INFLUENCES ON PROFILE ' + profile + ' for wildtype ' + wildType as string);
+			// console.log('APPLYING DEFAULT WILD INFLUENCES ON PROFILE ' + profile + ' for wildtype ' + wildType as string);
 			//Set default influences
 
 			influences=[
@@ -314,16 +314,14 @@ export function addWilds(
 		}
 
 		if (wildType === "DirectionalWild") {
-			wildData.steps = pickValueFromDistribution(integerRng,currentMaths.stepsData);
+			wildData.steps = pickValueFromDistribution(integerRng, currentMaths.profiles.base[profile].stepsData);
 			if (wildData.column === 0) {
 				wildData.direction = "right";
 			}
 			else if (wildData.column === 5) {
 				wildData.direction = "left";
-				wildData.steps = pickValueFromDistribution(
-					integerRng,
-					currentMaths.stepsColumn6Data
-				);
+				wildData.steps = pickValueFromDistribution(integerRng, currentMaths.profiles.base[profile].stepsColumn6Data);
+				
 			}
 			else if (wildData.row === 0) {
 				wildData.direction = "down";
