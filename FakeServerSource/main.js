@@ -64,7 +64,7 @@ function FakeServer(_interface) {
     });
 
     app.get('/game/info', (req, res) => {
-        res.send('{"state":{},"bets":' + JSON.stringify(gameInterface.bets) + ',"settings":{}}');
+        res.send('{"config":' + JSON.stringify(gameInterface.config()) + ',"state":{},"bets":' + JSON.stringify(gameInterface.bets) + ',"settings":{}}');
     });
 
     app.post('/game/complete', (req, res) => {
