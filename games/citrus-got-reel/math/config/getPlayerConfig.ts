@@ -6,5 +6,6 @@ export function getPlayerConfig() {
 	return {
 		payTable: currentMaths.payTable,
 		bookPayTable: currentMaths.bookPayTable,
+		winLines: currentMaths.lineDefines
 	};
 }
