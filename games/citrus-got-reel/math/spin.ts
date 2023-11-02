@@ -27,6 +27,7 @@ export interface ScatterInfo {
 }
 
 export interface SpinResult {
+	reelsInFlight: CitrusGotReelSymbol[][];
 	reelsBefore: CitrusGotReelSymbol[][];
 	reelsAfter: CitrusGotReelSymbol[][];
 	lineWins: LineWinDetails[];
@@ -176,6 +177,11 @@ function generateSpin(
 		integerRng
 	);
 
+	const inFlightGrid = generateInFlightReelGrid(
+		initialGrid,
+		integerRng
+	);
+
 	const scatters =
 		scatterSymbols > 0
 			? countScatters(indexReels)
@@ -189,6 +195,7 @@ function generateSpin(
 	);
 
 	return {
+		reelsInFlight: inFlightGrid,
 		reelsBefore: initialGrid,
 		reelsAfter: indexReels,
 		lineWins: lineWins,
@@ -229,6 +236,11 @@ function generateSpin_LoseOrTease(
 		addedWilds,
 		integerRng
 	);
+	
+	const inFlightGrid = generateInFlightReelGrid(
+		initialGrid,
+		integerRng
+	);
 
 	const scatters =
 		scatterSymbols > 0
@@ -236,6 +248,7 @@ function generateSpin_LoseOrTease(
 			: { collected: 0, positions: [] };
 
 	return {
+		reelsInFlight: inFlightGrid,
 		reelsBefore: initialGrid,
 		reelsAfter: indexReels,
 		lineWins: [],
@@ -283,6 +296,34 @@ function generateInitialReelGrid(
 			if (
 				resultGrid[i][j].symbol === CitrusGotReelSymbolValue.PlaceHolder
 			) {
+				const randomSymbol =
+					nonWildSymbols[
+						integerRng.randomInteger(nonWildSymbols.length)
+					];
+				resultGrid[i][j] = {
+					symbol: randomSymbol,
+				} as CitrusGotReelSymbol;
+			}
+		}
+	}
+
+	return resultGrid;
+}
+
+//reconstruct an initial reel grid with no wilds at all
+function generateInFlightReelGrid(
+	generatedSymbols: CitrusGotReelSymbol[][],
+	integerRng: IntegerRng
+): CitrusGotReelSymbol[][] {
+	// clone the generatedSymbols array
+	const resultGrid: CitrusGotReelSymbol[][] = JSON.parse(
+		JSON.stringify(generatedSymbols)
+	);
+
+	// Replace wild symbols in resultGrid with placeholders
+	for (let i = 0; i < resultGrid.length; i++) {
+		for (let j = 0; j < resultGrid[i].length; j++) {
+			if (WildSymbols.includes(resultGrid[i][j]?.symbol)) {
 				const randomSymbol =
 					nonWildSymbols[
 						integerRng.randomInteger(nonWildSymbols.length)
