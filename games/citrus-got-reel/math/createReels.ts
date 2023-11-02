@@ -254,6 +254,7 @@ export function createReels_loseOrTease(
 	}
 
 	//Stripe reels
+	//Quick note: Could just use the random allocation of stripes direct to reel - would remove stacking!
 
 	console.log("stripe type " + chosenStripeType);
 	switch (chosenStripeType) {
