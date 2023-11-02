@@ -63,6 +63,21 @@ export function addScatters(
 	return newInput;
 }
 
+export function applyScattersBetweenGrids(sourceGrid:CitrusGotReelSymbol[][], destGrid:CitrusGotReelSymbol[][]) :CitrusGotReelSymbol[][] {
+	const newDestGrid: CitrusGotReelSymbol[][] = deepCloneArray(destGrid);
+
+	for (let row = 0; row < newDestGrid.length; row++) {
+		for (let column = 0; column < newDestGrid[row].length; column++) {
+			if (sourceGrid[row][column].symbol === CitrusGotReelSymbolValue.Scatter) {
+				//Copy it
+				console.log('copy grid...' + row + ',' + column)
+				newDestGrid[row][column]=sourceGrid[row][column];
+			}
+		}
+	}
+	return newDestGrid;
+} 
+
 export function countScatters(matrix: CitrusGotReelSymbol[][]): ScatterInfo {
 	
     //SNC - 20231006 - TODO - Why use count? position.length?
