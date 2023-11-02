@@ -64,7 +64,6 @@ function gridPositionToWildWeight(
 export function addWilds(
 	integerRng: IntegerRng,
 	input: CitrusGotReelSymbol[][],
-	context: "base" | "bonus",
 	profile: baseGameProfile | bonusGameProfile
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();

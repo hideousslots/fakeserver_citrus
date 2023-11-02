@@ -61,7 +61,6 @@ export function spin(
 		integerRng,
 		scatterSymbols as number,
 		precisionMoneyMapper,
-		"base",
 		profile as baseGameProfile
 	);
 }
@@ -85,7 +84,6 @@ export function bonusSpins(
 		integerRng,
 		0,
 		precisionMoneyMapper,
-		"bonus",
 		profile as bonusGameProfile
 	);
 	bonusSpinRound.reelsAfter = stickWilds(
@@ -100,7 +98,6 @@ export function bonusSpins(
 			integerRng,
 			0,
 			precisionMoneyMapper,
-			"bonus",
 			profile as bonusGameProfile,
 			returnSticky(bonusSpinRound.reelsAfter)
 		);
@@ -122,7 +119,6 @@ function generateSpin(
 	// stopOffset: any,
 	scatterSymbols: number = 0,
 	precisionMoneyMapper: (a: number) => number,
-	context: "base" | "bonus",
 	profile: baseGameProfile | bonusGameProfile,
 	reelGrid?: CitrusGotReelSymbol[][]
 ): SpinResult {
@@ -143,13 +139,13 @@ function generateSpin(
 
 	//If this is a losing or teasing profile, control much more tightly the result
 
-	if((context === 'base') && ((profile === baseGameProfile.losing)||(profile === baseGameProfile.teasing))) {
+	if((profile === baseGameProfile.losing)||(profile === baseGameProfile.teasing)) {
 		return generateSpin_LoseOrTease(integerRng, scatterSymbols, precisionMoneyMapper, profile, initialReels, rows, cols);
 	}
 		
 	const currentMaths = mathConfig();
 
-	const addedWilds = addWilds(integerRng, initialReels, context, profile);
+	const addedWilds = addWilds(integerRng, initialReels, profile);
 	let expandedWilds = expandWilds(addedWilds);
 
 	if (scatterSymbols > 0) {
