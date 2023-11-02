@@ -69,12 +69,6 @@ export function addWilds(
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
 
-	//profile = baseGameProfile.losing;
-	//SNC 20231007 -
-	//This is the part which needs most tweaking
-	//Primarily, the positions of wilds should be weighted towards an ideal placement (probably based on the type of wins wanted)
-	//It may also be worth biasing by type in each location or based on other wilds nearby
-
 	if (
 		!pickValueFromDistribution(
 			integerRng,
@@ -85,7 +79,7 @@ export function addWilds(
 	}
 
 	// Determine the number of wilds to place
-	// NOTE - What if there are insufficient positions left on the matrix?
+	
 	const numWilds: number = pickValueFromDistribution(
 		integerRng,
 		currentMaths.profiles.base[profile].initialWilds
@@ -130,7 +124,7 @@ export function addWilds(
 			multiplier,
 			sticky: false,
 		}),
-	};
+	};	
 
 	//Find all possible positions for wilds, sort the weighting afterwards
 
@@ -546,4 +540,47 @@ export function returnSticky(
 			"sticky" in symbol && symbol.sticky ? symbol : undefined
 		)
 	);
+}
+
+//SNC - 20231101 - Code to handle wild placement for losing and teasing
+
+export function addWilds_loseOrTease(
+			integerRng: IntegerRng,
+	input: CitrusGotReelSymbol[][],
+	profile: baseGameProfile | bonusGameProfile): CitrusGotReelSymbol[][] {
+
+		
+	const currentMaths = mathConfig();
+
+		if (
+			!pickValueFromDistribution(
+				integerRng,
+				currentMaths.profiles.base[profile].wildFeatureActive
+			)
+		) {
+			return input;
+		}
+	
+		// Determine the number of wilds to place
+		
+		const numWilds: number = pickValueFromDistribution(
+			integerRng,
+			currentMaths.profiles.base[profile].initialWilds
+		);
+	
+		//Although currently the wilds options above do not allow 0, handle the possibility in case the table
+		//changes
+	
+		if (numWilds === 0) {
+			return input;
+		}
+	
+		//Add the wilds as needed, but ensure they cannot create a win 
+		//That means no wilds in rows 0+1 or 1+2 that work with each other
+		//Keep expanding wilds away from reels 2 or lower
+		
+
+		console.log('addWilds_loseOrTease ' + numWilds + ' wilds');
+		return input;
+	
 }

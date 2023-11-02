@@ -12,12 +12,12 @@ import {
 	nonWildSymbols,
 	LineWinDetails,
 } from "./config/CitrusGotReelSymbol";
-import { addWilds, expandWilds, stickWilds, returnSticky } from "./wildsCode";
+import { addWilds, addWilds_loseOrTease, expandWilds, stickWilds, returnSticky } from "./wildsCode";
 import { addScatters, countScatters } from "./scattersCode";
 import { IntegerRng } from "../../../common/rng/IntegerRng";
 import { Position } from "../../../common/reels/Position";
 import { LineWinCalculator } from "./calculateLineWins";
-import { createReels } from "./createReels";
+import { createReels, createReels_loseOrTease } from "./createReels";
 import { pickValueFromDistribution } from "../../../common/distributions/pickValueFromDistribution";
 import { baseGameProfile, bonusGameProfile } from "./config/profiles";
 
@@ -47,11 +47,15 @@ export function spin(
 		integerRng,
 		currentMaths.baseGameScattersToAdd
 	);
-	const profile = pickValueFromDistribution(
-		integerRng,
-		currentMaths.baseGameProfiles
-	);
+	
+	// const profile = pickValueFromDistribution(
+	// 	integerRng,
+	// 	currentMaths.baseGameProfiles
+	// );
 
+	const profile='losing';
+	console.log('spin profile picked ' + profile as string);
+	
 	return generateSpin(
 		bet,
 		integerRng,
@@ -122,8 +126,7 @@ function generateSpin(
 	profile: baseGameProfile | bonusGameProfile,
 	reelGrid?: CitrusGotReelSymbol[][]
 ): SpinResult {
-	const currentMaths = mathConfig();
-
+	
 	let rows: number, cols: number, initialReels: CitrusGotReelSymbol[][];
 
 	if (reelGrid) {
@@ -138,13 +141,21 @@ function generateSpin(
 		);
 	}
 
+	//If this is a losing or teasing profile, control much more tightly the result
+
+	if((context === 'base') && ((profile === baseGameProfile.losing)||(profile === baseGameProfile.teasing))) {
+		return generateSpin_LoseOrTease(integerRng, scatterSymbols, precisionMoneyMapper, profile, initialReels, rows, cols);
+	}
+		
+	const currentMaths = mathConfig();
+
 	const addedWilds = addWilds(integerRng, initialReels, context, profile);
 	let expandedWilds = expandWilds(addedWilds);
 
 	if (scatterSymbols > 0) {
 		expandedWilds = addScatters(expandedWilds, scatterSymbols, integerRng);
-	}
-
+	}	
+	
 	const hitrateControl = currentMaths.profiles.base[profile].hitRate;
 	const symbolDistributionOffset = currentMaths.profiles.base[profile].distOffset;
 	const stop = currentMaths.profiles.base[profile].stopOffset;
@@ -184,6 +195,53 @@ function generateSpin(
 		lineWins: lineWins,
 		scatters: scatters,
 		win: precisionMoneyMapper(win),
+		freeSpinIndex: 0,
+		debug: false,
+	};
+}
+
+function generateSpin_LoseOrTease(
+	integerRng: IntegerRng,
+	scatterSymbols: number = 0,
+	precisionMoneyMapper: (a: number) => number,
+	profile: baseGameProfile | bonusGameProfile,
+	initialReels: CitrusGotReelSymbol[][],
+	rows: number,
+	cols: number
+): SpinResult {
+		
+	console.log('lose or tease generation');
+	const addedWilds = addWilds_loseOrTease(integerRng, initialReels, profile);
+	let expandedWilds = expandWilds(addedWilds);
+
+	if (scatterSymbols > 0) {
+		expandedWilds = addScatters(expandedWilds, scatterSymbols, integerRng);
+	}	
+	
+	const indexReels = createReels_loseOrTease(
+		cols,
+		rows,
+		integerRng,
+		expandedWilds
+	) as CitrusGotReelSymbol[][];
+	
+	const initialGrid = generateInitialReelGrid(
+		indexReels,
+		addedWilds,
+		integerRng
+	);
+
+	const scatters =
+		scatterSymbols > 0
+			? countScatters(indexReels)
+			: { collected: 0, positions: [] };
+
+	return {
+		reelsBefore: initialGrid,
+		reelsAfter: indexReels,
+		lineWins: [],
+		scatters: scatters,
+		win: precisionMoneyMapper(0),
 		freeSpinIndex: 0,
 		debug: false,
 	};

@@ -1,3 +1,4 @@
+import { getRNG } from "@slotify/gdk/lib/rng/rng";
 import { IntegerRng } from "../../../common/rng/IntegerRng";
 import {
 	CitrusGotReelSymbol,
@@ -160,6 +161,117 @@ export function createReels(
 
 			reels[col][row] = newSymbol;
 		}
+	}
+
+	return reels;
+}
+
+export function createReels_loseOrTease(
+	columns: number,
+	rows: number,
+	integerRng: IntegerRng,
+	existingReels: CitrusGotReelSymbol[][]
+): CitrusGotReelSymbol[][] {
+	const reels = existingReels;
+	const availableSymbols: CitrusGotReelSymbolValue[] = [
+		CitrusGotReelSymbolValue.Ten,
+		CitrusGotReelSymbolValue.Jack,
+		CitrusGotReelSymbolValue.Queen,
+		CitrusGotReelSymbolValue.King,
+		CitrusGotReelSymbolValue.Ace,
+		CitrusGotReelSymbolValue.High1,
+		CitrusGotReelSymbolValue.High2,
+		CitrusGotReelSymbolValue.High3,
+		CitrusGotReelSymbolValue.High4,
+		CitrusGotReelSymbolValue.High5,
+	];
+
+	//Create stripe symbols L+R randomly!
+
+	const stripeSymbolsL: CitrusGotReelSymbolValue[] = [
+		CitrusGotReelSymbolValue.Ten,
+		CitrusGotReelSymbolValue.Jack,
+		CitrusGotReelSymbolValue.Queen,
+		CitrusGotReelSymbolValue.King,
+		CitrusGotReelSymbolValue.Ace,
+		CitrusGotReelSymbolValue.High1,
+		CitrusGotReelSymbolValue.High2,
+		CitrusGotReelSymbolValue.High3,
+		CitrusGotReelSymbolValue.High4,
+		CitrusGotReelSymbolValue.High5,
+	];
+
+	const stripeSymbolsR: CitrusGotReelSymbolValue[] = [];
+
+	for (let i = 0; i < 5; i++) {
+		const moveIndex: number = integerRng.randomInteger(
+			stripeSymbolsL.length
+		);
+		stripeSymbolsR.push(stripeSymbolsL.splice(moveIndex, 1)[0]);
+	}
+
+	const generateReel = (reel, symbolsToPickFrom) => {
+		for (let cell = 0; cell < rows; cell++) {
+			if (reels[reel][cell] === undefined) {
+				reels[reel][cell] = {
+					symbol: symbolsToPickFrom[
+						integerRng.randomInteger(symbolsToPickFrom.length)
+					],
+				} as CitrusGotReelSymbol;
+			}
+		}
+	};
+
+	//Build reels randomly for reels 3-5
+
+	for (let reel = 3; reel < columns; reel++) {
+		generateReel(reel, availableSymbols);
+	}
+
+	let chosenStripeType: number = -1; //0 - stripe 1+2, 1 is stripe 0+2, 2 is stripe 0+1
+
+	for (let reel = 0; reel <= 2 && chosenStripeType === -1; reel++) {
+		for (let cell = 0; cell < rows; cell++) {
+			if (reels[reel][cell] !== undefined) {
+				//Presuming a wild if not a scatter
+
+				if (
+					reels[reel][cell].symbol !==
+					CitrusGotReelSymbolValue.Scatter
+				) {
+					//Chosen this reel as stripe type
+					chosenStripeType = reel;
+					break;
+				}
+			}
+		}
+	}
+
+	//If no stripetype chosen, pick randomly
+
+	if (chosenStripeType === -1) {
+		chosenStripeType = integerRng.randomInteger(3);
+	}
+
+	//Stripe reels
+
+	console.log("stripe type " + chosenStripeType);
+	switch (chosenStripeType) {
+		case 0:
+			generateReel(0, availableSymbols);
+			generateReel(1, stripeSymbolsL);
+			generateReel(2, stripeSymbolsR);
+			break;
+		case 1:
+			generateReel(0, stripeSymbolsL);
+			generateReel(1, availableSymbols);
+			generateReel(2, stripeSymbolsR);
+			break;
+		case 2:
+			generateReel(0, stripeSymbolsL);
+			generateReel(1, stripeSymbolsR);
+			generateReel(2, availableSymbols);
+			break;
 	}
 
 	return reels;
