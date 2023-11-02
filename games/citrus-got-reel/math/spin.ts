@@ -52,9 +52,8 @@ export function spin(
 		integerRng,
 		currentMaths.baseGameProfiles
 	);
-
-	//const profile='losing';
-	console.log('spin profile picked ' + profile as string);
+	// const profile='teasing';//losing';
+	// console.log('spin profile picked ' + profile as string);
 	
 	return generateSpin(
 		bet,
@@ -210,7 +209,7 @@ function generateSpin_LoseOrTease(
 	cols: number
 ): SpinResult {
 		
-	console.log('lose or tease generation');
+	//console.log('lose or tease generation');
 	const addedWilds = addWilds_loseOrTease(integerRng, initialReels, profile,rows, cols);
 	let expandedWilds = expandWilds(addedWilds);
 

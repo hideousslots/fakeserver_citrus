@@ -665,13 +665,6 @@ export function addWilds_loseOrTease(
 
 	console.log("addWilds_loseOrTease " + numWilds + " wilds");
 
-	//Possible outcomes here:
-	//1) 1 wild non directional
-	//2) 1 wild directional
-	//3) 2 wilds non directional
-	//4) 2 wilds, one directional
-	//4) 2 wilds, directional
-
 	//Create the wilds to use:
 
 	const wildsToUse: { wildType: FeatureType; multiplier: number }[] = [];
@@ -689,7 +682,7 @@ export function addWilds_loseOrTease(
 		});
 	}
 
-	//If there is more than one make sure directional wilds go last
+	//If there is more than one, make sure directional wilds go last to allow a good placement of standard wilds
 
 	wildsToUse.sort((a, b) => {
 		if (
@@ -706,13 +699,12 @@ export function addWilds_loseOrTease(
 		return 0;
 	});
 
-	console.log("Wilds add order: " + JSON.stringify(wildsToUse));
-
 	//If only one wild, non directional can go anywhere. Directional anywhere from reel 2 onwards
 
 	for (let i = 0; i < wildsToUse.length; i++) {
 		const thisWild = wildsToUse[i];
-		//Choose minimum reel.
+		//Choose minimum reel logic:
+		//If a non-directional wild, minimum position is reel 0
 		//If a directional wild, minimum position is reel 2
 		//If not the first wild, minimum position is reel 3
 
