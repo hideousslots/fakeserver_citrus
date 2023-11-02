@@ -48,12 +48,12 @@ export function spin(
 		currentMaths.baseGameScattersToAdd
 	);
 	
-	// const profile = pickValueFromDistribution(
-	// 	integerRng,
-	// 	currentMaths.baseGameProfiles
-	// );
+	const profile = pickValueFromDistribution(
+		integerRng,
+		currentMaths.baseGameProfiles
+	);
 
-	const profile='losing';
+	//const profile='losing';
 	console.log('spin profile picked ' + profile as string);
 	
 	return generateSpin(
@@ -211,7 +211,7 @@ function generateSpin_LoseOrTease(
 ): SpinResult {
 		
 	console.log('lose or tease generation');
-	const addedWilds = addWilds_loseOrTease(integerRng, initialReels, profile);
+	const addedWilds = addWilds_loseOrTease(integerRng, initialReels, profile,rows, cols);
 	let expandedWilds = expandWilds(addedWilds);
 
 	if (scatterSymbols > 0) {

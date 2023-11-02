@@ -65,7 +65,7 @@ export function addWilds(
 	integerRng: IntegerRng,
 	input: CitrusGotReelSymbol[][],
 	context: "base" | "bonus",
-	profile: baseGameProfile | bonusGameProfile,
+	profile: baseGameProfile | bonusGameProfile
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
 
@@ -79,7 +79,7 @@ export function addWilds(
 	}
 
 	// Determine the number of wilds to place
-	
+
 	const numWilds: number = pickValueFromDistribution(
 		integerRng,
 		currentMaths.profiles.base[profile].initialWilds
@@ -105,13 +105,14 @@ export function addWilds(
 		[FeatureType.DirectionalWild]: (multiplier, direction, steps) => ({
 			symbol: CitrusGotReelSymbolValue.DirectionalWild,
 			multiplier,
-			direction: direction || currentMaths.directions[
-				integerRng.randomInteger(currentMaths.directions.length)
-			] as (typeof currentMaths.directions)[number],
-			steps: steps || pickValueFromDistribution(
-				integerRng,
-				currentMaths.stepsData
-			),
+			direction:
+				direction ||
+				(currentMaths.directions[
+					integerRng.randomInteger(currentMaths.directions.length)
+				] as (typeof currentMaths.directions)[number]),
+			steps:
+				steps ||
+				pickValueFromDistribution(integerRng, currentMaths.stepsData),
 			sticky: false,
 		}),
 		[FeatureType.CollectorWild]: (multiplier) => ({
@@ -124,7 +125,7 @@ export function addWilds(
 			multiplier,
 			sticky: false,
 		}),
-	};	
+	};
 
 	//Find all possible positions for wilds, sort the weighting afterwards
 
@@ -160,7 +161,10 @@ export function addWilds(
 						});
 						break;
 					case CitrusGotReelSymbolValue.CollectorWild:
-						currentWildPositions_CollectorWild.push({ row, column });
+						currentWildPositions_CollectorWild.push({
+							row,
+							column,
+						});
 						break;
 					case CitrusGotReelSymbolValue.PayerWild:
 						currentWildPositions_PayerWild.push({ row, column });
@@ -189,61 +193,91 @@ export function addWilds(
 			integerRng,
 			currentMaths.profiles.base[profile].wildLookUp
 		);
-		
+
 		//Calculate the proper weighting for all choices
 		//Bias to or from preferred usefulness position
 		//and bias to or from proximity to other wilds
 
-
 		//Determine what influences to use
 
 		let influences: WildInfluences[] = [];
-		const profileWildInfluences = currentMaths.profiles.base[profile].wildInfluences[wildType as string];
-		if(profileWildInfluences) {
+		const profileWildInfluences =
+			currentMaths.profiles.base[profile].wildInfluences[
+				wildType as string
+			];
+		if (profileWildInfluences) {
 			//Form the influences from the profile
 
-			if(profileWildInfluences.default) {
+			if (profileWildInfluences.default) {
 				influences.push(profileWildInfluences.default);
 			}
 
-			const wildInfluence =profileWildInfluences[FeatureType.Wild as string];
-			const directionalWildInfluence = profileWildInfluences[FeatureType.DirectionalWild as string];
-			const collectorWildInfluence = profileWildInfluences[FeatureType.CollectorWild as string];
-			const payerWildInfluence = profileWildInfluences[FeatureType.PayerWild as string];
-			
-			if(wildInfluence && (currentWildPositions_Wild.length > 0)) {
-				influences.push({positions: currentWildPositions_Wild, rowInfluence: wildInfluence.rowInfluence, columnInfluence: wildInfluence.columnInfluence});
+			const wildInfluence =
+				profileWildInfluences[FeatureType.Wild as string];
+			const directionalWildInfluence =
+				profileWildInfluences[FeatureType.DirectionalWild as string];
+			const collectorWildInfluence =
+				profileWildInfluences[FeatureType.CollectorWild as string];
+			const payerWildInfluence =
+				profileWildInfluences[FeatureType.PayerWild as string];
+
+			if (wildInfluence && currentWildPositions_Wild.length > 0) {
+				influences.push({
+					positions: currentWildPositions_Wild,
+					rowInfluence: wildInfluence.rowInfluence,
+					columnInfluence: wildInfluence.columnInfluence,
+				});
 			}
-			if(directionalWildInfluence && (currentWildPositions_DirectionalWild.length > 0)) {
-				influences.push({positions: currentWildPositions_DirectionalWild, rowInfluence: directionalWildInfluence.rowInfluence, columnInfluence: directionalWildInfluence.columnInfluence});
+			if (
+				directionalWildInfluence &&
+				currentWildPositions_DirectionalWild.length > 0
+			) {
+				influences.push({
+					positions: currentWildPositions_DirectionalWild,
+					rowInfluence: directionalWildInfluence.rowInfluence,
+					columnInfluence: directionalWildInfluence.columnInfluence,
+				});
 			}
-			if(collectorWildInfluence && (currentWildPositions_CollectorWild.length > 0)) {
-				influences.push({positions: currentWildPositions_CollectorWild, rowInfluence: collectorWildInfluence.rowInfluence, columnInfluence: collectorWildInfluence.columnInfluence});
+			if (
+				collectorWildInfluence &&
+				currentWildPositions_CollectorWild.length > 0
+			) {
+				influences.push({
+					positions: currentWildPositions_CollectorWild,
+					rowInfluence: collectorWildInfluence.rowInfluence,
+					columnInfluence: collectorWildInfluence.columnInfluence,
+				});
 			}
-			if(payerWildInfluence && (currentWildPositions_PayerWild.length > 0)) {
-				influences.push({positions: currentWildPositions_PayerWild, rowInfluence: payerWildInfluence.rowInfluence, columnInfluence: payerWildInfluence.columnInfluence});
+			if (
+				payerWildInfluence &&
+				currentWildPositions_PayerWild.length > 0
+			) {
+				influences.push({
+					positions: currentWildPositions_PayerWild,
+					rowInfluence: payerWildInfluence.rowInfluence,
+					columnInfluence: payerWildInfluence.columnInfluence,
+				});
 			}
 		}
 		// console.log('influences: ' + JSON.stringify(influences));
 
 		//If no influences applied, set defaults
 		//@Will, we should try to ensure this default isn't needed
-		if(influences.length === 0)
-		{
+		if (influences.length === 0) {
 			// console.log('APPLYING DEFAULT WILD INFLUENCES ON PROFILE ' + profile + ' for wildtype ' + wildType as string);
 			//Set default influences
 
-			influences=[
+			influences = [
 				//Centre of board (for now)
 				{
 					positions: [
 						{
-							row: (numRows - 1) / 2, 		// These positions set in profile
-							column: (numColumns - 1) / 2, 	// These positions set in profile
+							row: (numRows - 1) / 2, // These positions set in profile
+							column: (numColumns - 1) / 2, // These positions set in profile
 						},
 					],
-					rowInfluence: 0.5, 						// These weights set in profile
-					columnInfluence: 0.5, 					// These weights set in profile
+					rowInfluence: 0.5, // These weights set in profile
+					columnInfluence: 0.5, // These weights set in profile
 				},
 				// Other wild proximity
 				{
@@ -253,10 +287,9 @@ export function addWilds(
 						...currentWildPositions_PayerWild,
 						...currentWildPositions_Wild,
 					],
-					rowInfluence: 0.1, 						// These weights set in profile
-					columnInfluence: 0.1,					// These weights set in profile
-					
-				}
+					rowInfluence: 0.1, // These weights set in profile
+					columnInfluence: 0.1, // These weights set in profile
+				},
 			];
 		}
 
@@ -285,20 +318,28 @@ export function addWilds(
 		// 	numColumns
 		// );
 
-
 		//Choose the available position to use
-		let wildData: {row: number, column: number, steps?: number, direction?: string};
-		const profileWildMaps: any = currentMaths.profiles.base[profile].wildMaps[wildType as string];
-		if(profileWildMaps) {
-			const definedWildPositions = filterByIntersection(profileWildMaps, weightedDistributionPositions, false);
+		let wildData: {
+			row: number;
+			column: number;
+			steps?: number;
+			direction?: string;
+		};
+		const profileWildMaps: any =
+			currentMaths.profiles.base[profile].wildMaps[wildType as string];
+		if (profileWildMaps) {
+			const definedWildPositions = filterByIntersection(
+				profileWildMaps,
+				weightedDistributionPositions,
+				false
+			);
 			const index = pickIndexFromDistribution(
 				integerRng,
 				definedWildPositions
 			);
 			const { row, column } = definedWildPositions.values[index];
 			wildData = { row, column };
-		}
-		else {
+		} else {
 			const index = pickIndexFromDistribution(
 				integerRng,
 				weightedDistributionPositions
@@ -308,28 +349,31 @@ export function addWilds(
 		}
 
 		if (wildType === "DirectionalWild") {
-			wildData.steps = pickValueFromDistribution(integerRng, currentMaths.profiles.base[profile].stepsData);
+			wildData.steps = pickValueFromDistribution(
+				integerRng,
+				currentMaths.profiles.base[profile].stepsData
+			);
 			if (wildData.column === 0) {
 				wildData.direction = "right";
-			}
-			else if (wildData.column === 5) {
+			} else if (wildData.column === 5) {
 				wildData.direction = "left";
-				wildData.steps = pickValueFromDistribution(integerRng, currentMaths.profiles.base[profile].stepsColumn6Data);
-				
-			}
-			else if (wildData.row === 0) {
+				wildData.steps = pickValueFromDistribution(
+					integerRng,
+					currentMaths.profiles.base[profile].stepsColumn6Data
+				);
+			} else if (wildData.row === 0) {
 				wildData.direction = "down";
-			}
-			else if (wildData.row === 4) {
+			} else if (wildData.row === 4) {
 				wildData.direction = "up";
-			}
-			else throw new Error;
+			} else throw new Error();
 		}
 
 		// Remove this position from the list of available positions
 		// Changing to looking up the position before removing it,
 		// May have pulled position from intersection with another distribution
-		const indexToRemove = weightedDistributionPositions.values.findIndex(pos => pos.row === wildData.row && pos.column === wildData.column);
+		const indexToRemove = weightedDistributionPositions.values.findIndex(
+			(pos) => pos.row === wildData.row && pos.column === wildData.column
+		);
 
 		weightedDistributionPositions.values.splice(indexToRemove, 1);
 		weightedDistributionPositions.weights.splice(indexToRemove, 1);
@@ -337,8 +381,8 @@ export function addWilds(
 		// Use the mapping to generate the new symbol
 		const newSymbol = featureToSymbolMap[wildType as FeatureType](
 			multiplier as number,
-			wildData.direction,  // passing direction
-			wildData.steps       // passing steps
+			wildData.direction, // passing direction
+			wildData.steps // passing steps
 		);
 
 		input[wildData.column][wildData.row] = newSymbol;
@@ -347,7 +391,10 @@ export function addWilds(
 
 		switch (newSymbol.symbol) {
 			case CitrusGotReelSymbolValue.Wild:
-				currentWildPositions_Wild.push({ row: wildData.row, column: wildData.column });
+				currentWildPositions_Wild.push({
+					row: wildData.row,
+					column: wildData.column,
+				});
 				break;
 			case CitrusGotReelSymbolValue.DirectionalWild:
 				currentWildPositions_DirectionalWild.push({
@@ -356,10 +403,16 @@ export function addWilds(
 				});
 				break;
 			case CitrusGotReelSymbolValue.CollectorWild:
-				currentWildPositions_CollectorWild.push({ row: wildData.row, column: wildData.column });
+				currentWildPositions_CollectorWild.push({
+					row: wildData.row,
+					column: wildData.column,
+				});
 				break;
 			case CitrusGotReelSymbolValue.PayerWild:
-				currentWildPositions_PayerWild.push({row: wildData.row, column: wildData.column });
+				currentWildPositions_PayerWild.push({
+					row: wildData.row,
+					column: wildData.column,
+				});
 				break;
 		}
 	}
@@ -543,44 +596,187 @@ export function returnSticky(
 }
 
 //SNC - 20231101 - Code to handle wild placement for losing and teasing
+// We can presume an empty gird on entry otherwise cannot guarantee to make a losing grid
 
 export function addWilds_loseOrTease(
-			integerRng: IntegerRng,
+	integerRng: IntegerRng,
 	input: CitrusGotReelSymbol[][],
-	profile: baseGameProfile | bonusGameProfile): CitrusGotReelSymbol[][] {
-
-		
+	profile: baseGameProfile | bonusGameProfile,
+	rows: number,
+	cols: number
+): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
 
-		if (
-			!pickValueFromDistribution(
-				integerRng,
-				currentMaths.profiles.base[profile].wildFeatureActive
-			)
-		) {
-			return input;
-		}
-	
-		// Determine the number of wilds to place
-		
-		const numWilds: number = pickValueFromDistribution(
+	if (
+		!pickValueFromDistribution(
 			integerRng,
-			currentMaths.profiles.base[profile].initialWilds
-		);
-	
-		//Although currently the wilds options above do not allow 0, handle the possibility in case the table
-		//changes
-	
-		if (numWilds === 0) {
-			return input;
-		}
-	
-		//Add the wilds as needed, but ensure they cannot create a win 
-		//That means no wilds in rows 0+1 or 1+2 that work with each other
-		//Keep expanding wilds away from reels 2 or lower
-		
-
-		console.log('addWilds_loseOrTease ' + numWilds + ' wilds');
+			currentMaths.profiles.base[profile].wildFeatureActive
+		)
+	) {
 		return input;
-	
+	}
+
+	// Determine the number of wilds to place
+
+	const numWilds: number = pickValueFromDistribution(
+		integerRng,
+		currentMaths.profiles.base[profile].initialWilds
+	);
+
+	//Although currently the wilds options above do not allow 0, handle the possibility in case the table
+	//changes
+
+	if (numWilds === 0) {
+		return input;
+	}
+
+	// Mapping between FeatureType and CitrusGotReelSymbolValue
+	const featureToSymbolMap: Record<
+		FeatureType,
+		(multiplier: number, direction?, steps?: number) => CitrusGotReelSymbol
+	> = {
+		[FeatureType.Wild]: (multiplier) => ({
+			symbol: CitrusGotReelSymbolValue.Wild,
+			multiplier,
+			sticky: false,
+		}),
+		[FeatureType.DirectionalWild]: (multiplier, direction, steps) => ({
+			symbol: CitrusGotReelSymbolValue.DirectionalWild,
+			multiplier,
+			direction: direction,
+			steps: steps,
+			sticky: false,
+		}),
+		[FeatureType.CollectorWild]: (multiplier) => ({
+			symbol: CitrusGotReelSymbolValue.CollectorWild,
+			multiplier,
+			sticky: false,
+		}),
+		[FeatureType.PayerWild]: (multiplier) => ({
+			symbol: CitrusGotReelSymbolValue.PayerWild,
+			multiplier,
+			sticky: false,
+		}),
+	};
+
+	//Add the wilds as needed, but ensure they cannot create a win
+	//That means no two wilds in rows 0 to 2
+	//And keep expanding wilds away from reels 2 or lower
+
+	console.log("addWilds_loseOrTease " + numWilds + " wilds");
+
+	//Possible outcomes here:
+	//1) 1 wild non directional
+	//2) 1 wild directional
+	//3) 2 wilds non directional
+	//4) 2 wilds, one directional
+	//4) 2 wilds, directional
+
+	//Create the wilds to use:
+
+	const wildsToUse: { wildType: FeatureType; multiplier: number }[] = [];
+
+	for (let i = 0; i < numWilds; i++) {
+		wildsToUse.push({
+			wildType: pickValueFromDistribution(
+				integerRng,
+				currentMaths.profiles.base[profile].wildLookUp
+			),
+			multiplier: pickValueFromDistribution(
+				integerRng,
+				currentMaths.profiles.base[profile].initialMultiplier
+			),
+		});
+	}
+
+	//If there is more than one make sure directional wilds go last
+
+	wildsToUse.sort((a, b) => {
+		if (
+			a.wildType === FeatureType.DirectionalWild &&
+			b.wildType !== FeatureType.DirectionalWild
+		) {
+			return 1;
+		} else if (
+			a.wildType !== FeatureType.DirectionalWild &&
+			b.wildType === FeatureType.DirectionalWild
+		) {
+			return -1;
+		}
+		return 0;
+	});
+
+	console.log("Wilds add order: " + JSON.stringify(wildsToUse));
+
+	//If only one wild, non directional can go anywhere. Directional anywhere from reel 2 onwards
+
+	for (let i = 0; i < wildsToUse.length; i++) {
+		const thisWild = wildsToUse[i];
+		//Choose minimum reel.
+		//If a directional wild, minimum position is reel 2
+		//If not the first wild, minimum position is reel 3
+
+		let minReel = 0;
+		if (thisWild.wildType === FeatureType.DirectionalWild) {
+			minReel = 2;
+		}
+		if (i !== 0) {
+			minReel = 3;
+		}
+
+		//Pick a place to add the wild
+
+		const reel = integerRng.randomInteger(cols - minReel) + minReel;
+		const row = integerRng.randomInteger(rows);
+
+		//If something already in the grid, skip this
+
+		if (input[reel][row] !== undefined) {
+			continue;
+		}
+
+		//If it's a directional wild, set its direction and steps (clamping as needed)
+
+		let direction = integerRng.randomInteger(2) === 0 ? "right" : "left";
+		let steps = 0;
+
+		if (thisWild.wildType === FeatureType.DirectionalWild) {
+			steps = pickValueFromDistribution(
+				integerRng,
+				currentMaths.profiles.base[profile].stepsData
+			);
+			if (reel === minReel) {
+				direction = "right";
+			} else if (reel === cols - 1) {
+				direction = "left";
+				steps = pickValueFromDistribution(
+					integerRng,
+					currentMaths.profiles.base[profile].stepsColumn6Data
+				);
+			} else if (row === 0) {
+				direction = "down";
+			} else if (row === rows - 1) {
+				direction = "up";
+			}
+
+			//Finally ensure a direction left won't breach minimum reel
+
+			if (direction === "left") {
+				if (reel - steps < minReel) {
+					steps = reel - minReel;
+				}
+			}
+		}
+
+		// Use the mapping to generate the new symbol
+		const newSymbol = featureToSymbolMap[thisWild.wildType as FeatureType](
+			thisWild.multiplier,
+			direction,
+			steps
+		);
+
+		input[reel][row] = newSymbol;
+	}
+
+	return input;
 }
