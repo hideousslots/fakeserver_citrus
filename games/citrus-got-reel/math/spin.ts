@@ -26,6 +26,7 @@ export interface ScatterInfo {
 }
 
 export interface SpinResult {
+	reelsInFlight: CitrusGotReelSymbol[][];
 	reelsBefore: CitrusGotReelSymbol[][];
 	reelsAfter: CitrusGotReelSymbol[][];
 	lineWins: LineWinDetails[];
@@ -179,6 +180,7 @@ function generateSpin(
 	);
 
 	return {
+		reelsInFlight: initialGrid,	//NB Later version of code uses this to hide wild symbols. Here a initial grid for data compatibility
 		reelsBefore: initialGrid,
 		reelsAfter: indexReels,
 		lineWins: lineWins,
