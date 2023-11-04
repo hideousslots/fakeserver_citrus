@@ -662,8 +662,6 @@ export function addWilds_loseOrTease(
 	//That means no two wilds in rows 0 to 2
 	//And keep expanding wilds away from reels 2 or lower
 
-	console.log("addWilds_loseOrTease " + numWilds + " wilds");
-
 	//Create the wilds to use:
 
 	const wildsToUse: { wildType: FeatureType; multiplier: number }[] = [];

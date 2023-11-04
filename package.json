@@ -13,7 +13,8 @@
     "start:fakeserver": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && ts-node-dev ./FakeServer.js",
     "start:getstats": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GetStats.js",
     "start:fakeservermac": "node buildtracker.js&&tsc&&PROVIDER=dreamspin RNG=node_modules/@slotify/gdk/lib/rng/IsaacRNG GAMES_PATH=games/space-hive-7/index.ts ts-node-dev ./FakeServer.js",
-    "start:mathsextraction": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && ts-node-dev ./MathsExtraction/ExtractAll.js"
+    "start:mathsextraction": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && ts-node-dev ./MathsExtraction/ExtractAll.js",
+    "start:generatewildresults": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GenerateWildResults.js"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.58.0",
