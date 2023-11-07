@@ -1,5 +1,5 @@
 /**
- * GenerateWildTables.ts
+ * GenerateWildResults.ts
  *
  * Stats file for citrus tests
  */
@@ -173,7 +173,7 @@ export class Stats {
 	public Save() {
 		fs.writeFileSync(
 			".//GeneratedWildTables//results_" +
-				this.startTimeUTC.toString(16) +
+				Date.now().toString(16) +
 				".json",
 			JSON.stringify(this.savedResults),
 			{ encoding: "utf8", flag: "w" }
