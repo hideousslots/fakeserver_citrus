@@ -98,7 +98,7 @@ function PackScatters(scatterGrid: number[][]): number {
 }
 
 class LayoutInstance {
-	public wilds: number[] = [0, 0, 0];
+	public wilds: number[] = [0, 0, 0, 0, 0];
 	public scatters: number = 0;
 
 	public checksum: number = 0;
@@ -129,7 +129,7 @@ class LayoutInstance {
 	protected MakeChecksum() {
 		this.checksum = 0;
 
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < 5; i++) {
 			this.checksum *= 33;
 			this.checksum ^= this.wilds[i] & 0xff;
 			this.checksum &= 0x7fffffff;
@@ -156,18 +156,71 @@ class LayoutInstance {
 	}
 }
 
+enum LayoutType {
+	SCATTER0WILD1 = 0,
+	SCATTER0WILD2,
+	SCATTER0WILD3,
+	SCATTER0WILD4,
+	SCATTER0WILD5,
+	SCATTER1WILD1,
+	SCATTER1WILD2,
+	SCATTER1WILD3,
+	SCATTER1WILD4,
+	SCATTER1WILD5,
+	SCATTER2WILD1,
+	SCATTER2WILD2,
+	SCATTER2WILD3,
+	SCATTER2WILD4,
+	SCATTER2WILD5,
+	SCATTER3WILD1,
+	SCATTER3WILD2,
+	SCATTER3WILD3,
+	SCATTER3WILD4,
+	SCATTER3WILD5,
+
+	COUNT,
+}
+
+const LayoutTypeName: string[] = [
+	"SCATTER0WILD1",
+	"SCATTER0WILD2",
+	"SCATTER0WILD3",
+	"SCATTER0WILD4",
+	"SCATTER0WILD5",
+	"SCATTER1WILD1",
+	"SCATTER1WILD2",
+	"SCATTER1WILD3",
+	"SCATTER1WILD4",
+	"SCATTER1WILD5",
+	"SCATTER2WILD1",
+	"SCATTER2WILD2",
+	"SCATTER2WILD3",
+	"SCATTER2WILD4",
+	"SCATTER2WILD5",
+	"SCATTER3WILD1",
+	"SCATTER3WILD2",
+	"SCATTER3WILD3",
+	"SCATTER3WILD4",
+	"SCATTER3WILD5",
+];
+
 export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 	//Adjust parameters?
 
-	const adjustedParameters: any = parameters;
+	// const adjustedParameters: any = parameters;
 
-	if (process.argv.length > 2) {
-		for (let i = 2; i < process.argv.length; i++) {
-			const arg = process.argv[i];
-		}
+	// if (process.argv.length > 2) {
+	// 	for (let i = 2; i < process.argv.length; i++) {
+	// 		const arg = process.argv[i];
+	// 	}
+	// }
+
+	// const uniqueLayouts: LayoutInstance[] = [];
+	const uniqueLayoutsByType: LayoutInstance[][] = [];
+
+	for (let i = 0; i < LayoutType.COUNT; i++) {
+		uniqueLayoutsByType[i] = [];
 	}
-
-	const uniqueLayouts: LayoutInstance[] = [];
 
 	//Run through all results, isolate unique instances of wild layouts (including scatters)
 
@@ -186,10 +239,22 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 				thisSet.forEach((saved) => {
 					const newLayout = new LayoutInstance(saved);
 
+					const typeToCheck =
+						0 +
+						saved.scatterGridIndices.length * 5 +
+						(saved.wilds.length - 1);
+
+					if (typeToCheck < 0 || typeToCheck >= LayoutType.COUNT) {
+						console.log(typeToCheck);
+						console.log(JSON.stringify(saved));
+					}
+
+					const typeLayoutArray = uniqueLayoutsByType[typeToCheck];
+
 					//Check for uniqueness
 
 					if (
-						uniqueLayouts.findIndex((existing) => {
+						typeLayoutArray.findIndex((existing) => {
 							if (existing.checksum !== newLayout.checksum) {
 								return false;
 							}
@@ -202,29 +267,42 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 							if (existing.wilds[2] !== newLayout.wilds[2]) {
 								return false;
 							}
+							if (existing.wilds[3] !== newLayout.wilds[3]) {
+								return false;
+							}
+							if (existing.wilds[4] !== newLayout.wilds[4]) {
+								return false;
+							}
 							if (existing.scatters !== newLayout.scatters) {
 								return false;
 							}
 							return true;
 						}) === -1
 					) {
-						uniqueLayouts.push(newLayout);
+						typeLayoutArray.push(newLayout);
 					}
 				});
 			}
 
-			console.log(
-				"Currently have " + uniqueLayouts.length + " unique positions"
-			);
+			for (let i: LayoutType = 0; i < LayoutType.COUNT; i++) {
+				console.log(
+					"Currently have " +
+						uniqueLayoutsByType[i].length +
+						" unique positions for " +
+						LayoutTypeName[i]
+				);
+			}
 		});
 
-		fs.writeFileSync(
-			".//GeneratedWildTablesCombined//combined_" +
-				Date.now().toString(16) +
-				".json",
-			JSON.stringify(uniqueLayouts),
-			{ encoding: "utf8", flag: "w" }
-		);
+		for (let i: LayoutType = 0; i < LayoutType.COUNT; i++) {
+			fs.writeFileSync(
+				".//GeneratedWildTablesCombined//combined_" +
+					LayoutTypeName[i] +
+					".json",
+				JSON.stringify(uniqueLayoutsByType[i]),
+				{ encoding: "utf8", flag: "w" }
+			);
+		}
 	});
 
 	//Save the instances
