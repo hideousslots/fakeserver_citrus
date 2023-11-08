@@ -1,7 +1,8 @@
 //Import the lib version of the server
 //Code to generate wild tables data for citrus
 
-"use strict";
+
+("use strict");
 var __importDefault =
 	(this && this.__importDefault) ||
 	function (mod) {
@@ -23,13 +24,11 @@ const startUp = async () => {
 	);
 	await delay(1000);
 
-	console.log("Running citrus_generatewildtables");
+	console.log("Running GenerateWildResults_UseGenerated");
 
 	__importDefault(
 		require("./lib/GenerateWildTables/Citrus/GenerateWildResults_UseGenerated.js")
-	).RunUseGenerated(gameInterface, {
-		iterations: 1000000,
-	});
+	).RunUseGenerated(gameInterface, {});
 };
 
 startUp();

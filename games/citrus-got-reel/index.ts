@@ -6,6 +6,7 @@ import { mathConfig } from "./math/config/mathConfig";
 import Variance from "@slotify/gdk/lib/stats/Variance";
 import ConfidenceInterval from "@slotify/gdk/lib/stats/ConfidenceInterval";
 import play from "./math/play";
+import wildanalysisplay from "./math/wildanalysisplay";
 import { SpinResult } from "./math/spin";
 import { getPlayerConfig } from "./math/config/getPlayerConfig";
 import HitFrequency from "@slotify/gdk/lib/stats/HitFrequency";
@@ -64,11 +65,15 @@ export const index: IGame<IData> = {
 			wagers.some((wager) => wager.data.bonusGameSpins.length > 0)
 		),
 		averageBonusGameValue: new Average((wagers) => {
-            return wagers[0].data.bonusGameSpins.reduce(
-                (acc, obj) => acc + obj.win,
-                0
-            );
-        }).filter((wagers) => wagers[0].data.bonusGameSpins && wagers[0].data.bonusGameSpins.length > 0),
+			return wagers[0].data.bonusGameSpins.reduce(
+				(acc, obj) => acc + obj.win,
+				0
+			);
+		}).filter(
+			(wagers) =>
+				wagers[0].data.bonusGameSpins &&
+				wagers[0].data.bonusGameSpins.length > 0
+		),
 		hitFrequency: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 0)
 		),
@@ -169,23 +174,49 @@ export const index: IGame<IData> = {
 			wagers.some((wager) => wager.win > 5000)
 		),
 		_3ofaKind: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 3)
+			wagers.some(
+				(wager) =>
+					wager.data.baseGameSpin.lineWins.length > 0 &&
+					wager.data.baseGameSpin.lineWins.some(
+						(lineWin) => lineWin.matchCount >= 3
+					)
 			)
 		),
 		_4ofaKind: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 4)
+			wagers.some(
+				(wager) =>
+					wager.data.baseGameSpin.lineWins.length > 0 &&
+					wager.data.baseGameSpin.lineWins.some(
+						(lineWin) => lineWin.matchCount >= 4
+					)
 			)
 		),
 		_5ofaKind: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 5)
+			wagers.some(
+				(wager) =>
+					wager.data.baseGameSpin.lineWins.length > 0 &&
+					wager.data.baseGameSpin.lineWins.some(
+						(lineWin) => lineWin.matchCount >= 5
+					)
 			)
 		),
 		_6ofaKind: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 6)
+			wagers.some(
+				(wager) =>
+					wager.data.baseGameSpin.lineWins.length > 0 &&
+					wager.data.baseGameSpin.lineWins.some(
+						(lineWin) => lineWin.matchCount >= 6
+					)
 			)
 		),
 		_6ofaKindTopSymbol: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.data.baseGameSpin.lineWins.length > 0 && wager.data.baseGameSpin.lineWins.some(lineWin => lineWin.matchCount >= 6 && lineWin.symbol ==  9)
+			wagers.some(
+				(wager) =>
+					wager.data.baseGameSpin.lineWins.length > 0 &&
+					wager.data.baseGameSpin.lineWins.some(
+						(lineWin) =>
+							lineWin.matchCount >= 6 && lineWin.symbol == 9
+					)
 			)
 		),
 		// zero_bonus: new WinBucket(wagers => wagers.some(wager => wager.win === 0)),
@@ -211,7 +242,8 @@ export const index: IGame<IData> = {
 	},
 
 	play({ bet, action, state, variant, promo }): IPlayResponse<IData> {
-		return play(bet, action);
+		return wildanalysisplay(bet, action, promo.control);
+		//return play(bet, action);
 	},
 
 	action(strategy): string {
@@ -224,3 +256,5 @@ export const index: IGame<IData> = {
 };
 
 export default index;
+
+
