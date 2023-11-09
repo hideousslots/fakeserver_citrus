@@ -114,7 +114,7 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 
 				const testResult = _gameInterface.play({
 					bet: 1,
-					action: "main",
+					action: "wildanalyse",
 					state: null,
 					variant: "95rtp",
 					//Patch control into promo

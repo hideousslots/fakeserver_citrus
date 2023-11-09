@@ -242,8 +242,10 @@ export const index: IGame<IData> = {
 	},
 
 	play({ bet, action, state, variant, promo }): IPlayResponse<IData> {
-		return wildanalysisplay(bet, action, promo.control);
-		//return play(bet, action);
+		if (action === "wildanalyse") {
+			return wildanalysisplay(bet, "main", promo.control);
+		}
+		return play(bet, action);
 	},
 
 	action(strategy): string {
