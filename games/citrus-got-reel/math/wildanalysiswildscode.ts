@@ -69,12 +69,13 @@ export function addWilds(
 		}
 		//Unpack the data
 
+		const directionStrings: string[] = ["up", "down", "left", "right"];
 		const reelIndex = packData & 0xf;
 		const rowIndex = (packData >> 4) & 0xf;
 		const symbol = (packData >> 8) & 0xff;
 		const multiplier = (packData >> 16) & 0xff;
 		const sticky = (packData & (0x1 << 25)) !== 0;
-		const direction = (packData >> 26) & 0x3;
+		const direction = directionStrings[(packData >> 26) & 0x3];
 		const steps = (packData >> 28) & 0xf;
 
 		let wildType: FeatureType;
