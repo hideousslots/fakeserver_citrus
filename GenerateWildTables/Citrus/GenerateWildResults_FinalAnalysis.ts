@@ -19,6 +19,52 @@ import {
 	ProfileResult,
 } from "./GenerateWildResults_Defines";
 
+const ConvertReelsToImage = function (reels: any[][]): string[] {
+	const image: string[] = [];
+
+	for (let row = 0; row < reels[0].length; row++) {
+		image[row] = "";
+	}
+
+	for (let reel = 0; reel < reels.length; reel++) {
+		for (let row = 0; row < reels[reel].length; row++) {
+			let symbol: string = " ";
+			let multiplier: string = "";
+			switch (reels[reel][row].symbol) {
+				case CitrusGotReelSymbolValue.Wild:
+					symbol = "W";
+					multiplier = " " + reels[reel][row].multiplier;
+					break;
+				case CitrusGotReelSymbolValue.DirectionalWild:
+					symbol = "D";
+					multiplier = " " + reels[reel][row].multiplier;
+					break;
+				case CitrusGotReelSymbolValue.PayerWild:
+					symbol = "P";
+					multiplier = " " + reels[reel][row].multiplier;
+					break;
+				case CitrusGotReelSymbolValue.CollectorWild:
+					symbol = "C";
+					multiplier = " " + reels[reel][row].multiplier;
+					break;
+				case CitrusGotReelSymbolValue.Scatter:
+					symbol = "S";
+					break;
+			}
+			image[row] +=
+				"[" +
+				symbol +
+				(multiplier !== ""
+					? "X" + multiplier.substring(multiplier.length - 2)
+					: "   ") +
+				"]";
+			// image[row] += "[" + reels[reel][row].symbol.toFixed(16) + "]";
+		}
+	}
+
+	return image;
+};
+
 export const RunFinalAnalysis = function (
 	_gameInterface: any,
 	parameters: any
@@ -119,6 +165,42 @@ export const RunFinalAnalysis = function (
 
 			fs.writeFileSync(
 				".//GeneratedWildTablesCombined//final_" +
+					LayoutTypeName[layoutType] +
+					".json",
+				JSON.stringify(thisSetData),
+				{ encoding: "utf8", flag: "w" }
+			);
+
+			//Attempt a drawing of each board
+
+			thisSetData.forEach((data) => {
+				const testResult = _gameInterface.play({
+					bet: 1,
+					action: "wildanalyse",
+					state: null,
+					variant: "95rtp",
+					//Patch control into promo
+					promo: {
+						control: {
+							packData: {
+								wilds: data.layout.wilds,
+								scatters: data.layout.scatters,
+							},
+							profile: data.results[0].profile,
+						},
+					},
+				});
+
+				data.beforeGrid = ConvertReelsToImage(
+					testResult.data.baseGameSpin.reelsBefore
+				);
+				data.afterGrid = ConvertReelsToImage(
+					testResult.data.baseGameSpin.reelsAfter
+				);
+			});
+
+			fs.writeFileSync(
+				".//GeneratedWildTablesCombined//final_imaged_" +
 					LayoutTypeName[layoutType] +
 					".json",
 				JSON.stringify(thisSetData),

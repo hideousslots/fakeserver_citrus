@@ -28,6 +28,7 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 	let arg_gamecount: number = 5000;
 	let arg_startTestIndex: number = 0;
 	let arg_endTestIndex: number = 99;
+	let arg_additionalNaming: string = "";
 
 	if (process.argv.length > 2) {
 		for (let i = 2; i < process.argv.length; i++) {
@@ -44,6 +45,9 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 			}
 			if (arg.substring(0, 4) === "end=") {
 				arg_endTestIndex = Number(arg.substring(4));
+			}
+			if (arg.substring(0, 8) === "addname=") {
+				arg_additionalNaming = arg.substring(8);
 			}
 		}
 	}
@@ -162,6 +166,8 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 	fs.writeFileSync(
 		".//GeneratedWildTablesCombined//runresults_" +
 			LayoutTypeName[arg_layoutTypeIndex] +
+			"_" +
+			arg_additionalNaming +
 			"_index " +
 			arg_startTestIndex +
 			"_to_" +
@@ -170,4 +176,4 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 		JSON.stringify(thisResultSet),
 		{ encoding: "utf8", flag: "w" }
 	);
-}
+};
