@@ -185,6 +185,30 @@ export class LayoutInstance {
 		this.checksum ^= (this.scatters >> 16) & 0xff;
 		this.checksum &= 0x7fffffff;
 	}
+
+	public static CountWilds(wilds: number[]): number {
+		for (let i = 0; i < wilds.length; i++) {
+			if (wilds[i] === 0) {
+				return i;
+			}
+		}
+
+		return wilds.length;
+	}
+
+	public static WildsContainSymbol(wilds: number[], symbol: number): boolean {
+		for (let i = 0; i < wilds.length; i++) {
+			if (((wilds[i] >> 8) & 0xff) === symbol) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static CountScatters(scatters: number): number {
+		return (scatters >> 24) & 0xff;
+	}
 }
 
 export enum LayoutType {

@@ -17,7 +17,8 @@
 		"start:generatewildresults": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GenerateWildResults.js",
 		"start:accountgeneratedwildresults": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GenerateWildResults_AccountGenerated.js",
 		"start:usegeneratedwildresults": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GenerateWildResults_UseGenerated.js",
-		"start:finalanalysiswildresults": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GenerateWildResults_FinalAnalysis.js"
+		"start:finalanalysiswildresults": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GenerateWildResults_FinalAnalysis.js",
+		"start:pullforgamewildresults": "node buildtracker.js&&tsc&&set PROVIDER=dreamspin&&set RNG=node_modules\\@slotify\\gdk\\lib\\rng\\IsaacRNG&&set GAMES_PATH=games/space-hive-7/index.ts && node ./GenerateWildResults_PullForGame.js"
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^5.58.0",
