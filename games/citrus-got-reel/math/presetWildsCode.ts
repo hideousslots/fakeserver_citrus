@@ -80,19 +80,24 @@ export function addWildsFromPreset(
 ): WildPresetResponse {
 	const currentMaths = mathConfig();
 
-	// if (
-	// 	!pickValueFromDistribution(
-	// 		integerRng,
-	// 		currentMaths.profiles.base[profile].wildFeatureActive
-	// 	)
-	// ) {
-	// 	return { grid: input, scatterData: -1 };
-	// }
+	if (
+		!pickValueFromDistribution(
+			integerRng,
+			currentMaths.profiles.base[profile].wildFeatureActive
+		)
+	) {
+		return { grid: input, scatterData: -1 };
+	}
+
+	//Use set 0 for now - random pick can come later
+
+	const setToUse: any = presetWildData[profile].sets[0];
+
 
 	//Check in the available data for the profile if there are choices for the scatter
 
 	console.log("check profile : " + profile);
-	if (presetWildData[profile].sets[scatterCount].count === 0) {
+	if (setToUse.countPerScatterCount[scatterCount] === 0) {
 		//Cannot handle the request
 
 		return { grid: input, scatterData: -1 };
@@ -101,10 +106,10 @@ export function addWildsFromPreset(
 	//Pick a random layout to apply
 
 	const layoutIndex = integerRng.randomInteger(
-		presetWildData[profile].sets[scatterCount].count
+		setToUse.countPerScatterCount[scatterCount]
 	);
 	const layoutToUse =
-		presetWildData[profile].sets[scatterCount].data[layoutIndex];
+		setToUse.dataPerScatterCount[scatterCount][layoutIndex];
 	const scatterDataToUse = layoutToUse[0];
 
 	//Apply to the field
