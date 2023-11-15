@@ -18,12 +18,22 @@ import {
 	MultiRunResult,
 	ProfileResult,
 } from "./GenerateWildResults_Defines";
+
 import { FeatureType } from "../../games/citrus-got-reel/math/config/defines";
 
 type GameSet = {
 	setChance: number;
 	criteria: ((layout: any) => void)[];
 };
+
+import {
+	CriteriaFunction_NoPayerWild,
+	CriteriaFunction_NoCollectorWild,
+} from "./GenerateWildResults_CriteriaFunctions";
+
+/**
+ * Code for actually pulling
+ */
 
 export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 	//Adjust parameters?
@@ -46,173 +56,25 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		baseGameLow: {
 			sets: [
 				{
-					//0 scatters
-
+					referenceID: "simplelow",
 					setChance: 1,
 					matches: [],
+					matchesPerScatterCount: [],
 					criteria: [
+						CriteriaFunction_NoCollectorWild,
+						CriteriaFunction_NoPayerWild,
 						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 0
-							) {
-								return false;
-							}
-
 							if (LayoutInstance.CountWilds(layout.wilds) > 1) {
 								return false;
 							}
-							if (
-								LayoutInstance.WildsContainSymbol(
-									layout.wilds,
-									CitrusGotReelSymbolValue.PayerWild
-								) ||
-								LayoutInstance.WildsContainSymbol(
-									layout.wilds,
-									CitrusGotReelSymbolValue.CollectorWild
-								)
-							) {
-								return false;
-							}
+
 							if (results.averagePayout > 0.1) {
-								//console.log("noavep!");
 								return false;
 							}
 							if (results.maxPayout > 7) {
-								//console.log("nomaxp!");
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//1 scatter
-
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 1
-							) {
 								return false;
 							}
 
-							if (LayoutInstance.CountWilds(layout.wilds) > 1) {
-								return false;
-							}
-							if (
-								LayoutInstance.WildsContainSymbol(
-									layout.wilds,
-									CitrusGotReelSymbolValue.PayerWild
-								) ||
-								LayoutInstance.WildsContainSymbol(
-									layout.wilds,
-									CitrusGotReelSymbolValue.CollectorWild
-								)
-							) {
-								return false;
-							}
-							if (results.averagePayout > 0.1) {
-								//console.log("noavep!");
-								return false;
-							}
-							if (results.maxPayout > 7) {
-								//console.log("nomaxp!");
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//2 scatter
-
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 2
-							) {
-								return false;
-							}
-
-							if (LayoutInstance.CountWilds(layout.wilds) > 1) {
-								return false;
-							}
-							if (
-								LayoutInstance.WildsContainSymbol(
-									layout.wilds,
-									CitrusGotReelSymbolValue.PayerWild
-								) ||
-								LayoutInstance.WildsContainSymbol(
-									layout.wilds,
-									CitrusGotReelSymbolValue.CollectorWild
-								)
-							) {
-								return false;
-							}
-							if (results.averagePayout > 0.1) {
-								//console.log("noavep!");
-								return false;
-							}
-							if (results.maxPayout > 7) {
-								//console.log("nomaxp!");
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//3 scatter
-
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 3
-							) {
-								return false;
-							}
-
-							if (LayoutInstance.CountWilds(layout.wilds) > 1) {
-								return false;
-							}
-							if (
-								LayoutInstance.WildsContainSymbol(
-									layout.wilds,
-									CitrusGotReelSymbolValue.PayerWild
-								) ||
-								LayoutInstance.WildsContainSymbol(
-									layout.wilds,
-									CitrusGotReelSymbolValue.CollectorWild
-								)
-							) {
-								return false;
-							}
-							if (results.averagePayout > 0.1) {
-								//console.log("noavep!");
-								return false;
-							}
-							if (results.maxPayout > 7) {
-								//console.log("nomaxp!");
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
 							return true;
 						},
 					],
@@ -222,125 +84,22 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		baseGameMed: {
 			sets: [
 				{
-					//0 scatters
-
+					referenceID: "simplemed",
 					setChance: 1,
 					matches: [],
+					matchesPerScatterCount: [],
 					criteria: [
 						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 0
-							) {
-								return false;
-							}
 							if (LayoutInstance.CountWilds(layout.wilds) > 2) {
 								return false;
 							}
 
 							if (results.averagePayout > 0.5) {
-								//console.log("noavep!");
 								return false;
 							}
 							if (results.maxPayout > 15) {
-								//console.log("nomaxp!");
 								return false;
 							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//1 scatters
-
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 1
-							) {
-								return false;
-							}
-							if (LayoutInstance.CountWilds(layout.wilds) > 2) {
-								return false;
-							}
-
-							if (results.averagePayout > 0.5) {
-								//console.log("noavep!");
-								return false;
-							}
-							if (results.maxPayout > 15) {
-								//console.log("nomaxp!");
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//2 scatters
-
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 2
-							) {
-								return false;
-							}
-							if (LayoutInstance.CountWilds(layout.wilds) > 2) {
-								return false;
-							}
-
-							if (results.averagePayout > 0.5) {
-								//console.log("noavep!");
-								return false;
-							}
-							if (results.maxPayout > 15) {
-								//console.log("nomaxp!");
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//3 scatters
-
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 3
-							) {
-								return false;
-							}
-							if (LayoutInstance.CountWilds(layout.wilds) > 2) {
-								return false;
-							}
-
-							if (results.averagePayout > 0.5) {
-								//console.log("noavep!");
-								return false;
-							}
-							if (results.maxPayout > 15) {
-								//console.log("nomaxp!");
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
 							return true;
 						},
 					],
@@ -350,101 +109,18 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		baseGameHigh: {
 			sets: [
 				{
-					//0 scatters
+					referenceID: "simplehigh",
 					setChance: 1,
 					matches: [],
+					matchesPerScatterCount: [],
 					criteria: [
 						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 0
-							) {
-								return false;
-							}
-
 							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
 								return false;
 							}
 							if (results.averagePayout < 0.5) {
 								return false;
 							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//1 scatter
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 1
-							) {
-								return false;
-							}
-
-							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
-								return false;
-							}
-							if (results.averagePayout < 0.5) {
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//2 scatters
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 2
-							) {
-								return false;
-							}
-
-							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
-								return false;
-							}
-							if (results.averagePayout < 0.5) {
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
-							return true;
-						},
-					],
-				},
-				{
-					//3 scatters
-					setChance: 1,
-					matches: [],
-					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (
-								LayoutInstance.CountScatters(
-									layout.scatters
-								) !== 3
-							) {
-								return false;
-							}
-
-							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
-								return false;
-							}
-							if (results.averagePayout < 0.5) {
-								return false;
-							}
-							//console.log("using... " + JSON.stringify(results));
 							return true;
 						},
 					],
@@ -507,15 +183,15 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 			);
 
 			allTables.forEach((layoutData) => {
-				let useThisOne = false;
+				let useThisOne = true;
 				const theseResults = layoutData.results.find(
 					(existing: any) => {
 						return existing.profile === profile;
 					}
 				);
 				set.criteria.forEach((test) => {
-					if (test(layoutData.layout, theseResults)) {
-						useThisOne = true;
+					if (!test(layoutData.layout, theseResults)) {
+						useThisOne = false;
 					}
 				});
 
@@ -544,34 +220,54 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 					set.matches.length +
 					" results"
 			);
-			//In this set, sort by best average win
-			set.matches.sort((a, b) => {
-				return a.results.averagePayout - b.results.averagePayout;
-			});
 
-			//Limit to 256 best
+			//Break them down in per scatter count arrays
 
-			if (set.matches.length > 256) {
-				set.matches.splice(256);
-			}
-
-			//Correct the set data
-
-			const newMatches: { data: number[]; images: any[] }[] = [];
+			set.matchesPerScatterCount = [[], [], [], []];
 
 			set.matches.forEach((match) => {
-				const data: number[] = [
-					match.layout.scatters,
-					match.layout.wilds[0],
-				];
-				for (let w = 1; w < match.layout.wilds.length; w++) {
-					if (match.layout.wilds[w] !== 0) {
-						data.push(match.layout.wilds[w]);
-					}
-				}
-				newMatches.push({ data: data, images: match.images });
+				set.matchesPerScatterCount[
+					LayoutInstance.CountScatters(match.layout.scatters)
+				].push(match);
 			});
-			set.matches = newMatches;
+
+			//Sort all
+
+			for (
+				let scatterCount: number = 0;
+				scatterCount <= 3;
+				scatterCount++
+			) {
+				//In this set, sort by best average win
+				set.matchesPerScatterCount[scatterCount].sort((a, b) => {
+					return a.results.averagePayout - b.results.averagePayout;
+				});
+
+				//Limit to 256 best
+
+				if (set.matchesPerScatterCount[scatterCount].length > 256) {
+					set.matchesPerScatterCount[scatterCount].splice(256);
+				}
+
+				//Correct the set data
+
+				const newMatches: { data: number[]; images: any[] }[] = [];
+
+				set.matchesPerScatterCount[scatterCount].forEach((match) => {
+					const data: number[] = [
+						match.layout.scatters,
+						match.layout.wilds[0],
+					];
+					for (let w = 1; w < match.layout.wilds.length; w++) {
+						if (match.layout.wilds[w] !== 0) {
+							data.push(match.layout.wilds[w]);
+						}
+					}
+					newMatches.push({ data: data, images: match.images });
+				});
+				set.matchesPerScatterCount[scatterCount] = newMatches;
+			}
+			set.matches = undefined;
 		});
 
 		outputData[profile] = {
@@ -581,8 +277,19 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 
 		gameData[profile].sets.forEach((thisSet) => {
 			outputData[profile].sets.push({
-				count: thisSet.matches.length,
-				data: thisSet.matches,
+				referenceID: thisSet.referenceID,
+				countPerScatterCount: [
+					thisSet.matchesPerScatterCount[0].length,
+					thisSet.matchesPerScatterCount[1].length,
+					thisSet.matchesPerScatterCount[2].length,
+					thisSet.matchesPerScatterCount[3].length,
+				],
+				dataPerScatterCount: [
+					thisSet.matchesPerScatterCount[0],
+					thisSet.matchesPerScatterCount[1],
+					thisSet.matchesPerScatterCount[2],
+					thisSet.matchesPerScatterCount[3],
+				],
 			});
 			outputData[profile].chance.push(thisSet.setChance);
 		});
@@ -600,12 +307,19 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 	output += "{\n";
 	profiles.forEach((profile) => {
 		outputData[profile].sets.forEach((set) => {
-			const cleanData: number[][] = [];
+			for (
+				let scatterCount: number = 0;
+				scatterCount <= 3;
+				scatterCount++
+			) {
+				const cleanData: number[][] = [];
 
-			set.data.forEach((data) => {
-				cleanData.push(data.data);
-			});
-			set.data = cleanData;
+				set.dataPerScatterCount[scatterCount].forEach((dataObject) => {
+					cleanData.push(dataObject.data);
+				});
+
+				set.dataPerScatterCount[scatterCount] = cleanData;
+			}
 		});
 	});
 
