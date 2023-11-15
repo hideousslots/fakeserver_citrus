@@ -70,7 +70,7 @@ export function applyScattersBetweenGrids(sourceGrid:CitrusGotReelSymbol[][], de
 		for (let column = 0; column < newDestGrid[row].length; column++) {
 			if (sourceGrid[row][column].symbol === CitrusGotReelSymbolValue.Scatter) {
 				//Copy it
-				console.log('copy grid...' + row + ',' + column)
+				//console.log('copy grid...' + row + ',' + column)
 				newDestGrid[row][column]=sourceGrid[row][column];
 			}
 		}

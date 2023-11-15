@@ -30,6 +30,8 @@ import { LineWinCalculator } from "./calculateLineWins";
 import { createReels, createReels_loseOrTease } from "./createReels";
 import { pickValueFromDistribution } from "../../../common/distributions/pickValueFromDistribution";
 import { baseGameProfile, bonusGameProfile } from "./config/profiles";
+import {WildPresetResponse, addWildsFromPreset} from './presetWildsCode';
+import { addScattersFromPreset } from "./presetScattersCode";
 
 export interface ScatterInfo {
 	collected: number;
@@ -165,12 +167,19 @@ function generateSpin(
 
 	const currentMaths = mathConfig();
 
-	const addedWilds = addWilds(integerRng, initialReels, profile);
-	let expandedWilds = expandWilds(addedWilds);
+	// Preset replaces these:
 
-	if (scatterSymbols > 0) {
-		expandedWilds = addScatters(expandedWilds, scatterSymbols, integerRng);
-	}
+	// const addedWilds = addWilds(integerRng, initialReels, profile);
+	// let expandedWilds = expandWilds(addedWilds);
+	// if (scatterSymbols > 0) {
+	// 	expandedWilds = addScatters(expandedWilds, scatterSymbols, integerRng);
+	// }
+	
+	const presetResponse:WildPresetResponse = addWildsFromPreset(integerRng, scatterSymbols, initialReels, profile);
+	const addedWilds = presetResponse.grid;
+	let expandedWilds = expandWilds(addedWilds);
+	expandedWilds = addScattersFromPreset(expandedWilds, presetResponse.scatterData);
+
 
 	const hitrateControl = currentMaths.profiles.base[profile].hitRate;
 	const symbolDistributionOffset =
