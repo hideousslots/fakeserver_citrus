@@ -20,6 +20,10 @@ function deepCloneArray(arr: any[][]): any[][] {
 	);
 }
 
+type ReelRowPosition = {
+	reel: number;
+	row: number;
+}
 export function addScatters(
 	input: CitrusGotReelSymbol[][],
 	numScatters: number,
@@ -29,35 +33,40 @@ export function addScatters(
 		return input;
 	}
 	const newInput: CitrusGotReelSymbol[][] = deepCloneArray(input);
-	// Create an array of available positions for placing scatters
-	const availablePositions: Position[] = [];
-	for (let row = 0; row < newInput.length; row++) {
-		for (let column = 0; column < newInput[row].length; column++) {
-			if (newInput[row][column] === undefined) {
-				// Only consider empty positions
-				availablePositions.push({ row, column });
+
+	//Check all reels and check the space available in each
+
+	const availableReels: ReelRowPosition[][] = [];
+
+	for(let reel =0; reel < newInput.length; reel++) {	
+		const thisReel: ReelRowPosition[] = [];
+		for(let row = 0; row < newInput[reel].length; row++) {
+			if(newInput[reel][row] === undefined) {
+				thisReel.push({reel, row});
 			}
+		}
+		if(thisReel.length > 0) {
+			availableReels.push(thisReel);
 		}
 	}
 
-	// Check if there are enough available positions for scatters
-	if (availablePositions.length < numScatters) {
+	//Make sure the available reels is suitable for the required scatters
+
+	if(availableReels.length < numScatters) {
 		console.warn("Not enough positions to place scatters");
 		return newInput; // Return the input as is
 	}
 
-    //SNC - 20231006 - TODO - get all RNG responses in batch, then apply as needed
-
 	// Randomly place the scatters
 	for (let i = 0; i < numScatters; i++) {
-		const randomIndex = integerRng.randomInteger(availablePositions.length);
-		const { row, column } = availablePositions[randomIndex];
-
-		// Remove this position from the list of available positions
-		availablePositions.splice(randomIndex, 1);
+		let randomIndex = integerRng.randomInteger(availableReels.length);
+		const thisReel: ReelRowPosition[] = availableReels[randomIndex];
+		availableReels.splice(randomIndex, 1);
+		//Pick a position
+		randomIndex = integerRng.randomInteger(thisReel.length);
 
 		// Add the scatter symbol
-		newInput[row][column] = { symbol: CitrusGotReelSymbolValue.Scatter };
+		newInput[thisReel[randomIndex].reel][thisReel[randomIndex].row] = { symbol: CitrusGotReelSymbolValue.Scatter };
 	}
 
 	return newInput;
@@ -70,7 +79,7 @@ export function applyScattersBetweenGrids(sourceGrid:CitrusGotReelSymbol[][], de
 		for (let column = 0; column < newDestGrid[row].length; column++) {
 			if (sourceGrid[row][column].symbol === CitrusGotReelSymbolValue.Scatter) {
 				//Copy it
-				//console.log('copy grid...' + row + ',' + column)
+				console.log('copy grid...' + row + ',' + column)
 				newDestGrid[row][column]=sourceGrid[row][column];
 			}
 		}
