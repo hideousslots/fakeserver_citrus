@@ -1,0 +1,42 @@
+Stages:
+
+1) GENERATION
+
+If changes have been made to overall logic (e.g. scatter placement, you need new results):
+
+use GenerateWildResults.bat as many times as needed to generate sufficient results
+
+Each run will create play 10,000,000 games, results in around 1,500,000 wild layouts 
+
+usage:
+./GenerateWildResults.bat
+
+2) ACCOUNTING
+
+This takes the wild results generated, and batches them by type (e.g. 0 scatters, 2 wilds)
+
+usage:
+npm run start:accountgeneratedwildresults
+
+3) ASSESSMENT
+
+This plays 1000 games with each of the accounted results, to determine approximate returns from each layout
+
+usage:
+./GenerateWildResults_UseAll.bat
+
+NB This calls ./GenerateWildResults_UseSingle.bat for each case with a subset of the games indices. These can be tweaked as needed
+
+4) ANALYSIS
+
+This step analyses the results of the multiple rounds
+
+usage:
+npm run start:finalanalysiswildresults
+
+5) PULLING FOR GAME
+
+This step pulls by criteria sets of the wild layouts for selection in game.
+
+usage:
+npm run start:pullforgamewildresults
