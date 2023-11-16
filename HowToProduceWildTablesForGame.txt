@@ -40,3 +40,13 @@ This step pulls by criteria sets of the wild layouts for selection in game.
 
 usage:
 npm run start:pullforgamewildresults
+
+-
+
+Using the data:
+
+Step 5 creates 2 files in GeneratedWildPulled
+
+Overwrite the wildstabledata in the server code with the string in pulled_formatted_.json
+
+You can see any shape of grid for a result in pull_full_.json
