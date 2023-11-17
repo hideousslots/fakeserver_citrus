@@ -52,6 +52,7 @@ export const RunAccountGenerated = function (
 	const wildGroupTypeCounters: number[] = [
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	];
+	let totalLayoutsPushed: number = 0;
 
 	//Run through all results, isolate unique instances of wild layouts (including scatters)
 
@@ -132,6 +133,7 @@ export const RunAccountGenerated = function (
 					});
 					wildGroupTypeCounters[wildTypesInLayout]++;
 					typeLayoutArray.push(newLayout);
+					totalLayoutsPushed++;
 				}
 			});
 		}
@@ -160,6 +162,7 @@ export const RunAccountGenerated = function (
 
 	console.log("Wilds types layout count: ");
 
+	let layoutsReported = 0;
 	for (let i = 0; i < wildGroupTypeCounters.length; i++) {
 		let name: string = "NONE";
 		if (i !== 0) {
@@ -178,5 +181,14 @@ export const RunAccountGenerated = function (
 			}
 		}
 		console.log(name + " : " + wildGroupTypeCounters[i]);
+		layoutsReported += wildGroupTypeCounters[i];
 	}
+
+	console.log(
+		"Final check - above tables have " +
+			layoutsReported +
+			" and system thinks a total of " +
+			totalLayoutsPushed +
+			" have been used. Should match"
+	);
 };
