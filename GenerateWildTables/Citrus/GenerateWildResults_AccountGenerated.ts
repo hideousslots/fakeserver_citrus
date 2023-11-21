@@ -59,25 +59,27 @@ export const RunAccountGenerated = function (
 
 	for (let reel = 0; reel < 5; reel++) {
 		for (let row = 0; row < 6; row++) {
-			const newLayout = new LayoutInstance({
-				wilds: [
-					{
-						reelIndex: reel,
-						cellIndex: row,
-						symbol: CitrusGotReelSymbolValue.Wild,
-						multiplier: 1,
-						sticky: false,
-						direction: 0,
-						steps: 0,
-					},
-				],
-				scatterGridIndices: [],
-				win: 0,
-			});
+			for (let multiplier = 1; multiplier <= 5; multiplier++) {
+				const newLayout = new LayoutInstance({
+					wilds: [
+						{
+							reelIndex: reel,
+							cellIndex: row,
+							symbol: CitrusGotReelSymbolValue.Wild,
+							multiplier: multiplier,
+							sticky: false,
+							direction: 0,
+							steps: 0,
+						},
+					],
+					scatterGridIndices: [],
+					win: 0,
+				});
 
-			wildGroupTypeCounters[WILDTYPEFLAG_WILD]++;
-			uniqueLayoutsByType[LayoutType.PERCELL1WILD].push(newLayout);
-			totalLayoutsPushed++;
+				wildGroupTypeCounters[WILDTYPEFLAG_WILD]++;
+				uniqueLayoutsByType[LayoutType.PERCELL1WILD].push(newLayout);
+				totalLayoutsPushed++;
+			}
 		}
 	}
 
@@ -116,27 +118,29 @@ export const RunAccountGenerated = function (
 						//Grid exceeded, can't use this direction
 						break;
 					}
-					const newLayout = new LayoutInstance({
-						wilds: [
-							{
-								reelIndex: reel,
-								cellIndex: row,
-								symbol: CitrusGotReelSymbolValue.DirectionalWild,
-								multiplier: 1,
-								sticky: false,
-								direction: direction,
-								steps: steps,
-							},
-						],
-						scatterGridIndices: [],
-						win: 0,
-					});
+					for (let multiplier = 1; multiplier <= 5; multiplier++) {
+						const newLayout = new LayoutInstance({
+							wilds: [
+								{
+									reelIndex: reel,
+									cellIndex: row,
+									symbol: CitrusGotReelSymbolValue.DirectionalWild,
+									multiplier: multiplier,
+									sticky: false,
+									direction: direction,
+									steps: steps,
+								},
+							],
+							scatterGridIndices: [],
+							win: 0,
+						});
 
-					wildGroupTypeCounters[WILDTYPEFLAG_WILD]++;
-					uniqueLayoutsByType[LayoutType.PERCELLDIRECTIONALS].push(
-						newLayout
-					);
-					totalLayoutsPushed++;
+						wildGroupTypeCounters[WILDTYPEFLAG_WILD]++;
+						uniqueLayoutsByType[
+							LayoutType.PERCELLDIRECTIONALS
+						].push(newLayout);
+						totalLayoutsPushed++;
+					}
 				}
 			}
 		}

@@ -1,7 +1,11 @@
 @rem Create a set of results
 
-@call GenerateWildResults_UseSingle.bat 20 1000 0 29
-@call GenerateWildResults_UseSingle.bat 21 1000 0 249
+@call GenerateWildResults_UseSingle.bat 20 1000 0 150
+@call GenerateWildResults_UseSingle.bat 21 1000 0 255
+@call GenerateWildResults_UseSingle.bat 21 1000 256 511
+@call GenerateWildResults_UseSingle.bat 21 1000 512 767
+@call GenerateWildResults_UseSingle.bat 21 1000 768 1023
+@call GenerateWildResults_UseSingle.bat 21 1000 1024 1250
 
 
 @call GenerateWildResults_UseSingle.bat 0 1000 0 249
