@@ -233,6 +233,10 @@ export enum LayoutType {
 	SCATTER3WILD4,
 	SCATTER3WILD5,
 
+	//Specialist types
+
+	PERCELL1WILD,
+	PERCELLDIRECTIONALS,
 	COUNT,
 }
 
@@ -257,6 +261,11 @@ export const LayoutTypeName: string[] = [
 	"SCATTER3WILD3",
 	"SCATTER3WILD4",
 	"SCATTER3WILD5",
+
+	//Specialist types
+
+	"PERCELL1WILD",
+	"PERCELLDIRECTIONALS",
 ];
 
 export class ProfileResult {

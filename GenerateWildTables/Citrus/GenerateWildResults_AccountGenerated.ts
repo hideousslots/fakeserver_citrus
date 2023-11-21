@@ -52,7 +52,95 @@ export const RunAccountGenerated = function (
 	const wildGroupTypeCounters: number[] = [
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	];
+
 	let totalLayoutsPushed: number = 0;
+
+	//Create specialist layouts for all cells have a single wild and all cells have as many direction variants as possible
+
+	for (let reel = 0; reel < 5; reel++) {
+		for (let row = 0; row < 6; row++) {
+			const newLayout = new LayoutInstance({
+				wilds: [
+					{
+						reelIndex: reel,
+						cellIndex: row,
+						symbol: CitrusGotReelSymbolValue.Wild,
+						multiplier: 1,
+						sticky: false,
+						direction: 0,
+						steps: 0,
+					},
+				],
+				scatterGridIndices: [],
+				win: 0,
+			});
+
+			wildGroupTypeCounters[WILDTYPEFLAG_WILD]++;
+			uniqueLayoutsByType[LayoutType.PERCELL1WILD].push(newLayout);
+			totalLayoutsPushed++;
+		}
+	}
+
+	//Create specialist layouts for all cells have as many direction variants as possible
+
+	for (let reel = 0; reel < 5; reel++) {
+		for (let row = 0; row < 6; row++) {
+			for (let direction = 0; direction < 4; direction++) {
+				let dReel = 0;
+				let dRow = 0;
+				switch (direction) {
+					case 0:
+						dRow = -1;
+						break;
+					case 1:
+						dRow = 1;
+						break;
+					case 2:
+						dReel = -1;
+						break;
+					case 3:
+						dReel = 1;
+						break;
+				}
+
+				for (let steps = 1; steps <= 5; steps++) {
+					const currentReel = reel + dReel * steps;
+					const currentRow = row + dRow * steps;
+
+					if (
+						currentReel < 0 ||
+						currentReel > 5 ||
+						currentRow < 0 ||
+						currentRow > 4
+					) {
+						//Grid exceeded, can't use this direction
+						break;
+					}
+					const newLayout = new LayoutInstance({
+						wilds: [
+							{
+								reelIndex: reel,
+								cellIndex: row,
+								symbol: CitrusGotReelSymbolValue.DirectionalWild,
+								multiplier: 1,
+								sticky: false,
+								direction: direction,
+								steps: steps,
+							},
+						],
+						scatterGridIndices: [],
+						win: 0,
+					});
+
+					wildGroupTypeCounters[WILDTYPEFLAG_WILD]++;
+					uniqueLayoutsByType[LayoutType.PERCELLDIRECTIONALS].push(
+						newLayout
+					);
+					totalLayoutsPushed++;
+				}
+			}
+		}
+	}
 
 	//Run through all results, isolate unique instances of wild layouts (including scatters)
 
@@ -83,10 +171,18 @@ export const RunAccountGenerated = function (
 
 				const typeLayoutArray = uniqueLayoutsByType[typeToCheck];
 
+				//If it's a single wild with 0 scatters of type directional or normal wild, ditch it
+				//NB This may remove all types of 0 scatter with wild. But that would be good
+
+				let ditchSingleWild: boolean = false;
+				if (newLayout.wilds[1] === 0 && newLayout.scatters === 0) {
+					ditchSingleWild = true;
+				}
+
 				//Check for uniqueness
 
-				if (
-					typeLayoutArray.findIndex((existing) => {
+				const existingFoundIndex: number = typeLayoutArray.findIndex(
+					(existing) => {
 						if (existing.checksum !== newLayout.checksum) {
 							return false;
 						}
@@ -109,8 +205,10 @@ export const RunAccountGenerated = function (
 							return false;
 						}
 						return true;
-					}) === -1
-				) {
+					}
+				);
+
+				if (existingFoundIndex === -1 && !ditchSingleWild) {
 					let wildTypesInLayout = WILDTYPEFLAG_NONE;
 					newLayout.wilds.forEach((wild) => {
 						if (wild !== 0) {
@@ -147,6 +245,8 @@ export const RunAccountGenerated = function (
 			);
 		}
 	});
+
+	//Write all files
 
 	for (let i: LayoutType = 0; i < LayoutType.COUNT; i++) {
 		fs.writeFileSync(
