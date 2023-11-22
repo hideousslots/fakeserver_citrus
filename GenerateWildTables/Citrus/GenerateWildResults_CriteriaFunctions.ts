@@ -16,12 +16,13 @@ import {
 	LayoutTypeName,
 	MultiRunResult,
 	ProfileResult,
+	UnpackWild,
 } from "./GenerateWildResults_Defines";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 export const CriteriaFunction_DirectionalWild = (
-	layout: LayoutInstance,
+	layout: LayoutInstance
 ): boolean => {
 	if (
 		LayoutInstance.WildsContainSymbol(
@@ -36,14 +37,9 @@ export const CriteriaFunction_DirectionalWild = (
 };
 
 export const CriteriaFunction_NoMultiplierWild = (
-	layout: LayoutInstance,
+	layout: LayoutInstance
 ): boolean => {
-	if (
-		LayoutInstance.WildsMultiplierGreaterThan(
-			layout.wilds,
-			1
-		)
-	) {
+	if (LayoutInstance.WildsMultiplierGreaterThan(layout.wilds, 1)) {
 		return true;
 	}
 
@@ -51,7 +47,7 @@ export const CriteriaFunction_NoMultiplierWild = (
 };
 
 export const CriteriaFunction_NoDirectionalWild = (
-	layout: LayoutInstance,
+	layout: LayoutInstance
 ): boolean => {
 	if (
 		LayoutInstance.WildsContainSymbol(
@@ -66,7 +62,7 @@ export const CriteriaFunction_NoDirectionalWild = (
 };
 
 export const CriteriaFunction_NoPayerWild = (
-	layout: LayoutInstance,
+	layout: LayoutInstance
 ): boolean => {
 	if (
 		LayoutInstance.WildsContainSymbol(
@@ -81,7 +77,7 @@ export const CriteriaFunction_NoPayerWild = (
 };
 
 export const CriteriaFunction_NoCollectorWild = (
-	layout: LayoutInstance,
+	layout: LayoutInstance
 ): boolean => {
 	if (
 		LayoutInstance.WildsContainSymbol(
@@ -96,7 +92,7 @@ export const CriteriaFunction_NoCollectorWild = (
 };
 
 export const CriteriaFunction_PayerInWin = (
-	layout: LayoutInstance,
+	layout: LayoutInstance
 ): boolean => {
 	if (
 		LayoutInstance.WildsContainSymbol(
@@ -110,7 +106,7 @@ export const CriteriaFunction_PayerInWin = (
 };
 
 export const CriteriaFunction_CollectorInWin = (
-	layout: LayoutInstance,
+	layout: LayoutInstance
 ): boolean => {
 	if (
 		LayoutInstance.WildsContainSymbol(
@@ -120,6 +116,30 @@ export const CriteriaFunction_CollectorInWin = (
 	) {
 		return true;
 	}
+
+	return false;
+};
+
+export const CriteriaFunction_ContainsDirectionalLeftFacingInReel5 = (
+	layout: LayoutInstance
+): boolean => {
+	//Go through the wilds, and accept if any is in reel 5 and directional and facing left
+
+	for (let i = 0; i < layout.wilds.length; i++) {
+		const thisWild: SavedWildInfo = UnpackWild(layout.wilds[i]);
+
+		if (thisWild.reelIndex === 5) {
+			if (thisWild.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+				if (thisWild.direction === 2) {
+					//Got match
+
+					return true;
+				}
+			}
+		}
+	}
+
+	//None found
 
 	return false;
 };
