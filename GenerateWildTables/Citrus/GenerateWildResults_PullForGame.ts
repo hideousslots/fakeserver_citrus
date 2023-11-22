@@ -128,7 +128,7 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 							return true;
 						},
 					],
-				}
+				},
 			],
 		},
 		baseGameMed: {
@@ -162,7 +162,6 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 							}
 
 							return true;
-
 						},
 					],
 				},
@@ -251,7 +250,7 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 			if (
 				file.substring(0, 13) === "final_imaged_" &&
 				file.substring(13, 13 + LayoutTypeName[layoutType].length) ===
-				LayoutTypeName[layoutType] &&
+					LayoutTypeName[layoutType] &&
 				file.substring(file.length - 4) === "json"
 			) {
 				console.log("Processing file: " + file);
@@ -278,12 +277,12 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		gameData[profile].sets.forEach((set, setindex) => {
 			console.log(
 				"process profile " +
-				profile +
-				" set index " +
-				setindex +
-				" currently holding " +
-				set.matches.length +
-				" results"
+					profile +
+					" set index " +
+					setindex +
+					" currently holding " +
+					set.matches.length +
+					" results - "
 			);
 
 			allTables.forEach((layoutData) => {
@@ -315,16 +314,6 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 	profiles.forEach((profile) => {
 		//console.log(JSON.stringify(gameData[profile]));
 		gameData[profile].sets.forEach((set, setindex) => {
-			console.log(
-				"post process profile " +
-				profile +
-				" set index " +
-				setindex +
-				" currently holding " +
-				set.matches.length +
-				" results"
-			);
-
 			//Break them down in per scatter count arrays
 
 			set.matchesPerScatterCount = [[], [], [], []];
@@ -372,6 +361,30 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 				set.matchesPerScatterCount[scatterCount] = newMatches;
 			}
 			set.matches = undefined;
+
+			const totalResults =
+				set.matchesPerScatterCount[0].length +
+				set.matchesPerScatterCount[1].length +
+				set.matchesPerScatterCount[2].length +
+				set.matchesPerScatterCount[3].length;
+			console.log(
+				"post process profile " +
+					profile +
+					" set index " +
+					setindex +
+					" currently holding " +
+					totalResults +
+					" results - per scatter = " +
+					" (" +
+					set.matchesPerScatterCount[0].length +
+					" , " +
+					set.matchesPerScatterCount[1].length +
+					" , " +
+					set.matchesPerScatterCount[2].length +
+					" , " +
+					set.matchesPerScatterCount[3].length +
+					" )"
+			);
 		});
 
 		outputData[profile] = {
