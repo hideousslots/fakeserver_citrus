@@ -86,7 +86,7 @@ export class SavedResult {
 		public wilds: SavedWildInfo[],
 		public scatterGridIndices: number[][],
 		public win: number
-	) {}
+	) { }
 }
 
 export function PackScatters(scatterGrid: number[][]): number {
@@ -206,6 +206,43 @@ export class LayoutInstance {
 		return false;
 	}
 
+	public static WildsMultiplierGreaterThan(wilds: number[], multiplier: number): boolean {
+		for (let i = 0; i < wilds.length; i++) {
+			let wildInfo = UnpackWild(wilds[i]);
+
+			if (wildInfo.multiplier > multiplier) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static WildExceedsMaximumSteps(wilds: number[], maxSteps: number): boolean {
+		for (let i = 0; i < wilds.length; i++) {
+			let wildInfo = UnpackWild(wilds[i]);
+
+			if (wildInfo.steps > maxSteps) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static WildsOnThisReel(wilds: number[], reel: number): boolean {
+		for (let i = 0; i < wilds.length; i++) {
+			let wildInfo = UnpackWild(wilds[i]);
+
+			if (wildInfo.reelIndex == reel) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
 	public static CountScatters(scatters: number): number {
 		return (scatters >> 24) & 0xff;
 	}
@@ -269,9 +306,9 @@ export const LayoutTypeName: string[] = [
 ];
 
 export class ProfileResult {
-	constructor(public profileName: string, public playWins: number[][]) {}
+	constructor(public profileName: string, public playWins: number[][]) { }
 }
 export class MultiRunResult {
-	constructor(public layout: LayoutInstance) {}
+	constructor(public layout: LayoutInstance) { }
 	public results: ProfileResult[] = [];
 }

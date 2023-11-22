@@ -27,8 +27,13 @@ type GameSet = {
 };
 
 import {
+	CriteriaFunction_NoMultiplierWild,
+	CriteriaFunction_DirectionalWild,
+	CriteriaFunction_NoDirectionalWild,
 	CriteriaFunction_NoPayerWild,
 	CriteriaFunction_NoCollectorWild,
+	CriteriaFunction_PayerInWin,
+	CriteriaFunction_CollectorInWin,
 } from "./GenerateWildResults_CriteriaFunctions";
 
 /**
@@ -56,22 +61,21 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		baseGameLow: {
 			sets: [
 				{
-					referenceID: "simplelow",
+					referenceID: "simplelow1",
 					setChance: 1,
 					matches: [],
 					matchesPerScatterCount: [],
 					criteria: [
 						CriteriaFunction_NoCollectorWild,
 						CriteriaFunction_NoPayerWild,
+						CriteriaFunction_NoMultiplierWild,
+						CriteriaFunction_NoDirectionalWild,
 						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) > 1) {
+							if (LayoutInstance.CountWilds(layout.wilds) != 1) {
 								return false;
 							}
 
-							if (results.averagePayout > 0.1) {
-								return false;
-							}
-							if (results.maxPayout > 7) {
+							if (results.averagePayout > 0.2) {
 								return false;
 							}
 
@@ -79,6 +83,52 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 						},
 					],
 				},
+				{
+					referenceID: "simplelow2",
+					setChance: 1,
+					matches: [],
+					matchesPerScatterCount: [],
+					criteria: [
+						CriteriaFunction_NoCollectorWild,
+						CriteriaFunction_NoPayerWild,
+						CriteriaFunction_NoMultiplierWild,
+						CriteriaFunction_NoDirectionalWild,
+						(layout: LayoutInstance, results: any) => {
+							if (LayoutInstance.CountWilds(layout.wilds) != 2) {
+								return false;
+							}
+
+							if (results.averagePayout > 0.2) {
+								return false;
+							}
+
+							return true;
+						},
+					],
+				},
+				{
+					referenceID: "simplelow3",
+					setChance: 1,
+					matches: [],
+					matchesPerScatterCount: [],
+					criteria: [
+						CriteriaFunction_NoCollectorWild,
+						CriteriaFunction_PayerInWin,
+						CriteriaFunction_NoMultiplierWild,
+						CriteriaFunction_NoDirectionalWild,
+						(layout: LayoutInstance, results: any) => {
+							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
+								return false;
+							}
+
+							if (results.averagePayout > 1) {
+								return false;
+							}
+
+							return true;
+						},
+					],
+				}
 			],
 		},
 		baseGameMed: {
@@ -89,17 +139,71 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 					matches: [],
 					matchesPerScatterCount: [],
 					criteria: [
+						CriteriaFunction_NoCollectorWild,
+						CriteriaFunction_NoPayerWild,
+						CriteriaFunction_DirectionalWild,
+						CriteriaFunction_NoMultiplierWild,
 						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) > 2) {
+							if (LayoutInstance.CountWilds(layout.wilds) != 1) {
 								return false;
 							}
 
-							if (results.averagePayout > 0.5) {
+							if (results.averagePayout > 0.2) {
 								return false;
 							}
-							if (results.maxPayout > 15) {
+
+							if (
+								LayoutInstance.WildExceedsMaximumSteps(
+									layout.wilds,
+									2
+								)
+							) {
 								return false;
 							}
+
+							return true;
+
+						},
+					],
+				},
+				{
+					referenceID: "payer",
+					setChance: 1,
+					matches: [],
+					matchesPerScatterCount: [],
+					criteria: [
+						CriteriaFunction_PayerInWin,
+						CriteriaFunction_NoCollectorWild,
+						(layout: LayoutInstance, results: any) => {
+							if (LayoutInstance.CountWilds(layout.wilds) != 2) {
+								return false;
+							}
+
+							if (results.averagePayout < 0.2) {
+								return false;
+							}
+
+							return true;
+						},
+					],
+				},
+				{
+					referenceID: "collector",
+					setChance: 1,
+					matches: [],
+					matchesPerScatterCount: [],
+					criteria: [
+						CriteriaFunction_CollectorInWin,
+						CriteriaFunction_NoPayerWild,
+						(layout: LayoutInstance, results: any) => {
+							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
+								return false;
+							}
+
+							if (results.averagePayout > 0.15) {
+								return false;
+							}
+
 							return true;
 						},
 					],
@@ -147,7 +251,7 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 			if (
 				file.substring(0, 13) === "final_imaged_" &&
 				file.substring(13, 13 + LayoutTypeName[layoutType].length) ===
-					LayoutTypeName[layoutType] &&
+				LayoutTypeName[layoutType] &&
 				file.substring(file.length - 4) === "json"
 			) {
 				console.log("Processing file: " + file);
@@ -174,12 +278,12 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		gameData[profile].sets.forEach((set, setindex) => {
 			console.log(
 				"process profile " +
-					profile +
-					" set index " +
-					setindex +
-					" currently holding " +
-					set.matches.length +
-					" results"
+				profile +
+				" set index " +
+				setindex +
+				" currently holding " +
+				set.matches.length +
+				" results"
 			);
 
 			allTables.forEach((layoutData) => {
@@ -213,12 +317,12 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		gameData[profile].sets.forEach((set, setindex) => {
 			console.log(
 				"post process profile " +
-					profile +
-					" set index " +
-					setindex +
-					" currently holding " +
-					set.matches.length +
-					" results"
+				profile +
+				" set index " +
+				setindex +
+				" currently holding " +
+				set.matches.length +
+				" results"
 			);
 
 			//Break them down in per scatter count arrays

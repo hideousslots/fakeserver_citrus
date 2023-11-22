@@ -19,9 +19,54 @@ import {
 } from "./GenerateWildResults_Defines";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+export const CriteriaFunction_DirectionalWild = (
+	layout: LayoutInstance,
+): boolean => {
+	if (
+		LayoutInstance.WildsContainSymbol(
+			layout.wilds,
+			CitrusGotReelSymbolValue.DirectionalWild
+		)
+	) {
+		return true;
+	}
+
+	return false;
+};
+
+export const CriteriaFunction_NoMultiplierWild = (
+	layout: LayoutInstance,
+): boolean => {
+	if (
+		LayoutInstance.WildsMultiplierGreaterThan(
+			layout.wilds,
+			1
+		)
+	) {
+		return true;
+	}
+
+	return false;
+};
+
+export const CriteriaFunction_NoDirectionalWild = (
+	layout: LayoutInstance,
+): boolean => {
+	if (
+		LayoutInstance.WildsContainSymbol(
+			layout.wilds,
+			CitrusGotReelSymbolValue.DirectionalWild
+		)
+	) {
+		return false;
+	}
+
+	return true;
+};
+
 export const CriteriaFunction_NoPayerWild = (
 	layout: LayoutInstance,
-	results: any
 ): boolean => {
 	if (
 		LayoutInstance.WildsContainSymbol(
@@ -37,7 +82,6 @@ export const CriteriaFunction_NoPayerWild = (
 
 export const CriteriaFunction_NoCollectorWild = (
 	layout: LayoutInstance,
-	results: any
 ): boolean => {
 	if (
 		LayoutInstance.WildsContainSymbol(
@@ -49,4 +93,33 @@ export const CriteriaFunction_NoCollectorWild = (
 	}
 
 	return true;
+};
+
+export const CriteriaFunction_PayerInWin = (
+	layout: LayoutInstance,
+): boolean => {
+	if (
+		LayoutInstance.WildsContainSymbol(
+			layout.wilds,
+			CitrusGotReelSymbolValue.PayerWild
+		)
+	) {
+		return true;
+	}
+	return false;
+};
+
+export const CriteriaFunction_CollectorInWin = (
+	layout: LayoutInstance,
+): boolean => {
+	if (
+		LayoutInstance.WildsContainSymbol(
+			layout.wilds,
+			CitrusGotReelSymbolValue.CollectorWild
+		)
+	) {
+		return true;
+	}
+
+	return false;
 };
