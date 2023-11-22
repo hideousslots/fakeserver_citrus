@@ -57,8 +57,8 @@ export const RunAccountGenerated = function (
 
 	//Create specialist layouts for all cells have a single wild and all cells have as many direction variants as possible
 
-	for (let reel = 0; reel < 5; reel++) {
-		for (let row = 0; row < 6; row++) {
+	for (let reel = 0; reel < 6; reel++) {
+		for (let row = 0; row < 5; row++) {
 			for (let multiplier = 1; multiplier <= 5; multiplier++) {
 				const newLayout = new LayoutInstance({
 					wilds: [
@@ -85,8 +85,8 @@ export const RunAccountGenerated = function (
 
 	//Create specialist layouts for all cells have as many direction variants as possible
 
-	for (let reel = 0; reel < 5; reel++) {
-		for (let row = 0; row < 6; row++) {
+	for (let reel = 0; reel < 6; reel++) {
+		for (let row = 0; row < 5; row++) {
 			for (let direction = 0; direction < 4; direction++) {
 				let dReel = 0;
 				let dRow = 0;
