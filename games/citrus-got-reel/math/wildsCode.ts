@@ -184,7 +184,7 @@ export function addWilds(
 
 		//NB the multiplier and types need better control
 
-		const multiplier = pickValueFromDistribution(
+		let multiplier = pickValueFromDistribution(
 			integerRng,
 			currentMaths.profiles.base[profile].initialMultiplier
 		);
@@ -345,6 +345,12 @@ export function addWilds(
 			);
 			const { row, column } = weightedDistributionPositions.values[index];
 			wildData = { row, column };
+		}
+
+		//Force any collector's multiplier to 1
+
+		if (wildType === FeatureType.CollectorWild) {
+			multiplier = 1;
 		}
 
 		if (wildType === "DirectionalWild") {
