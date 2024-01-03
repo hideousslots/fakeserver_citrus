@@ -202,7 +202,7 @@ export function addWilds(
 		let influences: WildInfluences[] = [];
 		const profileWildInfluences =
 			currentMaths.profiles.base[profile].wildInfluences[
-				wildType as string
+			wildType as string
 			];
 		if (profileWildInfluences) {
 			//Form the influences from the profile
@@ -353,25 +353,65 @@ export function addWilds(
 			multiplier = 1;
 		}
 
+		if (wildType === FeatureType.DirectionalWild) {
+			multiplier = 1;
+		}
+
 		if (wildType === "DirectionalWild") {
-			wildData.steps = pickValueFromDistribution(
-				integerRng,
-				currentMaths.profiles.base[profile].stepsData
-			);
-			if (wildData.column === 0) {
-				wildData.direction = "right";
-			} else if (wildData.column === 5) {
-				wildData.direction = "left";
+			const numRows = 5; // Grid rows
+			const numColumns = 6; // Grid columns
+
+			// Determine initial steps
+			if (wildData.column === numColumns - 1) { // Column 6 (index 5)
 				wildData.steps = pickValueFromDistribution(
 					integerRng,
 					currentMaths.profiles.base[profile].stepsColumn6Data
 				);
+			} else {
+				wildData.steps = pickValueFromDistribution(
+					integerRng,
+					currentMaths.profiles.base[profile].stepsData
+				);
+			}
+
+			// Determine the direction based on the wild's position
+			if (wildData.column === 0) {
+				wildData.direction = "right";
+				wildData.steps = Math.min(wildData.steps, numColumns - 1 - wildData.column);
+			} else if (wildData.column === numColumns - 1) {
+				wildData.direction = "left";
+				wildData.steps = Math.min(wildData.steps, wildData.column);
 			} else if (wildData.row === 0) {
 				wildData.direction = "down";
-			} else if (wildData.row === 4) {
+				wildData.steps = Math.min(wildData.steps, numRows - 1 - wildData.row);
+			} else if (wildData.row === numRows - 1) {
 				wildData.direction = "up";
-			} else throw new Error();
+				wildData.steps = Math.min(wildData.steps, wildData.row);
+			} else {
+				// In the middle, pick a random direction
+				wildData.direction = pickValueFromDistribution(integerRng, {
+					values: ["up", "down", "left", "right"],
+					weights: [1, 1, 1, 1],
+				});
+
+				// Adjust steps based on direction to stay within bounds
+				switch (wildData.direction) {
+					case "up":
+						wildData.steps = Math.min(wildData.steps, wildData.row);
+						break;
+					case "down":
+						wildData.steps = Math.min(wildData.steps, numRows - 1 - wildData.row);
+						break;
+					case "left":
+						wildData.steps = Math.min(wildData.steps, wildData.column);
+						break;
+					case "right":
+						wildData.steps = Math.min(wildData.steps, numColumns - 1 - wildData.column);
+						break;
+				}
+			}
 		}
+
 
 		// Remove this position from the list of available positions
 		// Changing to looking up the position before removing it,

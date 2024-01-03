@@ -63,16 +63,16 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 
 	const recordLayoutsFile: any = fs.readFileSync(
 		".//GeneratedWildTablesCombined//combined_" +
-			LayoutTypeName[arg_layoutTypeIndex] +
-			".json"
+		LayoutTypeName[arg_layoutTypeIndex] +
+		".json"
 	);
 
 	const layouts: any = JSON.parse(recordLayoutsFile);
 	console.log(
 		"want to run " +
-			layouts.length +
-			" records from " +
-			LayoutTypeName[arg_layoutTypeIndex]
+		layouts.length +
+		" records from " +
+		LayoutTypeName[arg_layoutTypeIndex]
 	);
 
 	//Test with the required number of spin in each of these profiles:
@@ -87,12 +87,12 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 
 	console.log(
 		"Running results of " +
-			arg_gamecount +
-			" games for each of " +
-			LayoutTypeName[arg_layoutTypeIndex] +
-			" in each of " +
-			profilesToTest.length +
-			" profiles"
+		arg_gamecount +
+		" games for each of " +
+		LayoutTypeName[arg_layoutTypeIndex] +
+		" in each of " +
+		profilesToTest.length +
+		" profiles"
 	);
 
 	//Run each layout for each profile testCount times
@@ -165,14 +165,14 @@ export const RunUseGenerated = function (_gameInterface: any, parameters: any) {
 
 	fs.writeFileSync(
 		".//GeneratedWildTablesCombined//runresults_" +
-			LayoutTypeName[arg_layoutTypeIndex] +
-			"_" +
-			arg_additionalNaming +
-			"_index " +
-			arg_startTestIndex +
-			"_to_" +
-			arg_endTestIndex +
-			".json",
+		LayoutTypeName[arg_layoutTypeIndex] +
+		"_" +
+		arg_additionalNaming +
+		"_index " +
+		arg_startTestIndex +
+		"_to_" +
+		arg_endTestIndex +
+		".json",
 		JSON.stringify(thisResultSet),
 		{ encoding: "utf8", flag: "w" }
 	);

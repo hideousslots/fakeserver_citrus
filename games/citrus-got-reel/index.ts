@@ -12,6 +12,7 @@ import { getPlayerConfig } from "./math/config/getPlayerConfig";
 import HitFrequency from "@slotify/gdk/lib/stats/HitFrequency";
 import Average from "@slotify/gdk/lib/stats/Average";
 import WinAnalysis from "./math/stats/WinAnalysis";
+import { CitrusGotReelSymbolValue } from "./math/config/CitrusGotReelSymbol";
 
 const currentMaths = mathConfig();
 
@@ -134,45 +135,243 @@ export const index: IGame<IData> = {
 		_550x: new HitFrequency((wagers) =>
 			wagers.some((wager) => wager.win > 550)
 		),
-		_600x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 600)
+		// _600x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 600)
+		// ),
+		// _650x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 650)
+		// ),
+		// _700x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 700)
+		// ),
+		// _750x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 750)
+		// ),
+		// _800x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 800)
+		// ),
+		// _850x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 850)
+		// ),
+		// _900x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 900)
+		// ),
+		// _950x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 950)
+		// ),
+		// _1000x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 1000)
+		// ),
+		// _2000x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 2000)
+		// ),
+		// _3000x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 3000)
+		// ),
+		// _4000x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 4000)
+		// ),
+		// _5000x: new HitFrequency((wagers) =>
+		// 	wagers.some((wager) => wager.win > 5000)
+		// ),
+		normalWild: new HitFrequency((wagers) =>
+			wagers.some((wager) =>
+				wager.data.baseGameSpin.reelsBefore.some(row =>
+					row.some(symbol =>
+						symbol.symbol === CitrusGotReelSymbolValue.Wild
+					)
+				)
+			)
 		),
-		_650x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 650)
+		directionalWild: new HitFrequency((wagers) =>
+			wagers.some((wager) =>
+				wager.data.baseGameSpin.reelsBefore.some(row =>
+					row.some(symbol =>
+						symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild
+					)
+				)
+			)
 		),
-		_700x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 700)
+		winContainsNormalWild: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+				const lineWinsPositions = wager.data.baseGameSpin.lineWins.flatMap(lineWin => lineWin.positions);
+				return wager.data.baseGameSpin.reelsBefore.some((column, columnIndex) =>
+					column.some((symbol, rowIndex) => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.Wild) {
+							return lineWinsPositions.some(pos =>
+								pos.column === columnIndex && pos.row === rowIndex
+							);
+						}
+						return false;
+					})
+				);
+			})
 		),
-		_750x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 750)
+
+
+		winContainsDirectionalWild: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+				const directionalWildPositionsInReels = new Set<string>();
+				wager.data.baseGameSpin.reelsBefore.forEach((column, columnIndex) =>
+					column.forEach((symbol, rowIndex) => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+							directionalWildPositionsInReels.add(`${columnIndex},${rowIndex}`);
+						}
+					})
+				);
+				const absentWildPositions = new Set<string>();
+				wager.data.baseGameSpin.lineWins.forEach(lineWin => {
+					if (lineWin.symbol === CitrusGotReelSymbolValue.Wild) {
+						lineWin.positions.forEach(pos => {
+							const posKey = `${pos.column},${pos.row}`;
+							if (wager.data.baseGameSpin.reelsBefore[pos.column]?.[pos.row]?.symbol !== CitrusGotReelSymbolValue.Wild) {
+								absentWildPositions.add(posKey);
+							}
+						});
+					}
+				});
+
+				return wager.data.baseGameSpin.lineWins.some(lineWin => {
+					const winPositions = lineWin.positions.map(pos => `${pos.column},${pos.row}`);
+					const containsDirectionalWild = winPositions.some(pos => directionalWildPositionsInReels.has(pos));
+					const containsAbsentWild = winPositions.some(pos => absentWildPositions.has(pos));
+					return containsDirectionalWild || containsAbsentWild;
+				});
+			})
 		),
-		_800x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 800)
+
+		winContainsBothTypesOfWilds: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+
+				const normalWildPositionsInReels = new Set<string>();
+				wager.data.baseGameSpin.reelsBefore.forEach((column, columnIndex) =>
+					column.forEach((symbol, rowIndex) => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.Wild) {
+							normalWildPositionsInReels.add(`${columnIndex},${rowIndex}`);
+						}
+					})
+				);
+
+				const specialWildPositions = new Set<string>();
+				wager.data.baseGameSpin.reelsBefore.forEach((column, columnIndex) =>
+					column.forEach((symbol, rowIndex) => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+							specialWildPositions.add(`${columnIndex},${rowIndex}`);
+						}
+					})
+				);
+
+				wager.data.baseGameSpin.lineWins.forEach(lineWin => {
+					if (lineWin.symbol === CitrusGotReelSymbolValue.Wild) {
+						lineWin.positions.forEach(pos => {
+							const posKey = `${pos.column},${pos.row}`;
+							if (!normalWildPositionsInReels.has(posKey)) {
+								specialWildPositions.add(posKey);
+							}
+						});
+					}
+				});
+
+				return wager.data.baseGameSpin.lineWins.some(lineWin => {
+					const winPositions = lineWin.positions.map(pos => `${pos.column},${pos.row}`);
+					const containsNormalWild = winPositions.some(pos => normalWildPositionsInReels.has(pos));
+					const containsSpecialWild = winPositions.some(pos => specialWildPositions.has(pos));
+					return containsNormalWild && containsSpecialWild;
+				});
+			})
 		),
-		_850x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 850)
+		oneWildAfter: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+				let wildCount = 0;
+
+				wager.data.baseGameSpin.reelsAfter.forEach(column =>
+					column.forEach(symbol => {
+
+						if (symbol.symbol === CitrusGotReelSymbolValue.Wild || symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+							wildCount++;
+						}
+					})
+				);
+
+				return wildCount === 1;
+			})
 		),
-		_900x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 900)
+		moreThanOneWildAfter: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+				let wildCount = 0;
+
+				wager.data.baseGameSpin.reelsAfter.forEach(column =>
+					column.forEach(symbol => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.Wild || symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+							wildCount++;
+						}
+					})
+				);
+
+				return wildCount > 1;
+			})
 		),
-		_950x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 950)
+		moreThanTwoWildAfter: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+				let wildCount = 0;
+
+				wager.data.baseGameSpin.reelsAfter.forEach(column =>
+					column.forEach(symbol => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.Wild || symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+							wildCount++;
+						}
+					})
+				);
+
+				return wildCount > 2;
+			})
 		),
-		_1000x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 1000)
+		moreThanThreeWildAfter: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+				let wildCount = 0;
+
+				wager.data.baseGameSpin.reelsAfter.forEach(column =>
+					column.forEach(symbol => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.Wild || symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+							wildCount++;
+						}
+					})
+				);
+
+				return wildCount > 3;
+			})
 		),
-		_2000x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 2000)
+		moreThanFourWildAfter: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+				let wildCount = 0;
+
+				wager.data.baseGameSpin.reelsAfter.forEach(column =>
+					column.forEach(symbol => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.Wild || symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+							wildCount++;
+						}
+					})
+				);
+
+				return wildCount > 4;
+			})
 		),
-		_3000x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 3000)
+		moreThanFiveWildAfter: new HitFrequency((wagers) =>
+			wagers.some((wager) => {
+				let wildCount = 0;
+
+				wager.data.baseGameSpin.reelsAfter.forEach(column =>
+					column.forEach(symbol => {
+						if (symbol.symbol === CitrusGotReelSymbolValue.Wild || symbol.symbol === CitrusGotReelSymbolValue.DirectionalWild) {
+							wildCount++;
+						}
+					})
+				);
+
+				return wildCount > 5;
+			})
 		),
-		_4000x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 4000)
-		),
-		_5000x: new HitFrequency((wagers) =>
-			wagers.some((wager) => wager.win > 5000)
-		),
+
 		_3ofaKind: new HitFrequency((wagers) =>
 			wagers.some(
 				(wager) =>

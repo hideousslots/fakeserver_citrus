@@ -68,14 +68,13 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 					criteria: [
 						CriteriaFunction_NoCollectorWild,
 						CriteriaFunction_NoPayerWild,
-						CriteriaFunction_NoMultiplierWild,
 						CriteriaFunction_NoDirectionalWild,
 						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) != 1) {
-								return false;
-							}
+							// if (LayoutInstance.CountWilds(layout.wilds) != 1) {
+							// 	return false;
+							// }
 
-							if (results.averagePayout > 0.2) {
+							if (results.averagePayout > 0.4) {
 								return false;
 							}
 
@@ -84,44 +83,20 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 					],
 				},
 				{
-					referenceID: "simplelow2",
+					referenceID: "simplelow1",
 					setChance: 1,
 					matches: [],
 					matchesPerScatterCount: [],
 					criteria: [
 						CriteriaFunction_NoCollectorWild,
 						CriteriaFunction_NoPayerWild,
-						CriteriaFunction_NoMultiplierWild,
 						CriteriaFunction_NoDirectionalWild,
 						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) != 2) {
-								return false;
-							}
+							// if (LayoutInstance.CountWilds(layout.wilds) != 1) {
+							// 	return false;
+							// }
 
-							if (results.averagePayout > 0.2) {
-								return false;
-							}
-
-							return true;
-						},
-					],
-				},
-				{
-					referenceID: "simplelow3",
-					setChance: 1,
-					matches: [],
-					matchesPerScatterCount: [],
-					criteria: [
-						CriteriaFunction_NoCollectorWild,
-						CriteriaFunction_PayerInWin,
-						CriteriaFunction_NoMultiplierWild,
-						CriteriaFunction_NoDirectionalWild,
-						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
-								return false;
-							}
-
-							if (results.averagePayout > 1) {
+							if (results.averagePayout < 0.4) {
 								return false;
 							}
 
@@ -134,77 +109,69 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		baseGameMed: {
 			sets: [
 				{
-					referenceID: "simplemed",
+					referenceID: "simpleMed1",
 					setChance: 1,
 					matches: [],
 					matchesPerScatterCount: [],
 					criteria: [
-						CriteriaFunction_NoCollectorWild,
-						CriteriaFunction_NoPayerWild,
+						// CriteriaFunction_NoCollectorWild,
+						// CriteriaFunction_NoPayerWild,
+						CriteriaFunction_NoDirectionalWild,
+						(layout: LayoutInstance, results: any) => {
+							// if (LayoutInstance.CountWilds(layout.wilds) != 1) {
+							// 	return false;
+							// }
+
+							if (results.averagePayout > 0.4) {
+								return false;
+							}
+
+							return true;
+						},
+					],
+				},
+				{
+					referenceID: "simpleMed2",
+					setChance: 1,
+					matches: [],
+					matchesPerScatterCount: [],
+					criteria: [
+						// CriteriaFunction_NoCollectorWild,
+						// CriteriaFunction_NoPayerWild,
+						CriteriaFunction_NoDirectionalWild,
+						(layout: LayoutInstance, results: any) => {
+							// if (LayoutInstance.CountWilds(layout.wilds) != 1) {
+							// 	return false;
+							// }
+
+							if (results.averagePayout < 0.4) {
+								return false;
+							}
+
+							return true;
+						},
+					],
+				},
+				{
+					referenceID: "simpleMed3",
+					setChance: 1,
+					matches: [],
+					matchesPerScatterCount: [],
+					criteria: [
+						// CriteriaFunction_NoCollectorWild,
+						// CriteriaFunction_NoPayerWild,
 						CriteriaFunction_DirectionalWild,
-						CriteriaFunction_NoMultiplierWild,
-						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) != 1) {
-								return false;
-							}
+						// (layout: LayoutInstance, results: any) => {
+						// 	if (LayoutInstance.CountWilds(layout.wilds) != 1) {
+						// 		return false;
+						// 	}
 
-							if (results.averagePayout > 0.2) {
-								return false;
-							}
+						// 	if (results.averagePayout < 0.4) {
+						// 		return false;
+						// 	}
 
-							if (
-								LayoutInstance.WildExceedsMaximumSteps(
-									layout.wilds,
-									2
-								)
-							) {
-								return false;
-							}
-
-							return true;
-						},
-					],
-				},
-				{
-					referenceID: "payer",
-					setChance: 1,
-					matches: [],
-					matchesPerScatterCount: [],
-					criteria: [
-						CriteriaFunction_PayerInWin,
-						CriteriaFunction_NoCollectorWild,
-						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) != 2) {
-								return false;
-							}
-
-							if (results.averagePayout < 0.2) {
-								return false;
-							}
-
-							return true;
-						},
-					],
-				},
-				{
-					referenceID: "collector",
-					setChance: 1,
-					matches: [],
-					matchesPerScatterCount: [],
-					criteria: [
-						CriteriaFunction_CollectorInWin,
-						CriteriaFunction_NoPayerWild,
-						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
-								return false;
-							}
-
-							if (results.averagePayout > 0.15) {
-								return false;
-							}
-
-							return true;
-						},
+						// 	return true;
+						// },
 					],
 				},
 			],
@@ -217,15 +184,15 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 					matches: [],
 					matchesPerScatterCount: [],
 					criteria: [
-						(layout: LayoutInstance, results: any) => {
-							if (LayoutInstance.CountWilds(layout.wilds) < 2) {
-								return false;
-							}
-							if (results.averagePayout < 0.5) {
-								return false;
-							}
-							return true;
-						},
+						// (layout: LayoutInstance, results: any) => {
+						// 	if (LayoutInstance.CountWilds(layout.wilds) < 2) {
+						// 		return false;
+						// 	}
+						// 	if (results.averagePayout < 0.5) {
+						// 		return false;
+						// 	}
+						// 	return true;
+						// },
 					],
 				},
 			],
@@ -250,7 +217,7 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 			if (
 				file.substring(0, 13) === "final_imaged_" &&
 				file.substring(13, 13 + LayoutTypeName[layoutType].length) ===
-					LayoutTypeName[layoutType] &&
+				LayoutTypeName[layoutType] &&
 				file.substring(file.length - 4) === "json"
 			) {
 				console.log("Processing file: " + file);
@@ -277,12 +244,12 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 		gameData[profile].sets.forEach((set, setindex) => {
 			console.log(
 				"process profile " +
-					profile +
-					" set index " +
-					setindex +
-					" currently holding " +
-					set.matches.length +
-					" results - "
+				profile +
+				" set index " +
+				setindex +
+				" currently holding " +
+				set.matches.length +
+				" results - "
 			);
 
 			allTables.forEach((layoutData) => {
@@ -337,9 +304,10 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 				});
 
 				//Limit to 256 best
+				//temporarily expanding this to make sure we aren't missing anything in these broad sets
 
-				if (set.matchesPerScatterCount[scatterCount].length > 256) {
-					set.matchesPerScatterCount[scatterCount].splice(256);
+				if (set.matchesPerScatterCount[scatterCount].length > 4096) {
+					set.matchesPerScatterCount[scatterCount].splice(4096);
 				}
 
 				//Correct the set data
@@ -369,21 +337,21 @@ export const RunPullForGame = function (_gameInterface: any, parameters: any) {
 				set.matchesPerScatterCount[3].length;
 			console.log(
 				"post process profile " +
-					profile +
-					" set index " +
-					setindex +
-					" currently holding " +
-					totalResults +
-					" results - per scatter = " +
-					" (" +
-					set.matchesPerScatterCount[0].length +
-					" , " +
-					set.matchesPerScatterCount[1].length +
-					" , " +
-					set.matchesPerScatterCount[2].length +
-					" , " +
-					set.matchesPerScatterCount[3].length +
-					" )"
+				profile +
+				" set index " +
+				setindex +
+				" currently holding " +
+				totalResults +
+				" results - per scatter = " +
+				" (" +
+				set.matchesPerScatterCount[0].length +
+				" , " +
+				set.matchesPerScatterCount[1].length +
+				" , " +
+				set.matchesPerScatterCount[2].length +
+				" , " +
+				set.matchesPerScatterCount[3].length +
+				" )"
 			);
 		});
 
