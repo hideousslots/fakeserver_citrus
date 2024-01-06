@@ -70,17 +70,18 @@ const standardConfig = {
 
 	wildsStick: {
 		values: [true, false],
-		weights: [100, 0],
+		weights: [79, 21],
 	},
 
 	baseGameProfiles: {
 		values: [losing, teasing, baseGameLow, baseGameMed, baseGameHigh],
-		weights: [100, 100, 100, 100, 0],
+		// weights: [100, 100, 100, 100, 0],
+		weights: [100, 100, 170, 100, 0],
 	},
 
 	bonusGameProfiles: {
 		values: [bonusGameLow, bonusGameMed, bonusGameHigh],
-		weights: [1, 1, 1],
+		weights: [0, 1, 0],
 	},
 
 	profiles: {
@@ -235,11 +236,11 @@ const standardConfig = {
 			},
 			baseGameLow: {
 				hitRate: 0.31,
-				distOffset: 0.5,
+				distOffset: 0.4,
 				stopOffset: 3,
 				wildFeatureActive: {
 					values: [true, false],
-					weights: [2, 7],
+					weights: [4, 17],
 				},
 				initialWilds: {
 					values: [1, 2, 3, 4, 5],
@@ -324,12 +325,12 @@ const standardConfig = {
 
 			},
 			baseGameMed: {
-				hitRate: 0.3,
-				distOffset: 0.5,
+				hitRate: 0.23,
+				distOffset: 0.425,
 				stopOffset: 4,
 				wildFeatureActive: {
 					values: [true, false],
-					weights: [4, 13],
+					weights: [4, 17],
 				},
 				initialWilds: {
 					values: [1, 2, 3, 4, 5],
@@ -575,12 +576,113 @@ const standardConfig = {
 			}
 
 		},
+		bonus: {
+			bonusGameLow: {},
+			bonusGameMed: {
+				hitRate: 0.23,
+				distOffset: 0.425,
+				stopOffset: 4,
+				wildFeatureActive: {
+					values: [true, false],
+					weights: [4, 17],
+				},
+				initialWilds: {
+					values: [1, 2, 3, 4, 5],
+					weights: [10, 150, 150, 50, 20],
+				},
+				initialMultiplier: {
+					values: [1, 2, 3, 4, 5],
+					weights: [100, 20, 3, 2, 1],
+				},
+				wildLookUp: {
+					values: [
+						FeatureType.Wild,
+						FeatureType.DirectionalWild,
+						FeatureType.CollectorWild,
+						FeatureType.PayerWild,
+					],
+					weights: [7, 3, 0, 0],
+				},
+				stepsData: {
+					values: [1, 2, 3, 4, 5],
+					weights: [100, 40, 30, 20, 10],
+				},
+
+				stepsColumn6Data: {
+					values: [1, 2, 3, 4, 5],
+					weights: [75, 150, 150, 150, 30],
+				},
+				wildMaps: {
+					DirectionalWild: {
+						values: [
+							{ row: 0, column: 0 }, { row: 0, column: 1 },
+							{ row: 0, column: 2 }, { row: 0, column: 3 },
+							{ row: 0, column: 4 }, { row: 0, column: 5 },
+
+							{ row: 1, column: 0 }, { row: 1, column: 1 },
+							{ row: 1, column: 2 }, { row: 1, column: 3 },
+							{ row: 1, column: 4 }, { row: 1, column: 5 },
+
+							{ row: 2, column: 0 }, { row: 2, column: 1 },
+							{ row: 2, column: 2 }, { row: 2, column: 3 },
+							{ row: 2, column: 4 }, { row: 2, column: 5 },
+
+							{ row: 3, column: 0 }, { row: 3, column: 1 },
+							{ row: 3, column: 2 }, { row: 3, column: 3 },
+							{ row: 3, column: 4 }, { row: 3, column: 5 },
+
+							{ row: 4, column: 0 }, { row: 4, column: 1 },
+							{ row: 4, column: 2 }, { row: 4, column: 3 },
+							{ row: 4, column: 4 }, { row: 4, column: 5 },
+
+							{ row: 5, column: 0 }, { row: 5, column: 1 },
+							{ row: 5, column: 2 }, { row: 5, column: 3 },
+							{ row: 5, column: 4 }, { row: 5, column: 5 }],
+						weights: [
+							3000, 3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000, 3000,
+							3000, 3000, 3000, 3000, 3000, 3000]
+					},
+				},
+				wildInfluences: {
+					Wild: {
+						default:
+						{
+							positions: [
+								{
+									row: (5 - 1) / 2,
+									column: 1,
+								},
+							],
+							rowInfluence: 0.7,
+							columnInfluence: 0.7,
+						},
+						Wild: {
+							rowInfluence: 0.1,
+							columnInfluence: 0.1,
+						},
+						DirectionalWild: {
+							rowInfluence: 0.1,
+							columnInfluence: 0.1,
+						},
+						CollectorWild: {
+							rowInfluence: 0.1,
+							columnInfluence: 0.1,
+						},
+						PayerWild: {
+							rowInfluence: 0.1,
+							columnInfluence: 0.1,
+						}
+					}
+				}
+
+			},
+			bonusGameHigh: {},
+		}
 	},
-	bonus: {
-		bonusGameLow: {},
-		bonusGameMed: {},
-		bonusGameHigh: {},
-	}
 }
 	;
 

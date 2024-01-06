@@ -20,7 +20,7 @@ import { filterByIntersection } from "../../../common/distributions/intersectDis
 import { pickIndexFromDistribution } from "../../../common/distributions/pickIndexFromDistribution";
 import { FeatureType } from "./config/defines";
 //import { DEBUG_DrawPickWeight } from "./debugsupport/Debug_DrawPickWeight";
-import { baseGameProfile, bonusGameProfile } from "./config/profiles";
+import { baseGameProfile, bonusGameProfile, determineProfileType } from "./config/profiles";
 
 function deepCloneArray(arr: any[][]): any[][] {
 	return arr.map((row) =>
@@ -291,11 +291,12 @@ export function addWilds_loseOrTease(
 	cols: number
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
+	const profileType = determineProfileType(profile);
 
 	if (
 		!pickValueFromDistribution(
 			integerRng,
-			currentMaths.profiles.base[profile].wildFeatureActive
+			currentMaths.profiles[profileType][profile].wildFeatureActive
 		)
 	) {
 		return input;
@@ -305,7 +306,7 @@ export function addWilds_loseOrTease(
 
 	const numWilds: number = pickValueFromDistribution(
 		integerRng,
-		currentMaths.profiles.base[profile].initialWilds
+		currentMaths.profiles[profileType][profile].initialWilds
 	);
 
 	//Although currently the wilds options above do not allow 0, handle the possibility in case the table
@@ -356,11 +357,11 @@ export function addWilds_loseOrTease(
 		wildsToUse.push({
 			wildType: pickValueFromDistribution(
 				integerRng,
-				currentMaths.profiles.base[profile].wildLookUp
+				currentMaths.profiles[profileType][profile].wildLookUp
 			),
 			multiplier: pickValueFromDistribution(
 				integerRng,
-				currentMaths.profiles.base[profile].initialMultiplier
+				currentMaths.profiles[profileType][profile].initialMultiplier
 			),
 		});
 	}
@@ -418,7 +419,7 @@ export function addWilds_loseOrTease(
 		if (thisWild.wildType === FeatureType.DirectionalWild) {
 			steps = pickValueFromDistribution(
 				integerRng,
-				currentMaths.profiles.base[profile].stepsData
+				currentMaths.profiles[profileType][profile].stepsData
 			);
 			if (reel === minReel) {
 				direction = "right";
@@ -426,7 +427,7 @@ export function addWilds_loseOrTease(
 				direction = "left";
 				steps = pickValueFromDistribution(
 					integerRng,
-					currentMaths.profiles.base[profile].stepsColumn6Data
+					currentMaths.profiles[profileType][profile].stepsColumn6Data
 				);
 			} else if (row === 0) {
 				direction = "down";

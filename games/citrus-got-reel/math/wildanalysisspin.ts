@@ -30,7 +30,7 @@ import { Position } from "../../../common/reels/Position";
 import { LineWinCalculator } from "./calculateLineWins";
 import { createReels, createReels_loseOrTease } from "./createReels";
 import { pickValueFromDistribution } from "../../../common/distributions/pickValueFromDistribution";
-import { baseGameProfile, bonusGameProfile } from "./config/profiles";
+import { baseGameProfile, bonusGameProfile, determineProfileType } from "./config/profiles";
 
 export interface ScatterInfo {
 	collected: number;
@@ -166,6 +166,7 @@ function generateSpin(
 	}
 
 	const currentMaths = mathConfig();
+	const profileType = determineProfileType(profile);
 
 	const addedWilds = addWilds(providedWildAndScatterData, initialReels);
 	let expandedWilds = expandWilds(addedWilds);
@@ -177,10 +178,10 @@ function generateSpin(
 		);
 	}
 
-	const hitrateControl = currentMaths.profiles.base[profile].hitRate;
+	const hitrateControl = currentMaths.profiles[profileType][profile].hitRate;
 	const symbolDistributionOffset =
-		currentMaths.profiles.base[profile].distOffset;
-	const stop = currentMaths.profiles.base[profile].stopOffset;
+		currentMaths.profiles[profileType][profile].distOffset;
+	const stop = currentMaths.profiles[profileType][profile].stopOffset;
 
 	const indexReels = createReels(
 		6,
@@ -323,7 +324,7 @@ function generateInitialReelGrid(
 			) {
 				const randomSymbol =
 					nonWildSymbols[
-						integerRng.randomInteger(nonWildSymbols.length)
+					integerRng.randomInteger(nonWildSymbols.length)
 					];
 				resultGrid[i][j] = {
 					symbol: randomSymbol,
@@ -351,7 +352,7 @@ function generateInFlightReelGrid(
 			if (WildSymbols.includes(resultGrid[i][j]?.symbol)) {
 				const randomSymbol =
 					nonWildSymbols[
-						integerRng.randomInteger(nonWildSymbols.length)
+					integerRng.randomInteger(nonWildSymbols.length)
 					];
 				resultGrid[i][j] = {
 					symbol: randomSymbol,

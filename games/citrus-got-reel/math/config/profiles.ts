@@ -12,3 +12,12 @@ export enum bonusGameProfile {
     bonusGameMed = "bonusGameMed",
     bonusGameHigh = "bonusGameHigh"
 }
+
+export function determineProfileType(profile: baseGameProfile | bonusGameProfile): 'base' | 'bonus' {
+    if (Object.values(baseGameProfile).includes(profile as baseGameProfile)) {
+        return 'base';
+    } else if (Object.values(bonusGameProfile).includes(profile as bonusGameProfile)) {
+        return 'bonus';
+    }
+    throw new Error('Invalid profile type');
+}

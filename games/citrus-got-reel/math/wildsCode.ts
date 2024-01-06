@@ -20,7 +20,7 @@ import { filterByIntersection } from "../../../common/distributions/intersectDis
 import { pickIndexFromDistribution } from "../../../common/distributions/pickIndexFromDistribution";
 import { FeatureType } from "./config/defines";
 //import { DEBUG_DrawPickWeight } from "./debugsupport/Debug_DrawPickWeight";
-import { baseGameProfile, bonusGameProfile } from "./config/profiles";
+import { baseGameProfile, bonusGameProfile, determineProfileType } from "./config/profiles";
 
 interface WildInfluences {
 	positions: Position[];
@@ -67,11 +67,12 @@ export function addWilds(
 	profile: baseGameProfile | bonusGameProfile
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
+	const profileType = determineProfileType(profile);
 
 	if (
 		!pickValueFromDistribution(
 			integerRng,
-			currentMaths.profiles.base[profile].wildFeatureActive
+			currentMaths.profiles[profileType][profile].wildFeatureActive
 		)
 	) {
 		return input;
@@ -81,7 +82,7 @@ export function addWilds(
 
 	const numWilds: number = pickValueFromDistribution(
 		integerRng,
-		currentMaths.profiles.base[profile].initialWilds
+		currentMaths.profiles[profileType][profile].initialWilds
 	);
 
 	//Although currently the wilds options above do not allow 0, handle the possibility in case the table
@@ -186,11 +187,11 @@ export function addWilds(
 
 		let multiplier = pickValueFromDistribution(
 			integerRng,
-			currentMaths.profiles.base[profile].initialMultiplier
+			currentMaths.profiles[profileType][profile].initialMultiplier
 		);
 		const wildType = pickValueFromDistribution(
 			integerRng,
-			currentMaths.profiles.base[profile].wildLookUp
+			currentMaths.profiles[profileType][profile].wildLookUp
 		);
 
 		//Calculate the proper weighting for all choices
@@ -201,7 +202,7 @@ export function addWilds(
 
 		let influences: WildInfluences[] = [];
 		const profileWildInfluences =
-			currentMaths.profiles.base[profile].wildInfluences[
+			currentMaths.profiles[profileType][profile].wildInfluences[
 			wildType as string
 			];
 		if (profileWildInfluences) {
@@ -325,7 +326,7 @@ export function addWilds(
 			direction?: string;
 		};
 		const profileWildMaps: any =
-			currentMaths.profiles.base[profile].wildMaps[wildType as string];
+			currentMaths.profiles[profileType][profile].wildMaps[wildType as string];
 		if (profileWildMaps) {
 			const definedWildPositions = filterByIntersection(
 				profileWildMaps,
@@ -365,12 +366,12 @@ export function addWilds(
 			if (wildData.column === numColumns - 1) { // Column 6 (index 5)
 				wildData.steps = pickValueFromDistribution(
 					integerRng,
-					currentMaths.profiles.base[profile].stepsColumn6Data
+					currentMaths.profiles[profileType][profile].stepsColumn6Data
 				);
 			} else {
 				wildData.steps = pickValueFromDistribution(
 					integerRng,
-					currentMaths.profiles.base[profile].stepsData
+					currentMaths.profiles[profileType][profile].stepsData
 				);
 			}
 
@@ -651,11 +652,12 @@ export function addWilds_loseOrTease(
 	cols: number
 ): CitrusGotReelSymbol[][] {
 	const currentMaths = mathConfig();
+	const profileType = determineProfileType(profile);
 
 	if (
 		!pickValueFromDistribution(
 			integerRng,
-			currentMaths.profiles.base[profile].wildFeatureActive
+			currentMaths.profiles[profileType][profile].wildFeatureActive
 		)
 	) {
 		return input;
@@ -665,7 +667,7 @@ export function addWilds_loseOrTease(
 
 	const numWilds: number = pickValueFromDistribution(
 		integerRng,
-		currentMaths.profiles.base[profile].initialWilds
+		currentMaths.profiles[profileType][profile].initialWilds
 	);
 
 	//Although currently the wilds options above do not allow 0, handle the possibility in case the table
@@ -716,11 +718,11 @@ export function addWilds_loseOrTease(
 		wildsToUse.push({
 			wildType: pickValueFromDistribution(
 				integerRng,
-				currentMaths.profiles.base[profile].wildLookUp
+				currentMaths.profiles[profileType][profile].wildLookUp
 			),
 			multiplier: pickValueFromDistribution(
 				integerRng,
-				currentMaths.profiles.base[profile].initialMultiplier
+				currentMaths.profiles[profileType][profile].initialMultiplier
 			),
 		});
 	}
@@ -778,7 +780,7 @@ export function addWilds_loseOrTease(
 		if (thisWild.wildType === FeatureType.DirectionalWild) {
 			steps = pickValueFromDistribution(
 				integerRng,
-				currentMaths.profiles.base[profile].stepsData
+				currentMaths.profiles[profileType][profile].stepsData
 			);
 			if (reel === minReel) {
 				direction = "right";
@@ -786,7 +788,7 @@ export function addWilds_loseOrTease(
 				direction = "left";
 				steps = pickValueFromDistribution(
 					integerRng,
-					currentMaths.profiles.base[profile].stepsColumn6Data
+					currentMaths.profiles[profileType][profile].stepsColumn6Data
 				);
 			} else if (row === 0) {
 				direction = "down";
